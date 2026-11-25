@@ -359,6 +359,8 @@ h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy
 .autobox .aops button{flex:1;border:1px solid #0f2747;background:#fff;color:#0f2747;border-radius:3px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:1px}
 .autobox .aops button b{font-size:14px}.autobox .aops button small{font-size:11.5px;color:var(--mute)}
 .autobox .btn{margin-top:8px;width:100%}
+.mopts.troca button{display:block;width:100%;text-align:left}
+.mopts.troca button small{display:inline-block;min-width:74px;font-size:11px;font-weight:800;color:var(--mute)}
 /* fiscalizar / efetivo / dados do serviço */
 .fteam{border-radius:4px;border-top:3px solid #0f2747}
 .fteam .fh .cnt{border-radius:3px;background:#eef2f7}
@@ -814,7 +816,7 @@ function vincularFQ(){ let mudE=false, mudF=false;
   if(mudE) LS.set('dp_escalas',ESC); if(mudF) salvarFQ(); return mudE; }
 setTimeout(()=>{ try{ vincularFQ(); }catch(_){} },0);
 function sincRespTodas(){ vincularFQ(); let mud=false; ESC.forEach(sc=>{ if(sincResp(sc)) mud=true; }); if(mud) LS.set('dp_escalas',ESC); }
-let S=null, cad=LS.get('dp_cad')||{}, locais=LS.get('dp_locais')||[], aberto=null, movendo=null;
+let S=null, cad=LS.get('dp_cad')||{}, locais=LS.get('dp_locais')||[], aberto=null, movendo=null, trocando=null;
 const editando=new Set(), obsAbertas=new Set();
 const ST={P:'Presente',F:'Falta',LM:'Licença médica',ERR:'Erro na escala',OUT:'Outro'};
 const A=p=>!!p.st&&p.st!=='P'; // ausente / alterado: não entra na distribuição
@@ -1209,8 +1211,10 @@ function chipHTML(p){ return `<div class="blk r-${p.cls}${selVarios&&sel.has(p.i
 function equipeAberta(e){
   const o=ordemEquipe(e), pf=proxFuncao(e), n=numEq(e), outras=S.equipes.filter(x=>x!==e&&(x.salva||membros(x.id).length));
   const opts=p=>{ const t=o.find(([,q])=>q===p)[0];
+    if(trocando===p.id){ const cand=outras.flatMap(x=>ordemEquipe(x).map(([tg,q])=>({x,tg,q})));
+      return `<div class="mopts troca"><span class="lbl">Trocar ${esc(nomeP(p))} com:</span>${cand.map(({x,tg,q})=>`<button data-trocapor="${q.id}"><small>EQ ${numEq(x)} · ${tg}</small> ${esc(nomeP(q))}</button>`).join('')||'<span class="muted">Nenhuma outra equipe montada.</span>'}<button data-trocax="1">Cancelar</button></div>`; }
     if(movendo===p.id) return `<div class="mopts"><span class="lbl">Mover ${esc(nomeP(p))} para:</span>${outras.map(x=>`<button data-movpara="${x.id}">${esc(rotulo(x))}</button>`).join('')||'<span class="muted">Nenhuma outra equipe montada.</span>'}<button data-movx="1">Cancelar</button></div>`;
-    return `<div class="mopts">${t!=='CMT'&&temCmt(e.tipo)?'<button data-role="cmt">Comandante</button>':''}${t!=='MOT'&&temMot(e.tipo)?'<button data-role="mot">Motorista</button>':''}${t!=='PAT'?'<button data-role="pat">Patrulheiro</button>':''}<button data-role="mov">Mover para outra equipe</button><button class="out" data-role="out">Tirar da equipe</button></div>`; };
+    return `<div class="mopts">${t!=='CMT'&&temCmt(e.tipo)?'<button data-role="cmt">Comandante</button>':''}${t!=='MOT'&&temMot(e.tipo)?'<button data-role="mot">Motorista</button>':''}${t!=='PAT'?'<button data-role="pat">Patrulheiro</button>':''}<button data-role="troca">Trocar com policial de outra equipe</button><button data-role="mov">Mover para outra equipe</button><button class="out" data-role="out">Tirar da equipe</button></div>`; };
   const linhas=o.map(([t,p])=>`<div class="mrow r-${p.cls}${aberto===p.id?' open':''}" data-id="${esc(p.id)}"><span class="rl rl-${t}">${t}</span><span class="nm">${esc(nomeP(p))}<small>${esc(metaP(p))}</small></span></div>`+(aberto===p.id?opts(p):'')).join('');
   const idx=S.equipes.indexOf(e);
   return `<div class="team act${e.salva?' editing':''}" data-drop="${e.id}">
@@ -1229,7 +1233,7 @@ function equipeAberta(e){
 }
 function equipeFechada(e){
   const o=ordemEquipe(e), pend=!e.salva&&o.length;
-  const l1=[e.tipo==='ÔNIBUS'?('🚌 ÔNIBUS '+(e.vtr||'')).trim():temVtr(e.tipo)?('VTR '+(e.vtr||'—')):'A PÉ', e.setor].filter(Boolean).join(' · ');
+  const l1=[e.tipo==='ÔNIBUS'?('ÔNIBUS '+(e.vtr||'')).trim():temVtr(e.tipo)?('VTR '+(e.vtr||'—')):'A PÉ', e.setor].filter(Boolean).join(' · ');
   const l2=o.length?o.map(([t,p])=>(p.gc?p.gc+' ':'')+p.guerra.split(' ')[0]).join(', '):'vazia — toque para montar';
   return `<div class="team col${o.length?'':' vazia'}${pend?' pend':''}" data-drop="${e.id}" data-abrir="${e.id}"><span class="num">${numEq(e)}</span>
     <div class="info"><div class="l1">${esc(l1)}${pend?'<span class="tagpend">NÃO SALVA</span>':''}</div><div class="l2">${esc(l2)}</div></div>
@@ -1276,7 +1280,7 @@ $('#poolBody').addEventListener('click',e=>{
   if(e.target.closest('#pmOk')){ if(incluir($('#pmG').value,$('#pmN').value,$('#pmM').value,$('#pmL').value,true)) renderMontar(); else $('#pmN').focus(); }
 });
 function verAtiva(foco){ const t=document.querySelector('.team.act'); if(t){ t.scrollIntoView({block:'nearest',behavior:'smooth'}); if(foco){ const i=t.querySelector('input[data-f="vtr"]')||t.querySelector('input[data-f="setor"]'); if(i&&!i.value) setTimeout(()=>i.focus(),250); } } }
-function abrir(eid,foco){ S.ativa=eid; aberto=null; movendo=null; salvar(); renderMontar(); verAtiva(foco); }
+function abrir(eid,foco){ S.ativa=eid; aberto=null; movendo=null; trocando=null; salvar(); renderMontar(); verAtiva(foco); }
 function mover(id,dest){
   const p=P(id); if(!p) return; const orig=p.eq;
   if(p.fisc&&dest!=='pool'){ toast(nomeP(p)+' está na equipe de fiscalização'); renderMontar(); return; }
@@ -1287,7 +1291,8 @@ function mover(id,dest){
   aberto=null; movendo=null; salvar(); renderMontar();
 }
 function funcao(id,role){ const p=P(id); if(!p||!p.eq) return;
-  if(role==='mov'){ movendo=id; renderMontar(); return; }
+  if(role==='mov'){ movendo=id; trocando=null; renderMontar(); return; }
+  if(role==='troca'){ trocando=id; movendo=null; renderMontar(); return; }
   if(role==='out'){ const o=p.eq; p.eq=null; p.fn=null; normalizar(o); }
   else { const o=ocup(p.eq,role); if(o&&o!==p) o.fn=p.fn; p.fn=role; }
   aberto=null; salvar(); renderMontar(); }
@@ -1307,6 +1312,11 @@ $('#teams').addEventListener('click',e=>{
   const mp=t.closest('[data-movpara]'); if(mp){ const p=P(movendo), dest=S.equipes.find(x=>x.id===mp.dataset.movpara); const orig=p.eq;
     colocar(p,dest,proxFuncao(dest,p)); normalizar(orig); aberto=null; movendo=null; salvar(); renderMontar(); toast(`${nomeP(p)} → Equipe ${numEq(dest)}`); return; }
   if(t.closest('[data-movx]')){ movendo=null; renderMontar(); return; }
+  if(t.closest('[data-trocax]')){ trocando=null; renderMontar(); return; }
+  const tq=t.closest('[data-trocapor]'); if(tq){ const a=P(trocando), b=P(tq.dataset.trocapor); if(a&&b){ // troca de lugar e de função
+      [a.eq,b.eq]=[b.eq,a.eq]; [a.fn,b.fn]=[b.fn,a.fn]; desfazerAuto=null;
+      toast(`Trocados: ${nomeP(a)} e ${nomeP(b)}`); }
+    aberto=null; trocando=null; salvar(); renderMontar(); return; }
   const rl=t.closest('[data-role]'); if(rl){ funcao(aberto,rl.dataset.role); return; }
   if(t.closest('[data-salvar]')){ salvarEquipe(); return; }
   if(t.closest('[data-sobe]')||t.closest('[data-desce]')){ const eq=ativa(), i=S.equipes.indexOf(eq), j=t.closest('[data-sobe]')?i-1:i+1;
@@ -1347,7 +1357,7 @@ $('#selBar').addEventListener('click',ev=>{ const b=ev.target.closest('[data-sa]
 function fimDrag(cancel){
   if(!drag) return; const d=drag; drag=null;
   if(cancel) return;
-  if(d.el.classList.contains('mrow')){ aberto = aberto===d.id?null:d.id; movendo=null; renderMontar(); return; }
+  if(d.el.classList.contains('mrow')){ aberto = aberto===d.id?null:d.id; movendo=null; trocando=null; renderMontar(); return; }
   if(modoFalta){ alternarFalta(d.id); return; }
   if(selVarios){ sel.has(d.id)?sel.delete(d.id):sel.add(d.id); renderMontar(); return; }
   mover(d.id,S.ativa); verAtiva();
