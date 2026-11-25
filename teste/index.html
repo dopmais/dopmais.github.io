@@ -609,13 +609,23 @@ async function lerPdf(file){
    Usada quando o modelo padrão (tabela do SEI) não encaixa. */
 const GRAD_LONGO=[[/TENENTE[\s-]*CORONEL/,'TC'],[/CORONEL/,'CEL'],[/MAJOR/,'MAJ'],[/CAPIT[AÃ]O/,'CAP'],[/(1|2)\s*[ºO°]?\s*TENENTE/,'$1º TEN'],[/TENENTE/,'TEN'],[/ASPIRANTE/,'ASP'],
   [/SUBTENENTE/,'ST'],[/(1|2|3)\s*[ºO°]?\s*SARGENTO/,'$1º SGT'],[/SARGENTO/,'SGT'],[/CABO/,'CB'],[/SOLDADO/,'SD']];
-const RE_GRAD=/(?:^|[\s|;,(])((?:[123]\s*[ºo°]?\s*)?(?:TC|CEL|MAJ|CAP|TEN|ASP|SUBTEN|ST|SGT|CB|SD))(?:\s*(?:1ª|2ª)\s*CL(?:ASSE)?)?\.?(?=[\s|;,.)]|$)/;
-const RE_MAT=/(?:^|[^\dA-Z])((?:\d\.?){6,7}[-.]?[\dX])(?![\d-])/i;
+const RE_GRAD=/(?:^|[\s|;,(\[{])((?:[123]\s*[ºo°]?\s*(?=SGT|TEN))?(?:TC|CEL|MAJ|CAP|TEN|ASP|SUBTEN|ST|SGT|CB|SD))(?:\s*(?:1ª|2ª)\s*CL(?:ASSE)?)?\.?(?=[\s|;,.)]|$)/;
+const RE_MAT=/(?:^|[^\d])((?:\d\.?){6,7}[-.]?[\dX])(?![\d-])/i;
 const RUIDO=new Set(['QPPMC','QOPM','QOPMA','QOPMS','QPPMP','QPPME','QPPMM','QOBM','GR','MTD','MAT','MATRICULA','MATRÍCULA','NOME','POSTO','GRAD','GRADUAÇÃO','LOTAÇÃO','UPM','RG','CPF','TEL','TELEFONE','FONE','CEL','CELULAR','WHATSAPP','ASSINADO','ASSINATURA']);
 const GRADS_SIGLA=new Set(['TC','CEL','MAJ','CAP','TEN','ASP','SUBTEN','ST','SGT','CB','SD']);
 function normGradLonga(l){ let u=' '+l.toUpperCase()+' '; for(const [re,c] of GRAD_LONGO) u=u.replace(new RegExp('\\b'+re.source+'\\b','g'),' '+c+' '); return u.replace(/\s+/g,' ').trim(); }
-function parseLinhaFlex(l0){
-  const l=normGradLonga(l0.replace(/[“”"'`´_*]/g,' ').replace(/[°o](?=\s*(?:TEN|SGT))/gi,'º'));
+// linhas só com nome (continuação de um nome quebrado) são grudadas na linha de cima que tem matrícula, separadas por "¦"
+function juntarContinuacoes(t){ const out=[];
+  for(const raw of String(t).split(/\r?\n/)){ const l=raw.trim(); if(!l) continue;
+    const ws=l.split(/\s+/);
+    const cont=!/\d/.test(l)&&/^[A-ZÀ-Ú' ]+$/.test(l)&&ws.length<=4&&ws.every(w=>w.length>=2&&!RUIDO.has(w)&&!GRADS_SIGLA.has(w));
+    if(cont&&out.length&&RE_MAT.test(out[out.length-1].split('¦')[0])) out[out.length-1]+=' ¦ '+l; else out.push(l); }
+  return out; }
+function parseLinhaFlex(l00){
+  const [l0,...resto]=String(l00).split('¦'), contW=resto.join(' ').trim().split(/\s+/).filter(w=>/^[A-ZÀ-Ú]{2,}$/.test(w)&&!RUIDO.has(w));
+  const l=normGradLonga(l0.replace(/[“”"'`´_*\[\]{}]/g,' ').replace(/[°o](?=\s*(?:TEN|SGT))/gi,'º')
+    .replace(/([A-Za-zÀ-ú])(?=\d{6})/g,'$1 ')                                     // nome grudado na matrícula (foto)
+    .replace(/\bS[6G8]T\b/gi,'SGT').replace(/(^|[\s|])[Il1]CB\b/g,'$1CB').replace(/\b5D\b/g,'SD')); // erros comuns da leitura por foto
   const mm=l.match(RE_MAT); if(!mm) return null;
   const mat=mm[1].replace(/[^\dX]/gi,'').toUpperCase(); if(mat.length<7||mat.length>8) return null;
   const gm=l.match(RE_GRAD); if(!gm) return null;
@@ -628,11 +638,12 @@ function parseLinhaFlex(l0){
     while(w.length&&PART.has(w[w.length-1])) w.pop(); return w; };
   let nome=pega(ig<im?l.slice(ig,im):l.slice(ig));
   if(nome.length<2&&ig>im) nome=pega(l.slice(im+mm[1].length));
+  nome=nome.concat(contW); // resto do nome que veio nas linhas de baixo
   if(nome.length<2) return null;
   return {ordem:0, grad, nome:nome.join(' '), mat, esp:/\bMTD\b/.test(l)?'MTD':'GR', lotacao:'', local:''};
 }
 function parseGenerico(t){ const out=[], vistos=new Set();
-  for(const l of String(t).split(/\r?\n/)){ const p=parseLinhaFlex(l); if(p&&!vistos.has(p.mat)){ vistos.add(p.mat); out.push(p); } }
+  for(const l of juntarContinuacoes(t)){ const p=parseLinhaFlex(l); if(p&&!vistos.has(p.mat)){ vistos.add(p.mat); out.push(p); } }
   out.forEach((p,i)=>p.ordem=i+1); return out; }
 function lerTextoFlex(t){ const a=parseTexto(t), b=parseGenerico(t);
   return {info:extrairInfo(t), policiais:a.policiais.length>=3||a.policiais.length>=b.length?a.policiais:b}; }
@@ -657,7 +668,7 @@ function parseLinhaOCR(l){
 }
 function parseOCR(t){
   let out=[]; for(const l of t.split(/\r?\n/)){ const p=parseLinhaOCR(l); if(p) out.push(p); }
-  const flex=parseGenerico(t); if(flex.length>out.length) out=flex;
+  const flex=parseGenerico(t); if(flex.length>=out.length&&flex.length) out=flex; // a flexível junta nomes quebrados em várias linhas
   out.forEach((p,i)=>p.ordem=i+1);
   return {info:extrairInfo(t), policiais:out};
 }
