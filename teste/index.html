@@ -774,9 +774,29 @@ const novoIdEsc=()=>'s'+Date.now().toString(36)+Math.random().toString(36).slice
 let FQ=LS.get('dp_fisc')||{vtr:'',tel:'',mem:[]}; if(!Array.isArray(FQ.mem)) FQ.mem=[];
 function salvarFQ(){ LS.set('dp_fisc',FQ); }
 /* o oficial da equipe de fiscalização é o responsável/fiscal das escalas do turno (quando a escala ainda não tem um) */
-function sincResp(sc){ const o=FQ.mem.find(m=>m.fn==='of'); if(!o||!sc||(sc.info.resp||'').trim()) return false;
+function sincResp(sc){ vincularFQ(); const o=FQ.mem.find(m=>m.fn==='of'); if(!o||!sc||(sc.info.resp||'').trim()) return false;
   sc.info.resp=((o.gc?o.gc+' ':'')+o.guerra).trim(); if(o.mat) sc.info.respMat=o.mat; return true; }
-function sincRespTodas(){ let mud=false; ESC.forEach(sc=>{ if(sincResp(sc)) mud=true; }); if(mud) LS.set('dp_escalas',ESC); }
+// quem foi digitado na equipe de fiscalização (ou lançado antes de a escala ser aberta) é achado na escala e sai da distribuição
+const _nz=t=>(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[º°O](?=\s*(SGT|TEN))/g,'').replace(/[^A-Z0-9]+/g,' ').trim();
+const _md=t=>(t||'').toUpperCase().replace(/[^\dX]/g,'');
+function vincularFQ(){ let mudE=false, mudF=false;
+  const todos=[]; ESC.forEach(sc=>sc.pol.forEach(p=>todos.push({sc,p})));
+  const usados=new Set(FQ.mem.filter(m=>m.src).map(m=>m.src.e+'|'+m.src.p));
+  FQ.mem.forEach(m=>{
+    if(m.src){ const x=todos.find(t=>t.sc.id===m.src.e&&t.p.id===m.src.p), md=_md(m.mat);
+      // o mesmo policial (mesma matrícula) em outra escala do turno também sai da distribuição
+      todos.filter(t=>t===x||(md.length>=5&&_md(t.p.mat)===md)).forEach(t=>{ if(!t.p.fisc){ t.p.fisc=true; if(t.p.eq){ t.p.eq=null; t.p.fn=null; } mudE=true; } }); return; }
+    const md=_md(m.mat); let c=[];
+    if(md.length>=5) c=todos.filter(t=>_md(t.p.mat)===md);
+    if(!c.length){ const g=_nz(m.guerra), gc=_nz(m.gc); if(!g) return;
+      c=todos.filter(t=>_nz(t.p.guerra)===g&&(!gc||_nz(t.p.gc)===gc)); }
+    c=c.filter(t=>!usados.has(t.sc.id+'|'+t.p.id)&&!t.p.extra);
+    if(c.length!==1) return; const {sc,p}=c[0];
+    p.fisc=true; if(p.eq){ p.eq=null; p.fn=null; } mudE=true; usados.add(sc.id+'|'+p.id);
+    m.src={e:sc.id,p:p.id}; if(!m.gc) m.gc=p.gc; if(!m.mat&&p.mat&&!/^X\d/.test(p.mat)) m.mat=p.mat; if(!m.lotacao) m.lotacao=p.lotacao||''; m.cls=p.cls||m.cls; mudF=true; });
+  if(mudE) LS.set('dp_escalas',ESC); if(mudF) salvarFQ(); return mudE; }
+setTimeout(()=>{ try{ vincularFQ(); }catch(_){} },0);
+function sincRespTodas(){ vincularFQ(); let mud=false; ESC.forEach(sc=>{ if(sincResp(sc)) mud=true; }); if(mud) LS.set('dp_escalas',ESC); }
 let S=null, cad=LS.get('dp_cad')||{}, locais=LS.get('dp_locais')||[], aberto=null, movendo=null;
 const editando=new Set(), obsAbertas=new Set();
 const ST={P:'Presente',F:'Falta',LM:'Licença médica',ERR:'Erro na escala',OUT:'Outro'};
@@ -1055,11 +1075,12 @@ function fqIncluir(){
   else { const g=$('#fqG').value.trim().toUpperCase(), n=$('#fqN').value.trim().toUpperCase().replace(/\s+/g,' '), m=$('#fqM').value.trim();
     if(!n){ $('#fqErr').innerHTML='<div class="msg err">Escolha um policial da escala ou digite o nome.</div>'; return; }
     FQ.mem.push({fn,gc:g,guerra:n,mat:m,lotacao:'',cls:classe(g||n),src:null}); ['#fqG','#fqN','#fqM'].forEach(x=>$(x).value=''); }
-  salvarFQ();
+  salvarFQ(); if(vincularFQ()&&S){ const k=ESC.findIndex(x=>x.id===S.id); if(k>=0) S=ESC[k]; }
   if(fn==='of'){ const o=FQ.mem.find(m=>m.fn==='of'); LS.set('dp_resp',((o.gc?o.gc+' ':'')+o.guerra).trim()); if(o.mat) LS.set('dp_respMat',o.mat); sincRespTodas(); }
   if(fn==='mot') fqFn='pat'; renderFiscEq(); toast('✓ Incluído na equipe de fiscalização'); }
 function fqTirar(k){ const m=FQ.mem[k]; if(!m) return;
-  if(m.src){ const sc=ESC.find(x=>x.id===m.src.e), p=sc&&sc.pol.find(x=>x.id===m.src.p); if(p){ p.fisc=false; LS.set('dp_escalas',ESC); } }
+  if(m.src){ const sc=ESC.find(x=>x.id===m.src.e), p=sc&&sc.pol.find(x=>x.id===m.src.p), md=_md(m.mat); if(p) p.fisc=false;
+    if(md.length>=5) ESC.forEach(e=>e.pol.forEach(q=>{ if(_md(q.mat)===md) q.fisc=false; })); LS.set('dp_escalas',ESC); }
   FQ.mem.splice(k,1); salvarFQ(); renderFiscEq(); }
 function fqSoltarPol(p){ // policial da escala que saiu (falta etc.) deixa a equipe de fiscalização
   if(!p.fisc||!S) return; const k=FQ.mem.findIndex(m=>m.src&&m.src.e===S.id&&m.src.p===p.id); p.fisc=false; if(k>=0){ FQ.mem.splice(k,1); salvarFQ(); toast(nomeP(p)+' saiu da equipe de fiscalização'); } }
