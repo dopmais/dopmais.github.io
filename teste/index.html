@@ -114,7 +114,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 .seg button+button{border-left:1px solid var(--line)}
 .seg button.on{background:var(--navy);color:#fff}
 .mini{border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 8px;font-size:14px;color:var(--navy2)}
-.del{border:0;background:none;color:#98a2b3;font-size:20px;padding:0 2px}
+.del{border:1px solid #e4b4b0;background:#fff;color:#b42318;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:6px 9px;border-radius:3px}
 .tf{display:flex;gap:8px;margin:10px 0}
 .vtrbox{display:flex;border:2px solid var(--navy);border-radius:9px;overflow:hidden;flex:0 0 40%}
 .vtrbox span{background:var(--navy);color:#fff;font-weight:800;font-size:12px;padding:0 8px;display:flex;align-items:center}
@@ -122,7 +122,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 .locbox{flex:1;display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;padding:0 8px;gap:4px;min-width:0}
 .locbox input{border:0;outline:0;width:100%;padding:9px 0;font-size:14.5px;font-weight:600;min-width:0}
 .mlist{display:flex;flex-direction:column;gap:5px}
-.mrow{touch-action:none;display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;background:#f6f7fa;border-left:5px solid #98a2b3;cursor:pointer}
+.mrow{touch-action:manipulation;display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;background:#f6f7fa;border-left:5px solid #98a2b3;cursor:pointer}
 .mrow.open{background:#fff;box-shadow:0 0 0 2px var(--navy2)}
 .rl{font-size:10.5px;font-weight:800;color:#fff;border-radius:5px;padding:3px 0;width:40px;text-align:center;flex:0 0 40px}
 .rl-CMT{background:#111}.rl-MOT{background:#0e7090}.rl-PAT{background:#98a2b3}
@@ -164,7 +164,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 #poolBody{flex:1;overflow-y:auto;padding:8px 10px 10px}
 .grp-t{font-size:11px;font-weight:800;color:var(--mute);text-transform:uppercase;margin:6px 2px 6px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.blk{touch-action:none;border-left:5px solid;border-radius:9px;padding:6px 10px 6px 8px;background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.1);line-height:1.2;cursor:pointer;position:relative;max-width:100%}
+.blk{touch-action:manipulation;border-left:5px solid;border-radius:9px;padding:6px 10px 6px 8px;background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.1);line-height:1.2;cursor:pointer;position:relative;max-width:100%}
 .blk .n{font-weight:800;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .blk .g{font-size:11.5px;font-weight:800;margin-right:3px}
 .blk .m{font-size:10.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -289,6 +289,69 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
   header.top .btn{padding:8px 10px;font-size:13px;flex:0 0 auto}
   .pedit{grid-template-columns:1fr 1fr}
 }
+
+/* ===================== TEMA INSTITUCIONAL ===================== */
+:root{--navy:#0f2747; --navy2:#1d3b66; --bg:#f1f3f6; --line:#d0d5dd; --gold:#a8873a; --ink:#101828; --mute:#5d6b82}
+body{font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;letter-spacing:.1px}
+header.top{background:var(--navy);border-bottom:3px solid var(--gold);height:54px}
+header.top h1{font-weight:600;letter-spacing:.3px}
+#bHome,#bEsc{display:inline-flex;align-items:center;gap:6px;border-radius:3px;box-shadow:none;font-size:12.5px;font-weight:700;padding:7px 10px;text-transform:uppercase;letter-spacing:.6px}
+#bHome{background:#fff;color:var(--navy)}
+#bEsc{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.55)}
+#bHome svg,#bEsc svg{width:16px;height:16px}
+.card{border-radius:4px;border-color:var(--line)}
+.btn,.btn.big,.btn.lt,.btn.danger{border-radius:3px}
+.btn{background:var(--navy)}
+h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy);font-weight:800}
+.sechead{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:var(--mute);text-transform:uppercase;letter-spacing:1px;margin:4px 2px 0}
+.sechead::after{content:'';flex:1;height:1px;background:var(--line)}
+/* números */
+.nums{gap:0;background:#fff;border:1px solid var(--line);border-radius:4px}
+.nums div{border:0;border-radius:0;border-right:1px solid var(--line);padding:10px 4px;background:transparent}
+.nums div:last-child{border-right:0}
+.nums b{font-size:22px;font-weight:700}
+.nums span{font-size:10px;letter-spacing:.6px;color:var(--mute)}
+/* menu: lista de funções, sem cores chamativas */
+.menu{display:flex;flex-direction:column;gap:0;background:#fff;border:1px solid var(--line);border-radius:4px}
+.mitem,.mitem[class*=" c-"]{background:#fff!important;border:0!important;border-bottom:1px solid #e4e7ec!important;border-radius:0;box-shadow:none!important;min-height:0;padding:14px 14px;flex-direction:row;align-items:center;gap:14px}
+.mitem:last-child{border-bottom:0!important}
+.mitem::after{content:'›';margin-left:auto;font-size:24px;color:#98a2b3;line-height:1}
+.mitem[class*=" c-"] b,.mitem b{color:var(--navy);font-size:15px;font-weight:700}
+.mitem[class*=" c-"] small,.mitem small{color:var(--mute);opacity:1;font-weight:500;font-size:12.5px}
+.mitem[class*=" c-"] small.al,.mitem small.al{background:transparent;color:#b54708;font-weight:700;padding:0}
+.mitem .mic{width:38px;height:38px;flex:0 0 38px;display:flex;align-items:center;justify-content:center;background:#eef2f7;border-radius:3px;color:var(--navy);font-size:0}
+.mitem .mic svg{width:21px;height:21px}
+.mitem.prin .mic{background:var(--navy);color:#fff}
+.mitem .mt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.mitem:active{transform:none;background:#f5f7fa!important}
+/* escalas e equipe de fiscalização */
+.esc{border-radius:3px;border-left:4px solid var(--navy);box-shadow:none}
+.esc.atual{border-left-color:var(--gold)}
+.esc .ei b{font-size:15px}
+.esc .est{border-radius:2px;font-weight:700;text-transform:uppercase;font-size:10.5px;letter-spacing:.5px}
+.esc .ex{border-radius:3px}
+.fqcard{border-radius:4px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold)}
+.fqcard .l1{color:var(--navy);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+.fqcard .ico{width:34px;height:34px;flex:0 0 34px;display:flex;align-items:center;justify-content:center;background:#f6f1e4;color:#7a5f1c;border-radius:3px}
+.fqcard .ico svg{width:20px;height:20px}
+.fqcard .ed{color:var(--navy)!important}
+.fqtag{border-radius:2px}
+.file{border:1px solid var(--line);border-radius:4px;background:#fff;padding:20px 10px}
+.file .ic{display:inline-flex;width:44px;height:44px;align-items:center;justify-content:center;background:#eef2f7;color:var(--navy);border-radius:3px}
+.file .ic svg{width:24px;height:24px}
+.file strong{font-size:15px}
+/* acesso */
+.gate{background:var(--navy)}
+.gcard{border-radius:4px;border-top:4px solid var(--gold);box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.glogo{font-weight:800;letter-spacing:2px}
+.glogo span{color:var(--gold)}
+.gcard input{border-radius:3px}
+/* geral */
+.team.act,.team.col{border-radius:4px}
+.blk{border-radius:3px}
+.msg,.toast{border-radius:3px}
+.tg,.fbtn,.selbar button,.segf button{border-radius:3px}
+.assin{color:#98a2b3}
 </style>
 </head>
 <body>
@@ -307,9 +370,9 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 
 <div style="background:#c9a227;color:#14213d;text-align:center;font-weight:900;font-size:12.5px;padding:5px">VERSÃO DE TESTE · dados separados do app oficial</div>
 <header class="top">
-  <button class="hide" id="bHome">🏠 Início</button>
+  <button class="hide" id="bHome">Início</button>
   <h1 id="ttl">DOP+</h1>
-  <button class="hide" id="bEsc">📚 Escalas</button>
+  <button class="hide" id="bEsc">Escalas</button>
   <button class="btn gh hide" id="bServ">Serviço</button>
   <button class="btn gh hide" id="bConf">Efetivo</button>
   <button class="btn gh hide" id="bFisc">Fiscalizar</button>
@@ -329,12 +392,12 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
     <div class="tiles">
       <label class="file">
         <input type="file" id="fPdf" accept="application/pdf,.pdf" multiple>
-        <span class="ic">📄</span><strong>Escala em PDF</strong>
+        <span class="ic" data-ico="pdf"></span><strong>Escala em PDF</strong>
         <span class="muted">Baixada no celular ou recebida no WhatsApp (pode escolher várias)</span>
       </label>
       <label class="file">
         <input type="file" id="fFoto" accept="image/*" multiple>
-        <span class="ic">📷</span><strong>Foto da escala</strong>
+        <span class="ic" data-ico="camera"></span><strong>Foto da escala</strong>
         <span class="muted">Tirar foto ou escolher da galeria (várias fotos = 1 escala)</span>
       </label>
     </div>
@@ -357,7 +420,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 <!-- EQUIPE DE FISCALIZAÇÃO DO TURNO -->
 <section class="screen stack hide" id="fisceq">
   <div class="card stack">
-    <h2 style="margin:0">👮 Equipe de fiscalização do turno</h2>
+    <h2 style="margin:0">Equipe de fiscalização do turno</h2>
     <div class="muted">Vale para todas as escalas do turno e sai no início de cada relatório.</div>
     <div class="info-grid">
       <div><label>VTR do fiscal</label><input id="fqVtr" placeholder="nº" autocomplete="off"></div>
@@ -404,7 +467,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
     </div>
   </div>
   <button class="btn big" id="bIrMontar">Começar a distribuição →</button>
-  <button class="btn danger" id="bNova" style="width:100%">🗑 Excluir esta escala</button>
+  <button class="btn danger" id="bNova" style="width:100%">Excluir esta escala</button>
   <div class="assin">Ten. Antoniel - SO</div>
 </section>
 
@@ -431,7 +494,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 <section class="hide" id="montar">
   <div id="teams"></div>
   <aside id="pool">
-    <div class="poolhead"><div class="phrow"><div style="flex:1;min-width:0"><div class="t" id="poolTitle"></div><div class="sub" id="poolSub"></div></div><button class="fbtn selb" id="bSel">☑ Vários</button><button class="fbtn" id="bFaltas">🚫 Marcar falta</button></div><div id="selBar"></div></div>
+    <div class="poolhead"><div class="phrow"><div style="flex:1;min-width:0"><div class="t" id="poolTitle"></div><div class="sub" id="poolSub"></div></div><button class="fbtn selb" id="bSel">Vários</button><button class="fbtn" id="bFaltas">🚫 Marcar falta</button></div><div id="selBar"></div></div>
     <div id="poolBody" data-drop="pool"></div>
   </aside>
 </section>
@@ -453,7 +516,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 <!-- 5. FISCALIZAÇÃO (durante o serviço) -->
 <section class="screen stack hide" id="fiscal">
   <div class="fbar"><div class="muted" id="fResumo"></div></div>
-  <div class="muted">Durante o serviço: registre quando passar pela equipe (<b>✓ Fiscalizada</b>) e quando mudar a equipe de lugar (<b>🔁 Remanejar</b>). O horário entra sozinho.</div>
+  <div class="muted">Durante o serviço: registre quando passar pela equipe (<b>✓ Fiscalizada</b>) e quando mudar a equipe de lugar (<b>Remanejar</b>). O horário entra sozinho.</div>
   <button class="btn danger" id="bAddAlt" style="width:100%">＋ Registrar alteração</button>
   <div id="fAlts"></div>
   <div id="fBody" class="stack"></div>
@@ -523,7 +586,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
   <div class="box stack" style="max-width:440px;margin-top:14vh">
     <h2 style="margin:0" id="nvTit">Excluir esta escala?</h2>
     <div id="nvTxt"></div>
-    <button class="btn wa" id="nvPdf">📄 Gerar PDF agora</button>
+    <button class="btn wa" id="nvPdf">Gerar PDF agora</button>
     <button class="btn danger" id="nvApagar">Já enviei, pode apagar</button>
     <button class="btn lt" id="nvNao">Cancelar</button>
   </div>
@@ -726,7 +789,7 @@ const TIPOS=['VIATURA','A PÉ','ÔNIBUS']; // a pé: todos juntos, sem motorista
 const temMot=t=>t==='VIATURA'||t==='ÔNIBUS';
 const temVtr=t=>t==='VIATURA'||t==='ÔNIBUS'; // nº da VTR ou prefixo do ônibus
 const temCmt=t=>t!=='ÔNIBUS';
-const TIPOLBL={'VIATURA':'🚓 Viatura','A PÉ':'🚶 A pé','ÔNIBUS':'🚌 Ônibus'};
+const TIPOLBL={'VIATURA':'Viatura','A PÉ':'A pé','ÔNIBUS':'Ônibus'};
 const P=id=>S.pol.find(p=>p.id===id);
 const membros=eid=>S.pol.filter(p=>p.eq===eid&&!A(p)).sort((a,b)=>a.ordem-b.ordem);
 const ocup=(eid,fn)=>S.pol.find(p=>p.eq===eid&&!A(p)&&p.fn===fn)||null;
@@ -753,9 +816,9 @@ const cmtEq=e=>{ const o=ordemEquipe(e).find(([t])=>t==='CMT'); return o?o[1]:nu
 const telEq=e=>{ if((e.tel||'').trim()) return e.tel.trim(); const c=cmtEq(e); return (c&&c.mat&&telsMem()[c.mat])||''; };
 function fmtTel(t){ const d=soDig(t).replace(/^55(?=\d{10,11}$)/,''); if(d.length===11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`; if(d.length===10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`; return t; }
 const telIntl=t=>{ const d=soDig(t); return d.length>=12&&d.startsWith('55')?d:'55'+d; };
-const ICON_WA='💬';
+const ICON_WA='';
 function botoesTel(t){ const d=soDig(t); if(d.length<10) return '';
-  return `<a class="tbt lig" href="tel:+${telIntl(t)}" target="_top">📞 Ligar</a><a class="tbt wa" href="https://wa.me/${telIntl(t)}" target="_blank" rel="noopener">${ICON_WA} WhatsApp</a>`; }
+  return `<a class="tbt lig" href="tel:+${telIntl(t)}" target="_top">Ligar</a><a class="tbt wa" href="https://wa.me/${telIntl(t)}" target="_blank" rel="noopener">${ICON_WA} WhatsApp</a>`; }
 const metaP=p=>[p.lotacao,p.mat&&!/^X\d/.test(p.mat)?p.mat:''].filter(Boolean).join(' · ');
 function ordemEquipe(e){ const c=temCmt(e.tipo)?ocup(e.id,'cmt'):null, m=temMot(e.tipo)?ocup(e.id,'mot'):null;
   return [c&&['CMT',c], m&&['MOT',m], ...pats(e.id).map(p=>['PAT',p])].filter(Boolean); }
@@ -803,6 +866,22 @@ function migrar(){ // aceita distribuições salvas pela versão anterior
   if(!S.equipes.find(e=>e.id===S.ativa)) S.ativa=S.equipes[0].id;
 }
 
+
+/* ================== ÍCONES (traço simples, sem emoji) ================== */
+const _sv=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const ICO={
+  inicio:_sv('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>'),
+  escalas:_sv('<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M8 8h8M8 12h8M8 16h5"/>'),
+  equipes:_sv('<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.9.4 5 2.8 5 5.8"/>'),
+  fiscal:_sv('<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.3-4.3"/><path d="M8.5 11l1.8 1.8L14 9.5"/>'),
+  efetivo:_sv('<rect x="5" y="4" width="14" height="17" rx="1"/><path d="M9 4V3h6v1"/><path d="M8.5 10h7M8.5 14h7M8.5 18h4"/>'),
+  servico:_sv('<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>'),
+  relatorio:_sv('<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/>'),
+  escudo:_sv('<path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>'),
+  pdf:_sv('<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h4"/>'),
+  camera:_sv('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),
+};
+
 /* ================== NAVEGAÇÃO ================== */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
@@ -821,13 +900,13 @@ function renderInicio(){
   $('#iOper').textContent=S.info.local||S.info.escala||'Serviço';
   $('#iLocal').textContent=[S.info.missao?'Missão: '+S.info.missao:'', S.info.resp?'Responsável/fiscal: '+S.info.resp:'Responsável/fiscal não preenchido'].filter(Boolean).join(' · ');
   $('#iNums').innerHTML=[['Escalados',n.escal],['Presentes',n.pres],['Faltas',n.F],['Equipes',eqs.length]].map(([t,v])=>`<div><b>${v}</b><span>${t}</span></div>`).join('');
-  const it=(id,ic,tit,sub,cls,al)=>`<button class="mitem ${cls||''}" data-ir="${id}"><span class="mic">${ic}</span><b>${tit}</b><small class="${al?'al':''}">${sub}</small></button>`;
+  const it=(id,ic,tit,sub,cls,al)=>`<button class="mitem ${cls||''}" data-ir="${id}"><span class="mic">${ic}</span><span class="mt"><b>${tit}</b><small class="${al?'al':''}">${sub}</small></span></button>`;
   $('#iMenu').innerHTML=
-    it('montar','👥','Distribuição', n.sem.length?`${n.sem.length} policial(is) sem equipe`:`Todos distribuídos · ${n.emp} empregados`,'prin c-dist',n.sem.length>0)+
-    it('fiscal','🔍','Fiscalizar', eqs.length?`${fz} de ${eqs.length} fiscalizadas`+(rm?` · ${rm} remanej.`:'')+(na?` · ${na} alteração(ões)`:''):'Monte as equipes primeiro','c-fisc',eqs.length&&fz<eqs.length)+
-    it('conferir','📋','Efetivo', n.F||n.LM||n.ERR||n.OUT?`${n.F} falta(s) · ${n.LM+n.ERR+n.OUT} outra(s)`:'Presença de todos','c-efet')+
-    it('servico','⚙️','Dados do serviço', S.info.resp?'Responsável preenchido':'Falta o responsável/fiscal','c-serv',!S.info.resp)+
-    it('rel','📄','Relatório','Gerar e enviar o PDF','c-rel');
+    it('montar',ICO.equipes,'Distribuição', n.sem.length?`${n.sem.length} policial(is) sem equipe`:`Todos distribuídos · ${n.emp} empregados`,'prin c-dist',n.sem.length>0)+
+    it('fiscal',ICO.fiscal,'Fiscalizar', eqs.length?`${fz} de ${eqs.length} fiscalizadas`+(rm?` · ${rm} remanej.`:'')+(na?` · ${na} alteração(ões)`:''):'Monte as equipes primeiro','c-fisc',eqs.length&&fz<eqs.length)+
+    it('conferir',ICO.efetivo,'Efetivo', n.F||n.LM||n.ERR||n.OUT?`${n.F} falta(s) · ${n.LM+n.ERR+n.OUT} outra(s)`:'Presença de todos','c-efet')+
+    it('servico',ICO.servico,'Dados do serviço', S.info.resp?'Responsável preenchido':'Falta o responsável/fiscal','c-serv',!S.info.resp)+
+    it('rel',ICO.relatorio,'Relatório','Gerar e enviar o PDF','c-rel');
   $('#iFq').innerHTML=fqCardHTML();
   if(typeof infoAcesso==='function') infoAcesso();
 }
@@ -870,7 +949,7 @@ function avisoLeitura(ok,erros,foto){
 const ausS=p=>!!p.st&&p.st!=='P';
 function statsEsc(s){ const pol=s.pol, eqs=s.equipes.filter(e=>pol.some(p=>p.eq===e.id&&!ausS(p)));
   return {n:pol.length, eqs:eqs.length, sem:pol.filter(p=>!p.eq&&!ausS(p)&&!p.fisc).length, fz:eqs.filter(e=>(e.hist||[]).some(h=>h.tipo==='fisc')).length, fal:pol.filter(p=>p.st==='F').length}; }
-const ICORIG={pdf:'📄 PDF',foto:'📷 foto',texto:'⌨ texto',exemplo:'🧪 teste'};
+const ICORIG={pdf:'PDF',foto:'foto',texto:'texto',exemplo:'teste'};
 function cardEsc(s){ const k=statsEsc(s), t=s.info.local||s.info.escala||'Escala sem nome';
   const sub=[(s.info.data||'').replace(/\s*\(.*\)/,''), s.info.periodo].filter(Boolean).join(' · ');
   const st=!s.iniciado?['nova','Não iniciada · toque para começar']:[k.sem?'':'ok', `${k.eqs} equipe(s) · ${k.sem?k.sem+' sem equipe':'todos distribuídos'} · ${k.fz}/${k.eqs} fiscalizada(s)`];
@@ -949,10 +1028,12 @@ function fqPreencherOficial(){ // o oficial fiscal começa com o responsável j�
   FQ.mem.unshift({fn:'of',gc:'',guerra:r.toUpperCase(),mat:(LS.get('dp_respMat')||'').trim(),lotacao:'',cls:classe(r),src:null}); salvarFQ(); sincRespTodas(); }
 function fqCardHTML(){ const o=fqOrd();
   const l2=o.length?o.map(m=>FQTAG[m.fn]+' '+nomeFQ(m)).join(' · '):'Toque para incluir o oficial fiscal, motorista, patrulheiro e VTR';
-  return `<span style="font-size:24px">👮</span><div class="info"><div class="l1">Equipe de fiscalização do turno${FQ.vtr?' · VTR '+esc(FQ.vtr):''}</div><div class="l2">${esc(l2)}</div></div><span class="ed" style="font-weight:800;color:#7a5200">${o.length?'✎':'＋'}</span>`; }
+  return `<span class="ico">${ICO.escudo}</span><div class="info"><div class="l1">Equipe de fiscalização do turno${FQ.vtr?' · VTR '+esc(FQ.vtr):''}</div><div class="l2">${esc(l2)}</div></div><span class="ed" style="font-weight:800;color:#7a5200">${o.length?'✎':'＋'}</span>`; }
 let fqVolta='importar', fqFn='mot';
 function irFiscEq(volta){ fqVolta=volta||tela; fqPreencherOficial(); renderFiscEq(); mostrar('fisceq'); window.scrollTo(0,0); }
-function livresTurno(){ const out=[]; ESC.forEach(sc=>sc.pol.forEach(p=>{ if(!p.eq&&!ausS(p)&&!p.fisc) out.push({sc,p}); })); return out; }
+function livresTurno(){ const out=[]; ESC.forEach(sc=>sc.pol.forEach(p=>{ if(!ausS(p)&&!p.fisc) out.push({sc,p}); }));
+  return out.sort((a,b)=>(a.p.eq?1:0)-(b.p.eq?1:0)); } // quem já está em equipe vem por último e sai de lá se for escolhido
+const eqDe=(sc,p)=>p.eq?sc.equipes.findIndex(x=>x.id===p.eq)+1:0;
 function renderFiscEq(){
   $('#fqVtr').value=FQ.vtr||''; $('#fqTel').value=FQ.tel||'';
   const o=fqOrd();
@@ -961,14 +1042,15 @@ function renderFiscEq(){
   $$('#fqFn button').forEach(b=>b.classList.toggle('on',b.dataset.fn===fqFn));
   const L=livresTurno(), varias=ESC.length>1;
   $('#fqSel').innerHTML=`<option value="">${L.length?'— escolher policial da escala —':'— nenhum policial disponível nas escalas —'}</option>`+
-    L.map(({sc,p})=>`<option value="${esc(sc.id)}|${esc(p.id)}">${esc(nomeP(p))}${p.mat&&!/^X\d/.test(p.mat)?' · '+esc(p.mat):''}${varias?' — '+esc(sc.info.local||sc.info.escala||'escala'):''}</option>`).join('');
+    L.map(({sc,p})=>`<option value="${esc(sc.id)}|${esc(p.id)}">${esc(nomeP(p))}${p.mat&&!/^X\d/.test(p.mat)?' · '+esc(p.mat):''}${varias?' — '+esc(sc.info.local||sc.info.escala||'escala'):''}${p.eq?' (está na Equipe '+eqDe(sc,p)+' – sai de lá)':''}</option>`).join('');
   $('#fqErr').innerHTML=''; }
 function fqIncluir(){
   const fn=fqFn, v=$('#fqSel').value;
   if(fn==='of'&&FQ.mem.some(m=>m.fn==='of')){ $('#fqErr').innerHTML='<div class="msg err">Já há um oficial na equipe. Tire-o (✕) para trocar.</div>'; return; }
   if(fn==='mot'&&FQ.mem.some(m=>m.fn==='mot')){ $('#fqErr').innerHTML='<div class="msg err">Já há um motorista. Tire-o (✕) para trocar, ou inclua como patrulheiro.</div>'; return; }
-  if(v){ const [eid,pid]=v.split('|'); const sc=ESC.find(x=>x.id===eid), p=sc&&sc.pol.find(x=>x.id===pid); if(!p) return;
-    p.fisc=true; LS.set('dp_escalas',ESC);
+  if(v){ const [eid,pid]=v.split('|'); const sc=(S&&S.id===eid)?S:ESC.find(x=>x.id===eid), p=sc&&sc.pol.find(x=>x.id===pid); if(!p) return;
+    if(p.eq){ const n=eqDe(sc,p); p.eq=null; p.fn=null; toast(nomeP(p)+' saiu da Equipe '+n+' e foi para a fiscalização'); }
+    p.fisc=true; if(S&&S.id===eid) salvar(); LS.set('dp_escalas',ESC);
     FQ.mem.push({fn,gc:p.gc,guerra:p.guerra,mat:p.mat&&!/^X\d/.test(p.mat)?p.mat:'',lotacao:p.lotacao,cls:p.cls,src:{e:eid,p:pid}}); }
   else { const g=$('#fqG').value.trim().toUpperCase(), n=$('#fqN').value.trim().toUpperCase().replace(/\s+/g,' '), m=$('#fqM').value.trim();
     if(!n){ $('#fqErr').innerHTML='<div class="msg err">Escolha um policial da escala ou digite o nome.</div>'; return; }
@@ -1001,7 +1083,7 @@ $('#nvApagar').onclick=()=>{ $('#mNova').classList.add('hide'); const f=nvAcao; 
 $('#nvPdf').onclick=()=>{ $('#mNova').classList.add('hide'); abrirRel(); };
 
 /* ================== EFETIVO / ALTERAÇÕES ================== */
-function linhaTopo(p){ return `<span class="pn">${p.extra?'+':p.ordem}</span><span class="gtag" style="background:var(--${p.cls}-bg);color:var(--${p.cls})">${esc(p.gc||'?')}</span><b class="pnm">${esc(p.guerra)}</b><span class="pmeta">${esc(metaP(p))}</span>${p.fisc?'<span class="fisctag">👮 Fiscalização</span>':''}`; }
+function linhaTopo(p){ return `<span class="pn">${p.extra?'+':p.ordem}</span><span class="gtag" style="background:var(--${p.cls}-bg);color:var(--${p.cls})">${esc(p.gc||'?')}</span><b class="pnm">${esc(p.guerra)}</b><span class="pmeta">${esc(metaP(p))}</span>${p.fisc?'<span class="fisctag">Fiscalização</span>':''}`; }
 function rowConf(p,ed){
   const showEd=ed||editando.has(p.id), showObs=A(p)||!!p.obs||obsAbertas.has(p.id);
   return `<div class="prow${A(p)?' aus':''}" data-id="${esc(p.id)}">
@@ -1056,14 +1138,14 @@ function equipeAberta(e){
     <div class="th"><span class="ttl">EQUIPE ${n}${e.salva?'<small>editando</small>':''}</span>
       <div class="seg">${TIPOS.map(t=>`<button data-tipo="${t}" class="${t===e.tipo?'on':''}">${TIPOLBL[t]}</button>`).join('')}</div>
       ${e.salva&&idx>0?`<button class="mini" data-sobe="1" title="Subir">↑</button>`:''}${e.salva&&idx<S.equipes.length-1&&S.equipes[idx+1].salva?`<button class="mini" data-desce="1" title="Descer">↓</button>`:''}
-      <button class="del" data-del="${e.id}" title="Apagar equipe">🗑</button></div>
+      <button class="del" data-del="${e.id}" title="Apagar equipe">Excluir</button></div>
     <div class="tf">${temVtr(e.tipo)?`<label class="vtrbox"><span>${e.tipo==='ÔNIBUS'?'ÔNIBUS':'VTR'}</span><input data-f="vtr" value="${esc(e.vtr)}" placeholder="${e.tipo==='ÔNIBUS'?'prefixo':'nº'}" autocomplete="off"></label>`:''}
-      <label class="locbox">📍<input data-f="setor" list="dlLoc" value="${esc(e.setor)}" placeholder="Local do policiamento" autocomplete="off"></label>
-      <label class="telbox">📞<input data-f="tel" type="tel" inputmode="tel" value="${esc(telEq(e))}" placeholder="${temCmt(e.tipo)?'Telefone do comandante (com DDD)':'Telefone de contato (com DDD)'}" autocomplete="off"></label></div>
+      <label class="locbox"><input data-f="setor" list="dlLoc" value="${esc(e.setor)}" placeholder="Local do policiamento" autocomplete="off"></label>
+      <label class="telbox"><input data-f="tel" type="tel" inputmode="tel" value="${esc(telEq(e))}" placeholder="${temCmt(e.tipo)?'Telefone do comandante (com DDD)':'Telefone de contato (com DDD)'}" autocomplete="off"></label></div>
     <div class="mlist">${linhas}
-      <div class="nexthint">${e.tipo==='ÔNIBUS'?'Toque nos nomes (ou use <b>☑ Vários</b>) → entram na lista do ônibus; motorista CAT D entra como <b>MOTORISTA</b>':`Toque num nome da lista → entra como <b>${NOMEF[pf]}</b>`}${o.length===1?'<br><span style="color:var(--warn)">mínimo de 2 policiais por equipe</span>':''}</div></div>
+      <div class="nexthint">${e.tipo==='ÔNIBUS'?'Toque nos nomes (ou use <b>Vários</b>) → entram na lista do ônibus; motorista CAT D entra como <b>MOTORISTA</b>':`Toque num nome da lista → entra como <b>${NOMEF[pf]}</b>`}${o.length===1?'<br><span style="color:var(--warn)">mínimo de 2 policiais por equipe</span>':''}</div></div>
     <div id="tErr"></div>
-    <div class="tbtns">${e.salva?'<button class="btn save" data-salvar="1">✓ Salvar alterações</button>':'<button class="btn save" data-salvar="1">💾 Salvar equipe</button>'}</div>
+    <div class="tbtns">${e.salva?'<button class="btn save" data-salvar="1">✓ Salvar alterações</button>':'<button class="btn save" data-salvar="1">Salvar equipe</button>'}</div>
   </div>`;
 }
 function equipeFechada(e){
@@ -1084,16 +1166,16 @@ function renderMontar(){
   const catd=livres.filter(p=>p.mot), resto=livres.filter(p=>!p.mot);
   const faltosos=S.pol.filter(p=>p.st==='F');
   $('#pool').classList.toggle('mfalta',modoFalta); $('#bFaltas').classList.toggle('on',modoFalta);
-  $('#pool').classList.toggle('msel',selVarios); $('#bSel').classList.toggle('on',selVarios); $('#bSel').textContent=selVarios?'✕ Sair':'☑ Vários'; $('#bSel').classList.toggle('hide',modoFalta);
+  $('#pool').classList.toggle('msel',selVarios); $('#bSel').classList.toggle('on',selVarios); $('#bSel').textContent=selVarios?'Sair da seleção':'Vários'; $('#bSel').classList.toggle('hide',modoFalta);
   [...sel].forEach(id=>{ if(!livres.some(p=>p.id===id)) sel.delete(id); });
   $('#selBar').innerHTML=selVarios&&!modoFalta?`<div class="selbar"><button data-sa="todos">Todos (${livres.length})</button><button data-sa="nenhum">Limpar</button><button class="ok" data-sa="ok"${sel.size?'':' disabled'}>Colocar ${sel.size} na EQUIPE ${numEq(a)}</button></div>`:'';
-  $('#bFaltas').textContent=modoFalta?'✓ Concluir':'🚫 Marcar falta';
+  $('#bFaltas').textContent=modoFalta?'Concluir':'Marcar falta';
   $('#poolTitle').textContent = modoFalta ? `Marcar falta${faltosos.length?' · '+faltosos.length+' falta(s)':''}`
     : livres.length ? `Falta distribuir: ${livres.length}`+(alt?` · ${alt} alteração(ões)`:'') : 'Todos distribuídos ✓';
   if(selVarios&&!modoFalta){ $('#poolTitle').textContent=`Selecionados: ${sel.size} de ${livres.length}`; }
   $('#poolSub').innerHTML = modoFalta ? 'Toque em quem <b style="color:#b42318">FALTOU</b>. Tocou errado? Toque de novo para desfazer.'
     : selVarios ? `Toque nos nomes para marcar e coloque todos de uma vez na <b>EQUIPE ${numEq(a)}</b>.`
-    : livres.length ? `Toque no nome para pôr na <b>EQUIPE ${numEq(a)}</b>` : 'Toque em <b>🏠 Início</b> para Fiscalizar ou gerar o Relatório.';
+    : livres.length ? `Toque no nome para pôr na <b>EQUIPE ${numEq(a)}</b>` : 'Toque em <b>Início</b> para Fiscalizar ou gerar o Relatório.';
   if(modoFalta){ $('#poolBody').innerHTML=(livres.length?`<div class="grp-t">Escalados</div><div class="chips">${livres.map(chipHTML).join('')}</div>`:'<div class="muted" style="padding:8px">Ninguém sobrando na lista.</div>')+
       (faltosos.length?`<div class="grp-t" style="color:#b42318">Faltaram (${faltosos.length}) — toque para desfazer</div><div class="chips">${faltosos.map(p=>chipHTML(p).replace('class="blk ','class="blk falt ')).join('')}</div>`:'')+
       '<div class="muted" style="padding:6px 2px">Quem já está numa equipe: marque a falta em <b>Efetivo</b> ou, durante o serviço, em <b>Fiscalizar → Registrar alteração</b>.</div>';
@@ -1116,6 +1198,7 @@ function verAtiva(foco){ const t=document.querySelector('.team.act'); if(t){ t.s
 function abrir(eid,foco){ S.ativa=eid; aberto=null; movendo=null; salvar(); renderMontar(); verAtiva(foco); }
 function mover(id,dest){
   const p=P(id); if(!p) return; const orig=p.eq;
+  if(p.fisc&&dest!=='pool'){ toast(nomeP(p)+' está na equipe de fiscalização'); renderMontar(); return; }
   if(dest==='pool'){ p.eq=null; p.fn=null; }
   else { const e=S.equipes.find(x=>x.id===dest); if(!e||(p.eq===e.id)) return; colocar(p,e,proxFuncao(e,p)); }
   if(orig&&orig!==p.eq) normalizar(orig);
@@ -1157,27 +1240,18 @@ $('#teams').addEventListener('input',e=>{ const f=e.target.dataset.f; if(f==='te
 $('#teams').addEventListener('change',e=>{ if(e.target.dataset.f==='setor'){ lembrarLocal(e.target.value); $('#dlLoc').innerHTML=locais.map(l=>`<option value="${esc(l)}">`).join(''); } });
 $('#teams').addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.dataset.f){ e.target.blur(); } });
 
-// toque = colocar na equipe aberta; arrastar também funciona (tablet/computador)
+// só toque: tocar coloca na equipe aberta (sem arrastar — rolar a lista nunca move ninguém)
 let drag=null;
 document.addEventListener('pointerdown',e=>{
   const b=e.target.closest('#montar .blk, #montar .mrow'); if(!b||e.button>0) return;
-  drag={id:b.dataset.id,el:b,x:e.clientX,y:e.clientY,on:false,ghost:null,over:null};
-  try{b.setPointerCapture(e.pointerId);}catch(_){}
+  drag={id:b.dataset.id,el:b,x:e.clientX,y:e.clientY};
 });
 document.addEventListener('pointermove',e=>{
-  if(!drag) return;
-  if(!drag.on){ if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<10) return;
-    drag.on=true; const g=drag.el.cloneNode(true); g.classList.add('ghost'); g.style.width=Math.min(drag.el.offsetWidth,260)+'px';
-    document.body.appendChild(g); drag.ghost=g; drag.el.classList.add('dragging'); }
-  drag.ghost.style.left=e.clientX+'px'; drag.ghost.style.top=e.clientY+'px';
-  const alvo=document.elementFromPoint(e.clientX,e.clientY); const z=alvo&&alvo.closest('[data-drop]');
-  if(drag.over&&drag.over!==z) drag.over.classList.remove('drop-on'); if(z) z.classList.add('drop-on'); drag.over=z;
-  for(const sc of [$('#teams'),$('#poolBody')]){ const r=sc.getBoundingClientRect();
-    if(e.clientX>=r.left&&e.clientX<=r.right){ if(e.clientY<r.top+50&&e.clientY>r.top-30) sc.scrollTop-=14; else if(e.clientY>r.bottom-50&&e.clientY<r.bottom+30) sc.scrollTop+=14; } }
+  if(drag&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>=10) drag=null; // dedo andou = rolagem, não toque
 });
 function alternarFalta(id){ const p=P(id); if(!p) return;
   if(p.st==='F'){ p.st='P'; delete p.faltaServ; toast(nomeP(p)+' voltou para a lista'); }
-  else { p.st='F'; if(p.eq){ const o=p.eq; p.eq=null; p.fn=null; normalizar(o); } toast('🚫 '+nomeP(p)+' – falta'); }
+  else { p.st='F'; if(p.eq){ const o=p.eq; p.eq=null; p.fn=null; normalizar(o); } toast(nomeP(p)+' – falta'); }
   salvar(); renderMontar(); }
 $('#bFaltas').onclick=()=>{ modoFalta=!modoFalta; if(modoFalta){ selVarios=false; sel.clear(); } aberto=null; movendo=null; renderMontar(); };
 $('#bSel').onclick=()=>{ selVarios=!selVarios; sel.clear(); aberto=null; movendo=null; renderMontar(); };
@@ -1190,8 +1264,6 @@ $('#selBar').addEventListener('click',ev=>{ const b=ev.target.closest('[data-sa]
   else if(k==='ok') colocarVarios(); });
 function fimDrag(cancel){
   if(!drag) return; const d=drag; drag=null;
-  if(d.on){ d.ghost.remove(); d.el.classList.remove('dragging'); if(d.over) d.over.classList.remove('drop-on');
-    if(!cancel&&d.over&&!modoFalta) mover(d.id,d.over.dataset.drop); else renderMontar(); return; }
   if(cancel) return;
   if(d.el.classList.contains('mrow')){ aberto = aberto===d.id?null:d.id; movendo=null; renderMontar(); return; }
   if(modoFalta){ alternarFalta(d.id); return; }
@@ -1210,11 +1282,11 @@ function cardFiscal(e){
   const hist=(e.hist||[]).map((x,k)=>`<div class="hi"><span>${esc(linhasHist({hist:[x]})[0])}</span><button data-rmh="${k}" title="Apagar registro">✕</button></div>`).join('');
   return `<div class="fteam" data-eq="${e.id}">
     <div class="fh"><b>${esc(rotulo(e))}${e.tipo==='A PÉ'?' · A PÉ':''}</b><span class="cnt">${o.length} PM</span></div>
-    <div class="pt">📍 ${esc(atual||'Local não informado')}${r.length?`<small>Remanejada ${r.length}x · início: ${esc(pontoIni(e)||'—')}</small>`:''}</div>
+    <div class="pt">${esc(atual||'Local não informado')}${r.length?`<small>Remanejada ${r.length}x · início: ${esc(pontoIni(e)||'—')}</small>`:''}</div>
     <div class="nomes">${esc(nomes)}</div>
     ${(()=>{ const c=cmtEq(e), t=telEq(e); return `<div class="ftel"><span class="nm">${temCmt(e.tipo)?'CMT: '+(c?esc(nomeP(c)):'—'):'Contato'}${t?' · '+esc(fmtTel(t)):''}</span>${t?botoesTel(t):`<input data-ftel="1" type="tel" inputmode="tel" placeholder="📞 Telefone ${temCmt(e.tipo)?'do comandante':'de contato'} (com DDD)">`}</div>`; })()}
     <div class="st ${f.length?'sim':'nao'}">${f.length?`✓ Fiscalizada ${f.length}x · última às ${hFmt(f[f.length-1].h)}`:'Ainda não fiscalizada'}</div>
-    <div class="acts"><button class="btn save" data-fisc="1">✓ Fiscalizada</button><button class="btn lt" data-rem="1">🔁 Remanejar</button></div>
+    <div class="acts"><button class="btn save" data-fisc="1">✓ Fiscalizada</button><button class="btn lt" data-rem="1">Remanejar</button></div>
     ${hist?`<div class="hist">${hist}</div>`:''}
   </div>`; }
 function renderFiscal(){
@@ -1229,7 +1301,7 @@ $('#bFisc').onclick=irFiscal;
 let acao=null;
 function abrirAcao(tipo,e){
   acao={tipo,eid:e.id}; const rem=tipo==='rem';
-  $('#aTit').textContent=(rem?'🔁 Remanejar ':'✓ Fiscalizar ')+rotulo(e);
+  $('#aTit').textContent=(rem?'Remanejar ':'Fiscalizar ')+rotulo(e);
   $('#aSub').textContent=rem?('Ponto atual: '+(limpaLoc(e.setor)||'não informado')):('Local: '+(limpaLoc(e.setor)||'não informado'));
   $('#aPontoC').classList.toggle('hide',!rem); $('#aPonto').value='';
   $('#aHora').value=agoraHM();
@@ -1322,7 +1394,7 @@ function textoRel(){
   if(i.local) L.push('📍 *Operação:* '+i.local);
   L.push('📅 '+(i.data||'')+(i.periodo?'  ⏰ '+i.periodo:''));
   if(i.missao) L.push('🎯 *Missão:* '+i.missao.trim());
-  if(i.resp) L.push('👮 *Responsável/Fiscal:* '+i.resp+(i.respMat?' – Mat. '+i.respMat:''));
+  if(i.resp) L.push('*Responsável/Fiscal:* '+i.resp+(i.respMat?' – Mat. '+i.respMat:''));
   if(FQ.mem.length){ L.push(''); L.push('*EQUIPE DE FISCALIZAÇÃO*'+(FQ.vtr?' – VTR '+FQ.vtr:'')); fqOrd().forEach(m=>L.push(`▪ ${FQTAG[m.fn]}: ${nomeFQ(m)}${m.mat?' – '+m.mat:''}`)); }
   L.push(''); L.push('*RESUMO DO EFETIVO*');
   L.push(`Escalados: ${n.escal} · Presentes: ${n.pres}`);
@@ -1480,6 +1552,8 @@ $('#bPdfShare').onclick=async()=>{
 $('#bPdfDown').onclick=()=>{ try{ baixarPdf(); }catch(e){ $('#relMsg').textContent='Não foi possível gerar o PDF: '+(e.message||e); } };
 
 /* ================== CONFIRMAÇÃO ================== */
+$('#bHome').innerHTML=ICO.inicio+'Início'; $('#bEsc').innerHTML=ICO.escalas+'Escalas';
+$$('[data-ico]').forEach(el=>el.innerHTML=ICO[el.dataset.ico]||'');
 renderEscalas(); $('#ttl').textContent=titulo();
 function confirmar(t,ok){ $('#cfTxt').textContent=t; $('#mConfirm').classList.remove('hide');
   $('#cfYes').onclick=()=>{$('#mConfirm').classList.add('hide');ok();}; $('#cfNo').onclick=()=>$('#mConfirm').classList.add('hide'); }
