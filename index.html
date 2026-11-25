@@ -114,7 +114,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 .seg button+button{border-left:1px solid var(--line)}
 .seg button.on{background:var(--navy);color:#fff}
 .mini{border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 8px;font-size:14px;color:var(--navy2)}
-.del{border:0;background:none;color:#98a2b3;font-size:20px;padding:0 2px}
+.del{border:1px solid #e4b4b0;background:#fff;color:#b42318;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:6px 9px;border-radius:3px}
 .tf{display:flex;gap:8px;margin:10px 0}
 .vtrbox{display:flex;border:2px solid var(--navy);border-radius:9px;overflow:hidden;flex:0 0 40%}
 .vtrbox span{background:var(--navy);color:#fff;font-weight:800;font-size:12px;padding:0 8px;display:flex;align-items:center}
@@ -122,7 +122,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 .locbox{flex:1;display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;padding:0 8px;gap:4px;min-width:0}
 .locbox input{border:0;outline:0;width:100%;padding:9px 0;font-size:14.5px;font-weight:600;min-width:0}
 .mlist{display:flex;flex-direction:column;gap:5px}
-.mrow{touch-action:none;display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;background:#f6f7fa;border-left:5px solid #98a2b3;cursor:pointer}
+.mrow{touch-action:manipulation;display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;background:#f6f7fa;border-left:5px solid #98a2b3;cursor:pointer}
 .mrow.open{background:#fff;box-shadow:0 0 0 2px var(--navy2)}
 .rl{font-size:10.5px;font-weight:800;color:#fff;border-radius:5px;padding:3px 0;width:40px;text-align:center;flex:0 0 40px}
 .rl-CMT{background:#111}.rl-MOT{background:#0e7090}.rl-PAT{background:#98a2b3}
@@ -148,6 +148,15 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 .phrow{display:flex;align-items:center;gap:8px}
 .fbtn{flex:0 0 auto;border:1.5px solid #f1c0bb;background:#fff;color:#b42318;border-radius:10px;padding:8px 10px;font-size:12.5px;font-weight:800}
 .fbtn.on{background:#b42318;color:#fff;border-color:#b42318}
+.fbtn.selb{border-color:#9fd3e0;color:#0e7090}
+.fbtn.selb.on{background:#0e7090;color:#fff;border-color:#0e7090}
+.blk.sel{outline:3px solid #0e7090;outline-offset:1px}
+.blk.sel::after{content:'✓';position:absolute;top:-7px;left:-6px;background:#0e7090;color:#fff;font-size:11px;font-weight:900;border-radius:50%;width:17px;height:17px;display:flex;align-items:center;justify-content:center}
+#pool.msel .poolhead{background:#eaf7fa}
+.selbar{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+.selbar button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 10px;font-weight:800;font-size:12.5px;color:var(--navy)}
+.selbar button.ok{background:#0e7090;color:#fff;border-color:#0e7090;flex:1}
+.selbar button:disabled{opacity:.45}
 #pool.mfalta .poolhead{background:#fff4f2}
 #pool.mfalta #poolBody .blk:not(.falt){outline:1.5px dashed #f1a59c}
 .blk.falt{background:#f2f4f7!important;border-left-color:#b42318!important;opacity:.85}
@@ -155,7 +164,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 #poolBody{flex:1;overflow-y:auto;padding:8px 10px 10px}
 .grp-t{font-size:11px;font-weight:800;color:var(--mute);text-transform:uppercase;margin:6px 2px 6px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.blk{touch-action:none;border-left:5px solid;border-radius:9px;padding:6px 10px 6px 8px;background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.1);line-height:1.2;cursor:pointer;position:relative;max-width:100%}
+.blk{touch-action:manipulation;border-left:5px solid;border-radius:9px;padding:6px 10px 6px 8px;background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.1);line-height:1.2;cursor:pointer;position:relative;max-width:100%}
 .blk .n{font-weight:800;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .blk .g{font-size:11.5px;font-weight:800;margin-right:3px}
 .blk .m{font-size:10.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -185,6 +194,30 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 /* botão Início do topo: bem visível */
 #bHome{flex:0 0 auto;background:#fff;color:var(--navy);border:0;border-radius:12px;padding:9px 14px;font-size:15px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,.25);white-space:nowrap}
 #bHome:active{transform:scale(.97)}
+#bEsc{flex:0 0 auto;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.6);border-radius:12px;padding:8px 11px;font-size:14px;font-weight:800;white-space:nowrap}
+#bEsc:active{transform:scale(.97)}
+.esc{display:flex;align-items:stretch;gap:8px;background:#fff;border:1px solid var(--line);border-left:6px solid var(--navy2);border-radius:14px;padding:12px;cursor:pointer;box-shadow:0 2px 6px rgba(20,33,61,.08)}
+.esc+.esc{margin-top:10px}
+.esc .ei{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.esc .ei b{font-size:15.5px;color:var(--navy);line-height:1.25}
+.esc .ei small{font-size:12.5px;color:var(--mute)}
+.esc .est{align-self:flex-start;font-size:12px;font-weight:800;border-radius:6px;padding:3px 8px;margin-top:3px;background:#eef1f6;color:var(--navy2)}
+.esc .est.nova{background:#fffaeb;color:var(--warn)}
+.esc .est.ok{background:#ecfdf3;color:var(--ok)}
+.esc .ex{flex:0 0 auto;align-self:flex-start;border:1px solid #f1c0bb;background:#fff;color:var(--err);border-radius:8px;padding:4px 9px;font-weight:800}
+.esc.atual{border-left-color:#c9a227}
+.fqrow{display:flex;align-items:center;gap:8px;padding:9px 4px;border-bottom:1px solid #edf0f5}
+.fqrow .nm{flex:1;min-width:0;font-weight:700}
+.fqrow .nm small{display:block;font-weight:500;color:var(--mute);font-size:12px}
+.fqrow button{border:1px solid #f1c0bb;background:#fff;color:var(--err);border-radius:8px;padding:4px 9px;font-weight:800}
+.fqtag{font-size:11.5px;font-weight:800;color:#fff;border-radius:6px;padding:3px 7px;min-width:38px;text-align:center}
+.fqtag.of{background:#7a1f2b}.fqtag.mot{background:#0e7090}.fqtag.pat{background:#98a2b3}
+.fqcard{display:flex;align-items:center;gap:10px;background:#fff8e6;border:1px solid #f0d58a;border-radius:12px;padding:9px 12px;cursor:pointer}
+.fqcard .info{flex:1;min-width:0}.fqcard .l1{font-weight:800;font-size:13.5px;color:#7a5200}.fqcard .l2{font-size:12.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fisctag{font-size:11px;font-weight:800;background:#fff3d6;color:#8a5a00;border-radius:6px;padding:2px 6px}
+.segf{display:flex;gap:6px;flex-wrap:wrap}.segf button{flex:1;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 6px;font-weight:800;color:var(--navy)}
+.segf button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+#fqSel,.fqin{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;background:#fff}
 /* telefone do comandante */
 .telbox{flex:1 1 100%;display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;padding:0 8px;gap:4px;min-width:0}
 .telbox input{border:0;outline:0;width:100%;padding:9px 0;font-size:14.5px;font-weight:600;min-width:0}
@@ -256,6 +289,69 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
   header.top .btn{padding:8px 10px;font-size:13px;flex:0 0 auto}
   .pedit{grid-template-columns:1fr 1fr}
 }
+
+/* ===================== TEMA INSTITUCIONAL ===================== */
+:root{--navy:#0f2747; --navy2:#1d3b66; --bg:#f1f3f6; --line:#d0d5dd; --gold:#a8873a; --ink:#101828; --mute:#5d6b82}
+body{font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;letter-spacing:.1px}
+header.top{background:var(--navy);border-bottom:3px solid var(--gold);height:54px}
+header.top h1{font-weight:600;letter-spacing:.3px}
+#bHome,#bEsc{display:inline-flex;align-items:center;gap:6px;border-radius:3px;box-shadow:none;font-size:12.5px;font-weight:700;padding:7px 10px;text-transform:uppercase;letter-spacing:.6px}
+#bHome{background:#fff;color:var(--navy)}
+#bEsc{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.55)}
+#bHome svg,#bEsc svg{width:16px;height:16px}
+.card{border-radius:4px;border-color:var(--line)}
+.btn,.btn.big,.btn.lt,.btn.danger{border-radius:3px}
+.btn{background:var(--navy)}
+h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy);font-weight:800}
+.sechead{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:var(--mute);text-transform:uppercase;letter-spacing:1px;margin:4px 2px 0}
+.sechead::after{content:'';flex:1;height:1px;background:var(--line)}
+/* números */
+.nums{gap:0;background:#fff;border:1px solid var(--line);border-radius:4px}
+.nums div{border:0;border-radius:0;border-right:1px solid var(--line);padding:10px 4px;background:transparent}
+.nums div:last-child{border-right:0}
+.nums b{font-size:22px;font-weight:700}
+.nums span{font-size:10px;letter-spacing:.6px;color:var(--mute)}
+/* menu: lista de funções, sem cores chamativas */
+.menu{display:flex;flex-direction:column;gap:0;background:#fff;border:1px solid var(--line);border-radius:4px}
+.mitem,.mitem[class*=" c-"]{background:#fff!important;border:0!important;border-bottom:1px solid #e4e7ec!important;border-radius:0;box-shadow:none!important;min-height:0;padding:14px 14px;flex-direction:row;align-items:center;gap:14px}
+.mitem:last-child{border-bottom:0!important}
+.mitem::after{content:'›';margin-left:auto;font-size:24px;color:#98a2b3;line-height:1}
+.mitem[class*=" c-"] b,.mitem b{color:var(--navy);font-size:15px;font-weight:700}
+.mitem[class*=" c-"] small,.mitem small{color:var(--mute);opacity:1;font-weight:500;font-size:12.5px}
+.mitem[class*=" c-"] small.al,.mitem small.al{background:transparent;color:#b54708;font-weight:700;padding:0}
+.mitem .mic{width:38px;height:38px;flex:0 0 38px;display:flex;align-items:center;justify-content:center;background:#eef2f7;border-radius:3px;color:var(--navy);font-size:0}
+.mitem .mic svg{width:21px;height:21px}
+.mitem.prin .mic{background:var(--navy);color:#fff}
+.mitem .mt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.mitem:active{transform:none;background:#f5f7fa!important}
+/* escalas e equipe de fiscalização */
+.esc{border-radius:3px;border-left:4px solid var(--navy);box-shadow:none}
+.esc.atual{border-left-color:var(--gold)}
+.esc .ei b{font-size:15px}
+.esc .est{border-radius:2px;font-weight:700;text-transform:uppercase;font-size:10.5px;letter-spacing:.5px}
+.esc .ex{border-radius:3px}
+.fqcard{border-radius:4px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold)}
+.fqcard .l1{color:var(--navy);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+.fqcard .ico{width:34px;height:34px;flex:0 0 34px;display:flex;align-items:center;justify-content:center;background:#f6f1e4;color:#7a5f1c;border-radius:3px}
+.fqcard .ico svg{width:20px;height:20px}
+.fqcard .ed{color:var(--navy)!important}
+.fqtag{border-radius:2px}
+.file{border:1px solid var(--line);border-radius:4px;background:#fff;padding:20px 10px}
+.file .ic{display:inline-flex;width:44px;height:44px;align-items:center;justify-content:center;background:#eef2f7;color:var(--navy);border-radius:3px}
+.file .ic svg{width:24px;height:24px}
+.file strong{font-size:15px}
+/* acesso */
+.gate{background:var(--navy)}
+.gcard{border-radius:4px;border-top:4px solid var(--gold);box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.glogo{font-weight:800;letter-spacing:2px}
+.glogo span{color:var(--gold)}
+.gcard input{border-radius:3px}
+/* geral */
+.team.act,.team.col{border-radius:4px}
+.blk{border-radius:3px}
+.msg,.toast{border-radius:3px}
+.tg,.fbtn,.selbar button,.segf button{border-radius:3px}
+.assin{color:#98a2b3}
 </style>
 </head>
 <body>
@@ -273,8 +369,9 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 </section>
 
 <header class="top">
-  <button class="hide" id="bHome">🏠 Início</button>
+  <button class="hide" id="bHome">Início</button>
   <h1 id="ttl">DOP+</h1>
+  <button class="hide" id="bEsc">Escalas</button>
   <button class="btn gh hide" id="bServ">Serviço</button>
   <button class="btn gh hide" id="bConf">Efetivo</button>
   <button class="btn gh hide" id="bFisc">Fiscalizar</button>
@@ -283,37 +380,68 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 
 <!-- 1. ABRIR A ESCALA -->
 <section class="screen stack" id="importar">
-  <div class="card stack" id="cRetomar" style="display:none">
-    <h2>Distribuição em andamento</h2>
-    <div class="muted" id="retInfo"></div>
-    <button class="btn big" id="bRetomar">Continuar de onde parei</button>
+  <div class="card stack hide" id="cEscalas">
+    <h2 style="margin:0">Escalas do turno</h2>
+    <div class="muted">Toque numa escala para distribuir, fiscalizar ou gerar o relatório dela.</div>
+    <div id="escLista"></div>
   </div>
+  <div class="fqcard" id="cFiscT" data-fq="1"></div>
   <div class="card stack">
-    <h2>Abrir a escala</h2>
+    <h2 id="addTit">Abrir a escala</h2>
     <div class="tiles">
       <label class="file">
-        <input type="file" id="fPdf" accept="application/pdf,.pdf">
-        <span class="ic">📄</span><strong>Escala em PDF</strong>
-        <span class="muted">Baixada no celular ou recebida no WhatsApp</span>
+        <input type="file" id="fPdf" accept="application/pdf,.pdf" multiple>
+        <span class="ic" data-ico="pdf"></span><strong>Escala em PDF</strong>
+        <span class="muted">Baixada no celular ou recebida no WhatsApp (pode escolher várias)</span>
       </label>
       <label class="file">
         <input type="file" id="fFoto" accept="image/*" multiple>
-        <span class="ic">📷</span><strong>Foto da escala</strong>
-        <span class="muted">Tirar foto ou escolher da galeria</span>
+        <span class="ic" data-ico="camera"></span><strong>Foto da escala</strong>
+        <span class="muted">Tirar foto ou escolher da galeria (várias fotos = 1 escala)</span>
       </label>
     </div>
-    <div class="muted">O PDF é lido sem erros. A foto é lida aproximadamente: depois, confira os nomes.</div>
+    <div class="muted">Cada PDF vira uma escala na lista acima. O PDF é lido com mais precisão; a foto é lida aproximadamente: depois, confira os nomes.</div>
     <div id="impMsg"></div>
     <div class="prog hide" id="impProg"><i></i></div>
     <details>
       <summary class="muted" style="cursor:pointer">Outras opções</summary>
       <div class="stack" style="margin-top:8px">
-        <textarea id="txtEscala" placeholder="Cole aqui o texto copiado do PDF da escala"></textarea>
+        <textarea id="txtEscala" placeholder="Cole aqui o texto da escala (copiado do PDF)"></textarea>
         <button class="btn lt" id="bTxt">Ler texto colado</button>
         <button class="btn lt" id="bExemplo">Carregar exemplo fictício (teste)</button>
       </div>
     </details>
   </div>
+  <button class="btn danger hide" id="bTurno" style="width:100%">Encerrar o turno (apaga todas as escalas)</button>
+  <div class="assin">Ten. Antoniel - SO</div>
+</section>
+
+<!-- EQUIPE DE FISCALIZAÇÃO DO TURNO -->
+<section class="screen stack hide" id="fisceq">
+  <div class="card stack">
+    <h2 style="margin:0">Equipe de fiscalização do turno</h2>
+    <div class="muted">Vale para todas as escalas do turno e sai no início de cada relatório.</div>
+    <div class="info-grid">
+      <div><label>VTR do fiscal</label><input id="fqVtr" placeholder="nº" autocomplete="off"></div>
+      <div><label>Telefone (opcional)</label><input id="fqTel" type="tel" inputmode="tel" placeholder="(DDD) número" autocomplete="off"></div>
+    </div>
+    <div id="fqLista"></div>
+  </div>
+  <div class="card stack" id="fqAdd">
+    <b>＋ Incluir na equipe de fiscalização</b>
+    <div class="segf" id="fqFn"><button data-fn="of">Oficial</button><button data-fn="mot" class="on">Motorista</button><button data-fn="pat">Patrulheiro</button></div>
+    <label class="muted" for="fqSel">Escolher da escala (sai da lista de distribuição):</label>
+    <select id="fqSel"></select>
+    <div class="muted">ou digitar (quem não está em nenhuma escala):</div>
+    <div class="info-grid">
+      <div><input class="fqin" id="fqG" placeholder="Posto/Grad. (ex.: SD)"></div>
+      <div><input class="fqin" id="fqM" placeholder="Matrícula" inputmode="numeric"></div>
+      <div class="full"><input class="fqin" id="fqN" placeholder="Nome (ex.: JOÃO SILVA)"></div>
+    </div>
+    <div id="fqErr"></div>
+    <button class="btn" id="fqOk">Incluir</button>
+  </div>
+  <button class="btn big" id="fqPronto">✓ Pronto</button>
   <div class="assin">Ten. Antoniel - SO</div>
 </section>
 
@@ -338,7 +466,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
     </div>
   </div>
   <button class="btn big" id="bIrMontar">Começar a distribuição →</button>
-  <button class="btn danger" id="bNova" style="width:100%">Começar nova distribuição (apaga a atual)</button>
+  <button class="btn danger" id="bNova" style="width:100%">Excluir esta escala</button>
   <div class="assin">Ten. Antoniel - SO</div>
 </section>
 
@@ -365,7 +493,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 <section class="hide" id="montar">
   <div id="teams"></div>
   <aside id="pool">
-    <div class="poolhead"><div class="phrow"><div style="flex:1;min-width:0"><div class="t" id="poolTitle"></div><div class="sub" id="poolSub"></div></div><button class="fbtn" id="bFaltas">🚫 Marcar falta</button></div></div>
+    <div class="poolhead"><div class="phrow"><div style="flex:1;min-width:0"><div class="t" id="poolTitle"></div><div class="sub" id="poolSub"></div></div><button class="fbtn selb" id="bSel">Vários</button><button class="fbtn" id="bFaltas">🚫 Marcar falta</button></div><div id="selBar"></div></div>
     <div id="poolBody" data-drop="pool"></div>
   </aside>
 </section>
@@ -377,6 +505,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
     <div style="font-weight:800;color:var(--navy)" id="iOper"></div>
     <div class="muted" id="iLocal"></div>
   </div>
+  <div class="fqcard" id="iFq"></div>
   <div class="nums" id="iNums"></div>
   <div class="menu" id="iMenu"></div>
   <div class="acesso-info" id="iAcesso"></div>
@@ -386,7 +515,7 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 <!-- 5. FISCALIZAÇÃO (durante o serviço) -->
 <section class="screen stack hide" id="fiscal">
   <div class="fbar"><div class="muted" id="fResumo"></div></div>
-  <div class="muted">Durante o serviço: registre quando passar pela equipe (<b>✓ Fiscalizada</b>) e quando mudar a equipe de lugar (<b>🔁 Remanejar</b>). O horário entra sozinho.</div>
+  <div class="muted">Durante o serviço: registre quando passar pela equipe (<b>✓ Fiscalizada</b>) e quando mudar a equipe de lugar (<b>Remanejar</b>). O horário entra sozinho.</div>
   <button class="btn danger" id="bAddAlt" style="width:100%">＋ Registrar alteração</button>
   <div id="fAlts"></div>
   <div id="fBody" class="stack"></div>
@@ -454,10 +583,9 @@ textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:1
 </div>
 <div class="modal hide" id="mNova">
   <div class="box stack" style="max-width:440px;margin-top:14vh">
-    <h2 style="margin:0">Começar novo serviço?</h2>
-    <div>Você já <b>baixou ou enviou o PDF do relatório</b> deste serviço?</div>
-    <div class="muted">Depois de apagar, o relatório deste serviço não volta mais (ele só existe neste celular).</div>
-    <button class="btn wa" id="nvPdf">📄 Gerar PDF agora</button>
+    <h2 style="margin:0" id="nvTit">Excluir esta escala?</h2>
+    <div id="nvTxt"></div>
+    <button class="btn wa" id="nvPdf">Gerar PDF agora</button>
     <button class="btn danger" id="nvApagar">Já enviei, pode apagar</button>
     <button class="btn lt" id="nvNao">Cancelar</button>
   </div>
@@ -499,9 +627,17 @@ function parseEscala(paginas){
     const anc=corpo.filter(i=>i.x<nx+18&&/^\d{1,3}(\s|$)/.test(i.s.trim())).sort((a,b)=>a.y-b.y);
     const grupos=anc.map(()=>[]);
     for(const it of corpo){ let b=-1,bd=1e9; anc.forEach((a,k)=>{const d=Math.abs(it.y-a.y); if(d<bd){bd=d;b=k}}); if(bd<=9) grupos[b].push(it); }
-    for(const g of grupos){ const r=parseLinha(agruparLinhas(g,3).join(' ')); if(r) pol.push(r); }
+    // leitura flexível da mesma tabela: cada linha vai até a próxima (pega nomes quebrados em 2-3 linhas) e o texto é montado por coluna do cabeçalho
+    const hdr=itens.filter(i=>Math.abs(i.y-hy)<=4).sort((a,b)=>a.x-b.x).map(i=>i.x);
+    const largos=anc.map(()=>[]);
+    const difs=anc.slice(1).map((a,j)=>a.y-anc[j].y).sort((x,y)=>x-y), alt=difs.length?difs[Math.floor(difs.length/2)]:40; // altura típica da linha
+    for(const it of corpo){ let k=-1; for(let j=0;j<anc.length;j++) if(it.y>=anc[j].y-9) k=j; if(k>=0&&it.y<=anc[k].y+Math.max(alt*1.15,12)) largos[k].push(it); }
+    const porColuna=g=>{ const cols=hdr.map(()=>[]); for(const it of g){ let c=0; for(let j=0;j<hdr.length;j++) if(it.x>=hdr[j]-6) c=j; cols[c].push(it); }
+      return cols.map(c=>agruparLinhas(c,3).join(' ')).join(' | '); };
+    grupos.forEach((g,k)=>{ const r=parseLinha(agruparLinhas(g,3).join(' '))||parseLinhaFlex(porColuna(largos[k])); if(r) pol.push(r); });
   }
-  return {info:extrairInfo(texto.join('\n')), policiais:pol};
+  const flex=parseGenerico(texto.join('\n'));
+  return {info:extrairInfo(texto.join('\n')), policiais:pol.length>=3||pol.length>=flex.length?pol:flex}; // modelo padrão encaixou: fica com ele (mais completo)
 }
 function parseTexto(t){
   const out=[]; let u=null;
@@ -524,6 +660,54 @@ async function lerPdf(file){
   return parseEscala(pags);
 }
 
+
+/* ================== LEITURA FLEXÍVEL (PDF com layout diferente, foto e texto colado) ==================
+   Procura, linha a linha, "posto/graduação + nome + matrícula" em qualquer ordem.
+   Usada quando o modelo padrão (tabela do SEI) não encaixa. */
+const GRAD_LONGO=[[/TENENTE[\s-]*CORONEL/,'TC'],[/CORONEL/,'CEL'],[/MAJOR/,'MAJ'],[/CAPIT[AÃ]O/,'CAP'],[/(1|2)\s*[ºO°]?\s*TENENTE/,'$1º TEN'],[/TENENTE/,'TEN'],[/ASPIRANTE/,'ASP'],
+  [/SUBTENENTE/,'ST'],[/(1|2|3)\s*[ºO°]?\s*SARGENTO/,'$1º SGT'],[/SARGENTO/,'SGT'],[/CABO/,'CB'],[/SOLDADO/,'SD']];
+const RE_GRAD=/(?:^|[\s|;,(\[{])((?:[123]\s*[ºo°]?\s*(?=SGT|TEN))?(?:TC|CEL|MAJ|CAP|TEN|ASP|SUBTEN|ST|SGT|CB|SD))(?:\s*(?:1ª|2ª)\s*CL(?:ASSE)?)?\.?(?=[\s|;,.)]|$)/;
+const RE_MAT=/(?:^|[^\d])((?:\d\.?){6,7}[-.]?[\dX])(?![\d-])/i;
+const RUIDO=new Set(['QPPMC','QOPM','QOPMA','QOPMS','QPPMP','QPPME','QPPMM','QOBM','GR','MTD','MAT','MATRICULA','MATRÍCULA','NOME','POSTO','GRAD','GRADUAÇÃO','LOTAÇÃO','UPM','RG','CPF','TEL','TELEFONE','FONE','CEL','CELULAR','WHATSAPP','ASSINADO','ASSINATURA']);
+const GRADS_SIGLA=new Set(['TC','CEL','MAJ','CAP','TEN','ASP','SUBTEN','ST','SGT','CB','SD']);
+function normGradLonga(l){ let u=' '+l.toUpperCase()+' '; for(const [re,c] of GRAD_LONGO) u=u.replace(new RegExp('\\b'+re.source+'\\b','g'),' '+c+' '); return u.replace(/\s+/g,' ').trim(); }
+// linhas só com nome (continuação de um nome quebrado) são grudadas na linha de cima que tem matrícula, separadas por "¦"
+function juntarContinuacoes(t){ const out=[];
+  for(const raw of String(t).split(/\r?\n/)){ const l=raw.trim(); if(!l) continue;
+    const ws=l.split(/\s+/);
+    const cont=!/\d/.test(l)&&/^[A-ZÀ-Ú' ]+$/.test(l)&&ws.length<=4&&ws.every(w=>w.length>=2&&!RUIDO.has(w)&&!GRADS_SIGLA.has(w));
+    if(cont&&out.length&&RE_MAT.test(out[out.length-1].split('¦')[0])) out[out.length-1]+=' ¦ '+l; else out.push(l); }
+  return out; }
+function parseLinhaFlex(l00){
+  const [l0,...resto]=String(l00).split('¦'), contW=resto.join(' ').trim().split(/\s+/).filter(w=>/^[A-ZÀ-Ú]{2,}$/.test(w)&&!RUIDO.has(w));
+  const l=normGradLonga(l0.replace(/[“”"'`´_*\[\]{}]/g,' ').replace(/[°o](?=\s*(?:TEN|SGT))/gi,'º')
+    .replace(/([A-Za-zÀ-ú])(?=\d{6})/g,'$1 ')                                     // nome grudado na matrícula (foto)
+    .replace(/\bS[6G8]T\b/gi,'SGT').replace(/(^|[\s|])[Il1]CB\b/g,'$1CB').replace(/\b5D\b/g,'SD')); // erros comuns da leitura por foto
+  const mm=l.match(RE_MAT); if(!mm) return null;
+  const mat=mm[1].replace(/[^\dX]/gi,'').toUpperCase(); if(mat.length<7||mat.length>8) return null;
+  const gm=l.match(RE_GRAD); if(!gm) return null;
+  const grad=gm[1].replace(/\s+/g,' ').replace(/^([123])\s*[ºo°]?\s*/i,'$1º ').toUpperCase();
+  // nome = palavras só de letras logo depois da graduação (ou antes da matrícula), sem siglas de quadro/colunas
+  const ig=gm.index+gm[0].indexOf(gm[1])+gm[1].length, im=mm.index+mm[0].indexOf(mm[1]);
+  const pega=t=>{ const w=[]; for(const x of t.split(/[\s|;,]+/)){ const y=x.replace(/[.:()-]+$/,''); if(!y) { if(w.length) break; else continue; }
+      if(!w.length&&GRADS_SIGLA.has(y)) continue; // graduação antes do nome
+      if(/^[A-ZÀ-Ú]{1,}$/.test(y)&&!RUIDO.has(y)&&!/^Q[A-Z]{2,6}$/.test(y)) w.push(y); else if(w.length) break; }
+    while(w.length&&PART.has(w[w.length-1])) w.pop(); return w; };
+  let nome=pega(ig<im?l.slice(ig,im):l.slice(ig));
+  if(nome.length<2&&ig>im) nome=pega(l.slice(im+mm[1].length));
+  nome=nome.concat(contW); // resto do nome que veio nas linhas de baixo
+  if(nome.length<2) return null;
+  return {ordem:0, grad, nome:nome.join(' '), mat, esp:/\bMTD\b/.test(l)?'MTD':'GR', lotacao:'', local:''};
+}
+function parseGenerico(t){ const out=[], vistos=new Set();
+  for(const l of juntarContinuacoes(t)){ const p=parseLinhaFlex(l); if(p&&!vistos.has(p.mat)){ vistos.add(p.mat); out.push(p); } }
+  out.forEach((p,i)=>p.ordem=i+1); return out; }
+function lerTextoFlex(t){ const a=parseTexto(t), b=parseGenerico(t);
+  return {info:extrairInfo(t), policiais:a.policiais.length>=3||a.policiais.length>=b.length?a.policiais:b}; }
+async function lerArquivo(f){ const n=(f.name||'').toLowerCase(); // por enquanto: só PDF (e foto, no outro botão)
+  if(n.endsWith('.pdf')||f.type==='application/pdf') return {res:await lerPdf(f),origem:'pdf'};
+  throw new Error('Por enquanto o app lê só escala em PDF (ou foto). Se for Word, salve como PDF.'); }
+
 /* ================== LEITURA POR FOTO (OCR no aparelho) ================== */
 function parseLinhaOCR(l){
   l=l.replace(/[“”"'`´_]/g,' ').replace(/°/g,'º').replace(/\s+/g,' ').trim();
@@ -540,7 +724,8 @@ function parseLinhaOCR(l){
   return {ordem:0, grad, nome, mat, esp:/\bMTD\b/i.test(depois)?'MTD':'GR', lotacao:(tk[0]||'').toUpperCase(), local:''};
 }
 function parseOCR(t){
-  const out=[]; for(const l of t.split(/\r?\n/)){ const p=parseLinhaOCR(l); if(p) out.push(p); }
+  let out=[]; for(const l of t.split(/\r?\n/)){ const p=parseLinhaOCR(l); if(p) out.push(p); }
+  const flex=parseGenerico(t); if(flex.length>=out.length&&flex.length) out=flex; // a flexível junta nomes quebrados em várias linhas
   out.forEach((p,i)=>p.ordem=i+1);
   return {info:extrairInfo(t), policiais:out};
 }
@@ -573,24 +758,58 @@ function gradCurta(grad){return (grad||'').replace(/\s+Q[A-Z]{2,6}\b.*/,'').trim
 const PART=new Set(['DE','DA','DO','DAS','DOS','E','DI','DU']);
 function doisNomes(nome){ const w=nome.split(' '), out=[]; let n=0; for(const x of w){ out.push(x); if(!PART.has(x)) n++; if(n===2) break; } return out.join(' '); }
 const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-let modoFalta=false;
+let modoFalta=false, selVarios=false; const sel=new Set();
+/* escalas do turno: cada uma é um "S" completo; ficam todas no celular (dp_escalas) */
+let ESC=LS.get('dp_escalas');
+if(!Array.isArray(ESC)){ ESC=[]; const a0=LS.get('dp_atual'); if(a0&&a0.pol&&a0.pol.length){ a0.id=a0.id||('s'+Date.now()); ESC.push(a0); }
+  LS.set('dp_escalas',ESC); try{localStorage.removeItem('dp_atual')}catch(e){} }
+const novoIdEsc=()=>'s'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+/* equipe de fiscalização do turno (vale para todas as escalas) */
+let FQ=LS.get('dp_fisc')||{vtr:'',tel:'',mem:[]}; if(!Array.isArray(FQ.mem)) FQ.mem=[];
+function salvarFQ(){ LS.set('dp_fisc',FQ); }
+/* o oficial da equipe de fiscalização é o responsável/fiscal das escalas do turno (quando a escala ainda não tem um) */
+function sincResp(sc){ vincularFQ(); const o=FQ.mem.find(m=>m.fn==='of'); if(!o||!sc||(sc.info.resp||'').trim()) return false;
+  sc.info.resp=((o.gc?o.gc+' ':'')+o.guerra).trim(); if(o.mat) sc.info.respMat=o.mat; return true; }
+// quem foi digitado na equipe de fiscalização (ou lançado antes de a escala ser aberta) é achado na escala e sai da distribuição
+const _nz=t=>(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[º°O](?=\s*(SGT|TEN))/g,'').replace(/[^A-Z0-9]+/g,' ').trim();
+const _md=t=>(t||'').toUpperCase().replace(/[^\dX]/g,'');
+function vincularFQ(){ let mudE=false, mudF=false;
+  const todos=[]; ESC.forEach(sc=>sc.pol.forEach(p=>todos.push({sc,p})));
+  const usados=new Set(FQ.mem.filter(m=>m.src).map(m=>m.src.e+'|'+m.src.p));
+  FQ.mem.forEach(m=>{
+    if(m.src){ const x=todos.find(t=>t.sc.id===m.src.e&&t.p.id===m.src.p), md=_md(m.mat);
+      // o mesmo policial (mesma matrícula) em outra escala do turno também sai da distribuição
+      todos.filter(t=>t===x||(md.length>=5&&_md(t.p.mat)===md)).forEach(t=>{ if(!t.p.fisc){ t.p.fisc=true; if(t.p.eq){ t.p.eq=null; t.p.fn=null; } mudE=true; } }); return; }
+    const md=_md(m.mat); let c=[];
+    if(md.length>=5) c=todos.filter(t=>_md(t.p.mat)===md);
+    if(!c.length){ const g=_nz(m.guerra), gc=_nz(m.gc); if(!g) return;
+      c=todos.filter(t=>_nz(t.p.guerra)===g&&(!gc||_nz(t.p.gc)===gc)); }
+    c=c.filter(t=>!usados.has(t.sc.id+'|'+t.p.id)&&!t.p.extra);
+    if(c.length!==1) return; const {sc,p}=c[0];
+    p.fisc=true; if(p.eq){ p.eq=null; p.fn=null; } mudE=true; usados.add(sc.id+'|'+p.id);
+    m.src={e:sc.id,p:p.id}; if(!m.gc) m.gc=p.gc; if(!m.mat&&p.mat&&!/^X\d/.test(p.mat)) m.mat=p.mat; if(!m.lotacao) m.lotacao=p.lotacao||''; m.cls=p.cls||m.cls; mudF=true; });
+  if(mudE) LS.set('dp_escalas',ESC); if(mudF) salvarFQ(); return mudE; }
+setTimeout(()=>{ try{ vincularFQ(); }catch(_){} },0);
+function sincRespTodas(){ vincularFQ(); let mud=false; ESC.forEach(sc=>{ if(sincResp(sc)) mud=true; }); if(mud) LS.set('dp_escalas',ESC); }
 let S=null, cad=LS.get('dp_cad')||{}, locais=LS.get('dp_locais')||[], aberto=null, movendo=null;
 const editando=new Set(), obsAbertas=new Set();
 const ST={P:'Presente',F:'Falta',LM:'Licença médica',ERR:'Erro na escala',OUT:'Outro'};
 const A=p=>!!p.st&&p.st!=='P'; // ausente / alterado: não entra na distribuição
-function salvar(){ if(!S) return; LS.set('dp_atual',S);
+function salvar(){ if(!S) return; if(!S.id) S.id=novoIdEsc(); const k=ESC.findIndex(x=>x.id===S.id); if(k<0) ESC.push(S); else ESC[k]=S; LS.set('dp_escalas',ESC);
   S.pol.forEach(p=>{ if(!p.extra&&p.mat) cad[p.mat]={guerra:p.guerra,catd:p.mot,auto:p.guerraAuto===p.guerra}; }); LS.set('dp_cad',cad); }
 function lembrarLocal(v){ v=(v||'').trim(); if(!v) return; locais=[v,...locais.filter(x=>x.toUpperCase()!==v.toUpperCase())].slice(0,40); LS.set('dp_locais',locais); }
 
-const TIPOS=['VIATURA','A PÉ']; // a pé (eventos, manifestações): todos juntos, sem motorista
-const temMot=t=>t==='VIATURA';
-const temVtr=temMot;
+const TIPOS=['VIATURA','A PÉ','ÔNIBUS']; // a pé: todos juntos, sem motorista · ônibus: tropa embarcada (motorista CAT D + lista, sem comandante)
+const temMot=t=>t==='VIATURA'||t==='ÔNIBUS';
+const temVtr=t=>t==='VIATURA'||t==='ÔNIBUS'; // nº da VTR ou prefixo do ônibus
+const temCmt=t=>t!=='ÔNIBUS';
+const TIPOLBL={'VIATURA':'Viatura','A PÉ':'A pé','ÔNIBUS':'Ônibus'};
 const P=id=>S.pol.find(p=>p.id===id);
 const membros=eid=>S.pol.filter(p=>p.eq===eid&&!A(p)).sort((a,b)=>a.ordem-b.ordem);
 const ocup=(eid,fn)=>S.pol.find(p=>p.eq===eid&&!A(p)&&p.fn===fn)||null;
 const pats=eid=>membros(eid).filter(p=>p.fn==='pat');
 const numEq=e=>S.equipes.indexOf(e)+1;
-const rotulo=e=>'EQUIPE '+numEq(e)+(temVtr(e.tipo)&&e.vtr?' – VTR '+e.vtr:'');
+const rotulo=e=>'EQUIPE '+numEq(e)+(temVtr(e.tipo)&&e.vtr?(e.tipo==='ÔNIBUS'?' – ÔNIBUS ':' – VTR ')+e.vtr:'');
 const nomeP=p=>(p.gc?p.gc+' ':'')+p.guerra;
 // histórico da equipe durante o serviço: {tipo:'rem',h,de,para,motivo} | {tipo:'fisc',h,obs}
 const hFmt=h=>(h||'').replace(':','h');
@@ -611,21 +830,22 @@ const cmtEq=e=>{ const o=ordemEquipe(e).find(([t])=>t==='CMT'); return o?o[1]:nu
 const telEq=e=>{ if((e.tel||'').trim()) return e.tel.trim(); const c=cmtEq(e); return (c&&c.mat&&telsMem()[c.mat])||''; };
 function fmtTel(t){ const d=soDig(t).replace(/^55(?=\d{10,11}$)/,''); if(d.length===11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`; if(d.length===10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`; return t; }
 const telIntl=t=>{ const d=soDig(t); return d.length>=12&&d.startsWith('55')?d:'55'+d; };
-const ICON_WA='💬';
+const ICON_WA='';
 function botoesTel(t){ const d=soDig(t); if(d.length<10) return '';
-  return `<a class="tbt lig" href="tel:+${telIntl(t)}" target="_top">📞 Ligar</a><a class="tbt wa" href="https://wa.me/${telIntl(t)}" target="_blank" rel="noopener">${ICON_WA} WhatsApp</a>`; }
+  return `<a class="tbt lig" href="tel:+${telIntl(t)}" target="_top">Ligar</a><a class="tbt wa" href="https://wa.me/${telIntl(t)}" target="_blank" rel="noopener">${ICON_WA} WhatsApp</a>`; }
 const metaP=p=>[p.lotacao,p.mat&&!/^X\d/.test(p.mat)?p.mat:''].filter(Boolean).join(' · ');
-function ordemEquipe(e){ const c=ocup(e.id,'cmt'), m=temMot(e.tipo)?ocup(e.id,'mot'):null;
+function ordemEquipe(e){ const c=temCmt(e.tipo)?ocup(e.id,'cmt'):null, m=temMot(e.tipo)?ocup(e.id,'mot'):null;
   return [c&&['CMT',c], m&&['MOT',m], ...pats(e.id).map(p=>['PAT',p])].filter(Boolean); }
 function novaEquipe(){ S.seq++; const e={id:'e'+S.seq,tipo:'VIATURA',vtr:'',setor:'',hist:[],salva:false}; S.equipes.push(e); return e; }
 function normalizar(eid){ const e=S.equipes.find(x=>x.id===eid); if(!e) return;
-  membros(eid).forEach(p=>{ if(!p.fn||(p.fn==='mot'&&!temMot(e.tipo))) p.fn='pat'; });
+  membros(eid).forEach(p=>{ if(!p.fn||(p.fn==='mot'&&!temMot(e.tipo))||(p.fn==='cmt'&&!temCmt(e.tipo))) p.fn='pat'; });
   ['cmt','mot'].forEach(f=>membros(eid).filter(p=>p.fn===f).slice(1).forEach(p=>p.fn='pat')); }
 function colocar(p,e,fn){
   const orig=p.eq, origFn=p.fn;
   if(fn!=='pat'){ const o=ocup(e.id,fn); if(o&&o!==p) o.fn=(orig===e.id&&origFn)?origFn:'pat'; }
   p.eq=e.id; p.fn=fn; }
-function proxFuncao(e){ // na ordem do papel: comandante, motorista, patrulheiros
+function proxFuncao(e,p){ // na ordem do papel: comandante, motorista, patrulheiros
+  if(e.tipo==='ÔNIBUS') return (p&&p.mot&&!ocup(e.id,'mot'))?'mot':'pat'; // ônibus: motorista CAT D + lista
   if(!ocup(e.id,'cmt')) return 'cmt';
   if(temMot(e.tipo)&&!ocup(e.id,'mot')) return 'mot';
   return 'pat'; }
@@ -639,10 +859,12 @@ function carregar(res,origem,nomeArq){
   const usados=new Set();
   const pol=res.policiais.map((p,i)=>{ let id=p.mat||('L'+i); if(usados.has(id)) id+='-'+i; usados.add(id); return novoPol({...p,id}); });
   pol.forEach(p=>{ const c=cad[p.mat]; if(c){ if(c.guerra&&!c.auto) p.guerra=c.guerra; if(c.catd) p.mot=true; } });
-  S={v:2, origem, conferido:origem!=='foto', iniciado:false,
+  S={v:2, id:novoIdEsc(), criado:Date.now(), origem, conferido:origem!=='foto', iniciado:false,
      info:{escala:nomeArq||'', data:res.info.data||'', periodo:res.info.periodo||'', local:res.info.local||'', missao:'', resp:LS.get('dp_resp')||'', respMat:LS.get('dp_respMat')||'', obs:''},
      pol, equipes:[], alts:[], seq:0};
-  S.ativa=novaEquipe().id; aberto=null; editando.clear(); obsAbertas.clear(); salvar(); irServico();
+  S.ativa=novaEquipe().id; aberto=null; editando.clear(); obsAbertas.clear(); sincResp(S); salvar();
+  const n=S.pol.length, nome=S.info.local||S.info.escala||'Escala'; S=null; irEscalas();
+  return {n,nome};
 }
 function migrar(){ // aceita distribuições salvas pela versão anterior
   const mapa={'RP':'VIATURA','FORÇA TÁTICA':'VIATURA','MOTO':'VIATURA','OUTRO':'VIATURA','ÔNIBUS / MICRO':'A PÉ','ÔNIBUS':'A PÉ','A PÉ':'A PÉ','BASE / PC':'A PÉ','BIKE':'A PÉ'};
@@ -658,16 +880,33 @@ function migrar(){ // aceita distribuições salvas pela versão anterior
   if(!S.equipes.find(e=>e.id===S.ativa)) S.ativa=S.equipes[0].id;
 }
 
+
+/* ================== ÍCONES (traço simples, sem emoji) ================== */
+const _sv=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const ICO={
+  inicio:_sv('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>'),
+  escalas:_sv('<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M8 8h8M8 12h8M8 16h5"/>'),
+  equipes:_sv('<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.9.4 5 2.8 5 5.8"/>'),
+  fiscal:_sv('<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.3-4.3"/><path d="M8.5 11l1.8 1.8L14 9.5"/>'),
+  efetivo:_sv('<rect x="5" y="4" width="14" height="17" rx="1"/><path d="M9 4V3h6v1"/><path d="M8.5 10h7M8.5 14h7M8.5 18h4"/>'),
+  servico:_sv('<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>'),
+  relatorio:_sv('<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/>'),
+  escudo:_sv('<path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>'),
+  pdf:_sv('<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h4"/>'),
+  camera:_sv('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),
+};
+
 /* ================== NAVEGAÇÃO ================== */
-const $=s=>document.querySelector(s);
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 let tela='importar';
-function titulo(){ if(!S||tela==='importar') return 'DOP+';
+function titulo(){ if(tela==='importar') return 'DOP+ · Escalas do turno'; if(tela==='fisceq') return 'Equipe de fiscalização'; if(!S) return 'DOP+';
   return [(S.info.data||'').replace(/\s*\(.*\)/,''), S.info.periodo].filter(Boolean).join(' · ')||'Distribuição'; }
-function mostrar(id){ tela=id; ['importar','inicio','servico','conferir','montar','fiscal'].forEach(x=>$('#'+x).classList.toggle('hide',x!==id));
+function mostrar(id){ tela=id; ['importar','fisceq','inicio','servico','conferir','montar','fiscal'].forEach(x=>$('#'+x).classList.toggle('hide',x!==id));
   // o topo só tem "← Início"; as funções são escolhidas na tela inicial
   ['#bServ','#bConf','#bFisc','#bRel'].forEach(b=>$(b).classList.add('hide'));
-  $('#bHome').classList.toggle('hide',!(S&&S.iniciado&&id!=='importar'&&id!=='inicio'));
+  $('#bHome').classList.toggle('hide',!(S&&S.iniciado&&id!=='importar'&&id!=='inicio'&&id!=='fisceq'));
+  $('#bEsc').classList.toggle('hide',id==='importar');
   $('#ttl').textContent=titulo(); }
 function irInicio(){ if(!S) return; modoFalta=false; renderInicio(); mostrar('inicio'); window.scrollTo(0,0); }
 function renderInicio(){
@@ -675,22 +914,25 @@ function renderInicio(){
   $('#iOper').textContent=S.info.local||S.info.escala||'Serviço';
   $('#iLocal').textContent=[S.info.missao?'Missão: '+S.info.missao:'', S.info.resp?'Responsável/fiscal: '+S.info.resp:'Responsável/fiscal não preenchido'].filter(Boolean).join(' · ');
   $('#iNums').innerHTML=[['Escalados',n.escal],['Presentes',n.pres],['Faltas',n.F],['Equipes',eqs.length]].map(([t,v])=>`<div><b>${v}</b><span>${t}</span></div>`).join('');
-  const it=(id,ic,tit,sub,cls,al)=>`<button class="mitem ${cls||''}" data-ir="${id}"><span class="mic">${ic}</span><b>${tit}</b><small class="${al?'al':''}">${sub}</small></button>`;
+  const it=(id,ic,tit,sub,cls,al)=>`<button class="mitem ${cls||''}" data-ir="${id}"><span class="mic">${ic}</span><span class="mt"><b>${tit}</b><small class="${al?'al':''}">${sub}</small></span></button>`;
   $('#iMenu').innerHTML=
-    it('montar','👥','Distribuição', n.sem.length?`${n.sem.length} policial(is) sem equipe`:`Todos distribuídos · ${n.emp} empregados`,'prin c-dist',n.sem.length>0)+
-    it('fiscal','🔍','Fiscalizar', eqs.length?`${fz} de ${eqs.length} fiscalizadas`+(rm?` · ${rm} remanej.`:'')+(na?` · ${na} alteração(ões)`:''):'Monte as equipes primeiro','c-fisc',eqs.length&&fz<eqs.length)+
-    it('conferir','📋','Efetivo', n.F||n.LM||n.ERR||n.OUT?`${n.F} falta(s) · ${n.LM+n.ERR+n.OUT} outra(s)`:'Presença de todos','c-efet')+
-    it('servico','⚙️','Dados do serviço', S.info.resp?'Responsável preenchido':'Falta o responsável/fiscal','c-serv',!S.info.resp)+
-    it('rel','📄','Relatório','Gerar e enviar o PDF','c-rel');
+    it('montar',ICO.equipes,'Distribuição', n.sem.length?`${n.sem.length} policial(is) sem equipe`:`Todos distribuídos · ${n.emp} empregados`,'prin c-dist',n.sem.length>0)+
+    it('fiscal',ICO.fiscal,'Fiscalizar', eqs.length?`${fz} de ${eqs.length} fiscalizadas`+(rm?` · ${rm} remanej.`:'')+(na?` · ${na} alteração(ões)`:''):'Monte as equipes primeiro','c-fisc',eqs.length&&fz<eqs.length)+
+    it('conferir',ICO.efetivo,'Efetivo', n.F||n.LM||n.ERR||n.OUT?`${n.F} falta(s) · ${n.LM+n.ERR+n.OUT} outra(s)`:'Presença de todos','c-efet')+
+    it('servico',ICO.servico,'Dados do serviço', S.info.resp?'Responsável preenchido':'Falta o responsável/fiscal','c-serv',!S.info.resp)+
+    it('rel',ICO.relatorio,'Relatório','Gerar e enviar o PDF','c-rel');
+  $('#iFq').innerHTML=fqCardHTML();
   if(typeof infoAcesso==='function') infoAcesso();
 }
+$('#iFq').addEventListener('click',()=>irFiscEq('inicio'));
 $('#iMenu').addEventListener('click',ev=>{ const b=ev.target.closest('[data-ir]'); if(!b) return; const d=b.dataset.ir;
   if(d==='montar') irMontar(); else if(d==='fiscal') irFiscal(); else if(d==='conferir') irConferir(); else if(d==='servico') irServico(); else if(d==='rel') abrirRel(); });
 $('#bHome').onclick=irInicio;
+$('#bEsc').onclick=()=>irEscalas();
 const precisaConferir=()=>S&&S.origem==='foto'&&!S.conferido;
 function irServico(){ renderServ(); mostrar('servico'); window.scrollTo(0,0); }
 function irConferir(){ renderConf(); mostrar('conferir'); window.scrollTo(0,0); }
-function irMontar(){ modoFalta=false; S.conferido=true; S.iniciado=true; salvar(); renderMontar(); mostrar('montar'); }
+function irMontar(){ modoFalta=false; selVarios=false; sel.clear(); S.conferido=true; S.iniciado=true; salvar(); renderMontar(); mostrar('montar'); }
 $('#bServ').onclick=irServico;
 $('#bConf').onclick=irConferir;
 function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.remove('hide'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.add('hide'),1800); }
@@ -700,23 +942,55 @@ function msgImp(t,tipo){ $('#impMsg').innerHTML = t?`<div class="msg ${tipo||'er
 function barra(v){ $('#impProg').classList.toggle('hide',v==null); if(v!=null) $('#impProg i').style.width=Math.round(v*100)+'%'; }
 const semExt=n=>(n||'').replace(/\.[a-z0-9]+$/i,'').replace(/[_]+/g,' ').trim();
 $('#fPdf').addEventListener('change',async e=>{
-  const f=e.target.files[0]; if(!f) return; msgImp('Lendo escala…','ok');
-  try{ carregar(await lerPdf(f),'pdf',semExt(f.name)); msgImp(''); }catch(err){ msgImp(err.message||String(err)); }
-  e.target.value=''; });
+  const fs=[...e.target.files]; e.target.value=''; if(!fs.length) return;
+  const ok=[], erros=[]; msgImp(`Lendo ${fs.length>1?fs.length+' arquivos':'a escala'}…`,'ok');
+  for(const f of fs){ try{ const r=await lerArquivo(f); ok.push(carregar(r.res,r.origem,semExt(f.name))); }
+    catch(err){ erros.push(`<b>${esc(f.name)}</b>: ${esc(err.message||String(err))}`); } }
+  avisoLeitura(ok,erros); });
 $('#fFoto').addEventListener('change',async e=>{
   const fs=[...e.target.files]; if(!fs.length) return; e.target.value='';
   msgImp(`Lendo ${fs.length>1?fs.length+' fotos':'a foto'}… pode levar até 1 minuto. Não feche o app.`,'ok'); barra(0);
-  try{ const r=await lerFotos(fs,barra); barra(null); carregar(r,'foto',''); msgImp(''); }
+  try{ const r=await lerFotos(fs,barra); barra(null); avisoLeitura([carregar(r,'foto','')],[],true); }
   catch(err){ barra(null); msgImp(err.message||String(err)); } });
-$('#bTxt').onclick=()=>{ try{ carregar(parseTexto($('#txtEscala').value),'texto',''); }catch(err){ msgImp(err.message); } };
+$('#bTxt').onclick=()=>{ try{ avisoLeitura([carregar(lerTextoFlex($('#txtEscala').value),'texto','')],[]); $('#txtEscala').value=''; }catch(err){ msgImp(err.message); } };
 $('#bExemplo').onclick=()=>{
   const ex=[['ST QPPMC','ANTONIO CARLOS FICTICIO','00000011','GR'],['1º SGT QPPMC','MARCOS PAULO EXEMPLO','00000022','GR'],['1º SGT QPPMC','JOANA DARC MODELO','00000033','GR'],['2º SGT QPPMC','PEDRO HENRIQUE TESTE','00000044','GR'],['3º SGT QPPMC','LUCIANA ALVES AMOSTRA','00000055','GR'],['CB QPPMC','RAFAEL SOUZA PROTOTIPO','00000066','GR'],['CB QPPMC','TIAGO LIMA SIMULADO','00000077','GR'],['CB QPPMC','BRUNA COSTA FICTICIA','00000088','GR'],['SD QPPMC','DIEGO RAMOS ENSAIO','00000099','MTD'],['SD QPPMC','CARLA MENDES RASCUNHO','0000010X','GR'],['SD QPPMC','FELIPE ROCHA PILOTO','00000111','GR'],['SD QPPMC','GABRIEL NUNES DEMO','00000122','GR'],['SD QPPMC','HUGO PINTO PREVIA','00000133','GR'],['SD QPPMC','IGOR SALES MOCK','00000144','GR']];
-  carregar({info:{data:'DATA FICTÍCIA',periodo:'06h00 ÀS 14h00',local:'EXEMPLO – OPERAÇÃO TESTE'},policiais:ex.map((r,i)=>({ordem:i+1,grad:r[0],nome:r[1],mat:r[2],esp:r[3],lotacao:['1º BPM','DOP','CPSO'][i%3],local:''}))},'exemplo','Escala de teste'); };
-function telaInicial(){ const a=LS.get('dp_atual');
-  if(a&&a.pol&&a.pol.length){ $('#cRetomar').style.display=''; $('#retInfo').textContent=[a.info.escala,a.info.data,a.info.local].filter(Boolean).join(' · ')+` · ${a.pol.length} policiais`;
-    $('#bRetomar').onclick=()=>{ S=a; migrar(); salvar(); S.iniciado?irInicio():irServico(); }; }
-  else $('#cRetomar').style.display='none'; }
-telaInicial();
+  carregar({info:{data:'DATA FICTÍCIA',periodo:'06h00 ÀS 14h00',local:'EXEMPLO – OPERAÇÃO TESTE'},policiais:ex.map((r,i)=>({ordem:i+1,grad:r[0],nome:r[1],mat:r[2],esp:r[3],lotacao:['1º BPM','DOP','CPSO'][i%3],local:''}))},'exemplo','Escala de teste'); toast('✓ Escala de teste adicionada'); };
+function avisoLeitura(ok,erros,foto){
+  const l=ok.map(r=>`✓ <b>${esc(r.nome)}</b>: ${r.n} policiais lidos.`);
+  const t=[...l, ...erros.map(x=>'✗ '+x)].join('<br>')+(ok.length?`<br><span class="muted">Confira em <b>Efetivo</b> se faltou alguém${foto?' (foto: confira os nomes)':''}. Toque na escala para começar.</span>`:'');
+  msgImp(t, erros.length&&!ok.length?'err':(erros.length?'warn':'ok')); }
+const ausS=p=>!!p.st&&p.st!=='P';
+function statsEsc(s){ const pol=s.pol, eqs=s.equipes.filter(e=>pol.some(p=>p.eq===e.id&&!ausS(p)));
+  return {n:pol.length, eqs:eqs.length, sem:pol.filter(p=>!p.eq&&!ausS(p)&&!p.fisc).length, fz:eqs.filter(e=>(e.hist||[]).some(h=>h.tipo==='fisc')).length, fal:pol.filter(p=>p.st==='F').length}; }
+const ICORIG={pdf:'PDF',foto:'foto',texto:'texto',exemplo:'teste'};
+function cardEsc(s){ const k=statsEsc(s), t=s.info.local||s.info.escala||'Escala sem nome';
+  const sub=[(s.info.data||'').replace(/\s*\(.*\)/,''), s.info.periodo].filter(Boolean).join(' · ');
+  const st=!s.iniciado?['nova','Não iniciada · toque para começar']:[k.sem?'':'ok', `${k.eqs} equipe(s) · ${k.sem?k.sem+' sem equipe':'todos distribuídos'} · ${k.fz}/${k.eqs} fiscalizada(s)`];
+  return `<div class="esc${S&&S.id===s.id?' atual':''}" data-esc="${s.id}"><div class="ei"><b>${esc(t)}</b>${sub?`<small>${esc(sub)}</small>`:''}<small>${k.n} policiais${k.fal?' · '+k.fal+' falta(s)':''} · ${ICORIG[s.origem]||''}</small><span class="est ${st[0]}">${st[1]}</span></div><button class="ex" data-escdel="${s.id}" title="Excluir escala">✕</button></div>`; }
+function renderEscalas(){
+  $('#cEscalas').classList.toggle('hide',!ESC.length);
+  $('#escLista').innerHTML=ESC.map(cardEsc).join('');
+  $('#addTit').textContent=ESC.length?'＋ Adicionar outra escala':'Abrir a escala';
+  $('#bTurno').classList.toggle('hide',!ESC.length);
+  $('#cFiscT').innerHTML=fqCardHTML(); }
+function irEscalas(){ modoFalta=false; renderEscalas(); mostrar('importar'); window.scrollTo(0,0); }
+function abrirEscala(id){ const s=ESC.find(x=>x.id===id); if(!s) return; S=s; migrar(); sincResp(S); salvar(); aberto=null; movendo=null; editando.clear(); obsAbertas.clear(); modoFalta=false; msgImp('');
+  S.iniciado?irInicio():irServico(); }
+$('#escLista').addEventListener('click',ev=>{ const d=ev.target.closest('[data-escdel]'); if(d){ excluirEscala(d.dataset.escdel); return; }
+  const c=ev.target.closest('[data-esc]'); if(c) abrirEscala(c.dataset.esc); });
+let nvAcao=null;
+function pedirApagar(tit,html,comPdf,acao){ $('#nvTit').textContent=tit; $('#nvTxt').innerHTML=html; $('#nvPdf').classList.toggle('hide',!comPdf); nvAcao=acao; $('#mNova').classList.remove('hide'); }
+function apagarEscala(id){ FQ.mem.forEach(m=>{ if(m.src&&m.src.e===id) m.src=null; }); salvarFQ();
+  ESC=ESC.filter(x=>x.id!==id); LS.set('dp_escalas',ESC); if(S&&S.id===id) S=null; irEscalas(); toast('Escala excluída'); }
+function excluirEscala(id){ const s=ESC.find(x=>x.id===id); if(!s) return; const t=s.info.local||s.info.escala||'esta escala';
+  const tem=s.equipes.some(e=>s.pol.some(p=>p.eq===e.id))||(s.alts||[]).length||s.pol.some(ausS);
+  if(!tem) return confirmar(`Excluir a escala "${t}"?`,()=>apagarEscala(id));
+  S=s; migrar();
+  pedirApagar('Excluir esta escala?',`<div><b>${esc(t)}</b></div><div style="margin-top:8px">Você já <b>baixou ou enviou o PDF do relatório</b> desta escala?</div><div class="muted" style="margin-top:6px">Depois de excluir, o relatório desta escala não volta mais (ele só existe neste celular).</div>`,true,()=>apagarEscala(id)); }
+$('#bTurno').onclick=()=>pedirApagar('Encerrar o turno?',`Serão apagadas <b>${ESC.length} escala(s)</b> e a equipe de fiscalização do turno.<div style="margin-top:8px">Você já <b>baixou ou enviou os PDFs</b> de todas as escalas?</div><div class="muted" style="margin-top:6px">Depois de apagar, os relatórios não voltam mais (eles só existem neste celular).</div>`,false,()=>{
+  ESC=[]; LS.set('dp_escalas',ESC); FQ={vtr:'',tel:'',mem:FQ.mem.filter(m=>m.fn==='of').map(m=>({...m,src:null}))}; salvarFQ(); S=null; msgImp(''); irEscalas(); toast('Turno encerrado. Abra as escalas do próximo turno.'); });
+
 
 /* ================== ACESSO (código com validade) ==================
    O código é conferido no servidor (Apps Script do DOP+, planilha "DOP+ Acessos").
@@ -758,23 +1032,73 @@ function reconferirAcesso(){ const a=LS.get('dp_acesso'); if(!a||!a.cod) return;
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'){ const a=LS.get('dp_acesso');
   if(!acessoValido(a)) travarAcesso(a&&a.validade?`Seu acesso venceu em ${dataBR(a.validade)}.`:''); else if(Date.now()-(a.conferido||0)>30*60e3) reconferirAcesso(); } });
 
+
+/* ================== EQUIPE DE FISCALIZAÇÃO DO TURNO ================== */
+const FQTAG={of:'OF',mot:'MOT',pat:'PAT'}, FQNOME={of:'Oficial',mot:'Motorista',pat:'Patrulheiro'};
+const fqOrd=()=>['of','mot','pat'].flatMap(f=>FQ.mem.filter(m=>m.fn===f));
+const nomeFQ=m=>((m.gc?m.gc+' ':'')+m.guerra).trim();
+function fqPreencherOficial(){ // o oficial fiscal começa com o responsável já informado
+  if(FQ.mem.some(m=>m.fn==='of')) return; const r=(LS.get('dp_resp')||'').trim(); if(!r) return;
+  FQ.mem.unshift({fn:'of',gc:'',guerra:r.toUpperCase(),mat:(LS.get('dp_respMat')||'').trim(),lotacao:'',cls:classe(r),src:null}); salvarFQ(); sincRespTodas(); }
+function fqCardHTML(){ const o=fqOrd();
+  const l2=o.length?o.map(m=>FQTAG[m.fn]+' '+nomeFQ(m)).join(' · '):'Toque para incluir o oficial fiscal, motorista, patrulheiro e VTR';
+  return `<span class="ico">${ICO.escudo}</span><div class="info"><div class="l1">Equipe de fiscalização do turno${FQ.vtr?' · VTR '+esc(FQ.vtr):''}</div><div class="l2">${esc(l2)}</div></div><span class="ed" style="font-weight:800;color:#7a5200">${o.length?'✎':'＋'}</span>`; }
+let fqVolta='importar', fqFn='mot';
+function irFiscEq(volta){ fqVolta=volta||tela; fqPreencherOficial(); renderFiscEq(); mostrar('fisceq'); window.scrollTo(0,0); }
+function livresTurno(){ const out=[]; ESC.forEach(sc=>sc.pol.forEach(p=>{ if(!ausS(p)&&!p.fisc) out.push({sc,p}); }));
+  return out.sort((a,b)=>(a.p.eq?1:0)-(b.p.eq?1:0)); } // quem já está em equipe vem por último e sai de lá se for escolhido
+const eqDe=(sc,p)=>p.eq?sc.equipes.findIndex(x=>x.id===p.eq)+1:0;
+function renderFiscEq(){
+  $('#fqVtr').value=FQ.vtr||''; $('#fqTel').value=FQ.tel||'';
+  const o=fqOrd();
+  $('#fqLista').innerHTML=o.length?o.map(m=>`<div class="fqrow"><span class="fqtag ${m.fn}">${FQTAG[m.fn]}</span><span class="nm">${esc(nomeFQ(m))}<small>${esc([m.lotacao,m.mat].filter(Boolean).join(' · '))}${m.src?' · da escala':''}</small></span><button data-fqrm="${FQ.mem.indexOf(m)}" title="Tirar da equipe">✕</button></div>`).join('')
+    :'<div class="muted">Ninguém na equipe ainda.</div>';
+  $$('#fqFn button').forEach(b=>b.classList.toggle('on',b.dataset.fn===fqFn));
+  const L=livresTurno(), varias=ESC.length>1;
+  $('#fqSel').innerHTML=`<option value="">${L.length?'— escolher policial da escala —':'— nenhum policial disponível nas escalas —'}</option>`+
+    L.map(({sc,p})=>`<option value="${esc(sc.id)}|${esc(p.id)}">${esc(nomeP(p))}${p.mat&&!/^X\d/.test(p.mat)?' · '+esc(p.mat):''}${varias?' — '+esc(sc.info.local||sc.info.escala||'escala'):''}${p.eq?' (está na Equipe '+eqDe(sc,p)+' – sai de lá)':''}</option>`).join('');
+  $('#fqErr').innerHTML=''; }
+function fqIncluir(){
+  const fn=fqFn, v=$('#fqSel').value;
+  if(fn==='of'&&FQ.mem.some(m=>m.fn==='of')){ $('#fqErr').innerHTML='<div class="msg err">Já há um oficial na equipe. Tire-o (✕) para trocar.</div>'; return; }
+  if(fn==='mot'&&FQ.mem.some(m=>m.fn==='mot')){ $('#fqErr').innerHTML='<div class="msg err">Já há um motorista. Tire-o (✕) para trocar, ou inclua como patrulheiro.</div>'; return; }
+  if(v){ const [eid,pid]=v.split('|'); const sc=(S&&S.id===eid)?S:ESC.find(x=>x.id===eid), p=sc&&sc.pol.find(x=>x.id===pid); if(!p) return;
+    if(p.eq){ const n=eqDe(sc,p); p.eq=null; p.fn=null; toast(nomeP(p)+' saiu da Equipe '+n+' e foi para a fiscalização'); }
+    p.fisc=true; if(S&&S.id===eid) salvar(); LS.set('dp_escalas',ESC);
+    FQ.mem.push({fn,gc:p.gc,guerra:p.guerra,mat:p.mat&&!/^X\d/.test(p.mat)?p.mat:'',lotacao:p.lotacao,cls:p.cls,src:{e:eid,p:pid}}); }
+  else { const g=$('#fqG').value.trim().toUpperCase(), n=$('#fqN').value.trim().toUpperCase().replace(/\s+/g,' '), m=$('#fqM').value.trim();
+    if(!n){ $('#fqErr').innerHTML='<div class="msg err">Escolha um policial da escala ou digite o nome.</div>'; return; }
+    FQ.mem.push({fn,gc:g,guerra:n,mat:m,lotacao:'',cls:classe(g||n),src:null}); ['#fqG','#fqN','#fqM'].forEach(x=>$(x).value=''); }
+  salvarFQ(); if(vincularFQ()&&S){ const k=ESC.findIndex(x=>x.id===S.id); if(k>=0) S=ESC[k]; }
+  if(fn==='of'){ const o=FQ.mem.find(m=>m.fn==='of'); LS.set('dp_resp',((o.gc?o.gc+' ':'')+o.guerra).trim()); if(o.mat) LS.set('dp_respMat',o.mat); sincRespTodas(); }
+  if(fn==='mot') fqFn='pat'; renderFiscEq(); toast('✓ Incluído na equipe de fiscalização'); }
+function fqTirar(k){ const m=FQ.mem[k]; if(!m) return;
+  if(m.src){ const sc=ESC.find(x=>x.id===m.src.e), p=sc&&sc.pol.find(x=>x.id===m.src.p), md=_md(m.mat); if(p) p.fisc=false;
+    if(md.length>=5) ESC.forEach(e=>e.pol.forEach(q=>{ if(_md(q.mat)===md) q.fisc=false; })); LS.set('dp_escalas',ESC); }
+  FQ.mem.splice(k,1); salvarFQ(); renderFiscEq(); }
+function fqSoltarPol(p){ // policial da escala que saiu (falta etc.) deixa a equipe de fiscalização
+  if(!p.fisc||!S) return; const k=FQ.mem.findIndex(m=>m.src&&m.src.e===S.id&&m.src.p===p.id); p.fisc=false; if(k>=0){ FQ.mem.splice(k,1); salvarFQ(); toast(nomeP(p)+' saiu da equipe de fiscalização'); } }
+$('#fqFn').addEventListener('click',e=>{ const b=e.target.closest('[data-fn]'); if(!b) return; fqFn=b.dataset.fn; renderFiscEq(); });
+$('#fqOk').onclick=fqIncluir;
+$('#fqLista').addEventListener('click',e=>{ const b=e.target.closest('[data-fqrm]'); if(!b) return; const m=FQ.mem[+b.dataset.fqrm]; confirmar(`Tirar ${nomeFQ(m)} da equipe de fiscalização?`,()=>fqTirar(+b.dataset.fqrm)); });
+$('#fqVtr').addEventListener('input',e=>{ FQ.vtr=e.target.value.toUpperCase(); salvarFQ(); });
+$('#fqTel').addEventListener('input',e=>{ FQ.tel=e.target.value; salvarFQ(); });
+$('#fqPronto').onclick=()=>{ sincRespTodas(); if(S) sincResp(S); const v=fqVolta; if(v==='montar'&&S) irMontar(); else if(v==='inicio'&&S) irInicio(); else irEscalas(); };
+$('#cFiscT').addEventListener('click',()=>irFiscEq('importar'));
+
 /* ================== DADOS DO SERVIÇO ================== */
 const CAMPOS=[['sEscala','escala'],['sData','data'],['sPer','periodo'],['sOp','local'],['sMis','missao'],['sResp','resp'],['sRespMat','respMat']];
 function renderServ(){ CAMPOS.forEach(([i,k])=>$('#'+i).value=S.info[k]||'');
   $('#bIrMontar').textContent = precisaConferir()?'Conferir os nomes lidos da foto →':(S.iniciado?'Voltar para a distribuição →':'Começar a distribuição →'); }
 CAMPOS.forEach(([i,k])=>$('#'+i).addEventListener('input',e=>{ S.info[k]=e.target.value; if(k==='resp'||k==='respMat') LS.set('dp_'+k,e.target.value); salvar(); $('#ttl').textContent=titulo(); }));
 $('#bIrMontar').onclick=()=>precisaConferir()?irConferir():irMontar();
-function apagarServico(){ S=null; try{localStorage.removeItem('dp_atual')}catch(e){} telaInicial(); mostrar('importar'); window.scrollTo(0,0); toast('Pronto: abra a escala do novo serviço'); }
-$('#bNova').onclick=()=>{
-  const temAlgo=S&&(S.equipes.some(e=>membros(e.id).length)||(S.alts||[]).length||S.pol.some(A));
-  if(!temAlgo) return confirmar('Começar uma nova distribuição? A atual será apagada.',apagarServico);
-  $('#mNova').classList.remove('hide'); };
+$('#bNova').onclick=()=>excluirEscala(S.id);
 $('#nvNao').onclick=()=>$('#mNova').classList.add('hide');
-$('#nvApagar').onclick=()=>{ $('#mNova').classList.add('hide'); apagarServico(); };
+$('#nvApagar').onclick=()=>{ $('#mNova').classList.add('hide'); const f=nvAcao; nvAcao=null; if(f) f(); };
 $('#nvPdf').onclick=()=>{ $('#mNova').classList.add('hide'); abrirRel(); };
 
 /* ================== EFETIVO / ALTERAÇÕES ================== */
-function linhaTopo(p){ return `<span class="pn">${p.extra?'+':p.ordem}</span><span class="gtag" style="background:var(--${p.cls}-bg);color:var(--${p.cls})">${esc(p.gc||'?')}</span><b class="pnm">${esc(p.guerra)}</b><span class="pmeta">${esc(metaP(p))}</span>`; }
+function linhaTopo(p){ return `<span class="pn">${p.extra?'+':p.ordem}</span><span class="gtag" style="background:var(--${p.cls}-bg);color:var(--${p.cls})">${esc(p.gc||'?')}</span><b class="pnm">${esc(p.guerra)}</b><span class="pmeta">${esc(metaP(p))}</span>${p.fisc?'<span class="fisctag">Fiscalização</span>':''}`; }
 function rowConf(p,ed){
   const showEd=ed||editando.has(p.id), showObs=A(p)||!!p.obs||obsAbertas.has(p.id);
   return `<div class="prow${A(p)?' aus':''}" data-id="${esc(p.id)}">
@@ -798,7 +1122,7 @@ $('#confBody').addEventListener('input',e=>{ const f=e.target.dataset.f, row=e.t
   const p=P(row.dataset.id), v=f==='obs'?e.target.value:e.target.value.toUpperCase().replace(/\s+/g,' ').trimStart();
   p[f]=v; if(f==='gc'){ p.grad=v; p.cls=classe(v); } salvar(); row.querySelector('.pl1').innerHTML=linhaTopo(p); });
 $('#confBody').addEventListener('change',e=>{ if(e.target.dataset.f!=='st') return; const p=P(e.target.closest('.prow').dataset.id);
-  p.st=e.target.value; if(A(p)&&p.eq){ const o=p.eq, eq=S.equipes.find(x=>x.id===o); p.eq=null; p.fn=null; normalizar(o); toast(`${nomeP(p)} saiu da Equipe ${numEq(eq)}`); } salvar(); renderConf();
+  p.st=e.target.value; if(A(p)) fqSoltarPol(p); if(A(p)&&p.eq){ const o=p.eq, eq=S.equipes.find(x=>x.id===o); p.eq=null; p.fn=null; normalizar(o); toast(`${nomeP(p)} saiu da Equipe ${numEq(eq)}`); } salvar(); renderConf();
   if(A(p)){ const i=document.querySelector(`.prow[data-id="${CSS.escape(p.id)}"] input.obs`); if(i&&!i.value) i.focus(); } });
 $('#confBody').addEventListener('click',e=>{ const b=e.target.closest('[data-f]'); if(!b) return; const f=b.dataset.f; const p=P(b.closest('.prow').dataset.id);
   if(f==='mot'){ p.mot=!p.mot; salvar(); renderConf(); }
@@ -817,31 +1141,31 @@ function incluir(g,n,m,l,extra){ g=g.trim().toUpperCase(); n=n.trim().toUpperCas
 
 /* ================== DISTRIBUIÇÃO ================== */
 function ativa(){ return S.equipes.find(e=>e.id===S.ativa)||S.equipes[0]; }
-function chipHTML(p){ return `<div class="blk r-${p.cls}" data-id="${esc(p.id)}">${p.mot?'<span class="cd">CAT D</span>':''}<div class="n"><span class="g">${esc(p.gc)}</span>${esc(p.guerra)}</div><div class="m">${esc(metaP(p))||'&nbsp;'}</div></div>`; }
+function chipHTML(p){ return `<div class="blk r-${p.cls}${selVarios&&sel.has(p.id)?' sel':''}" data-id="${esc(p.id)}">${p.mot?'<span class="cd">CAT D</span>':''}<div class="n"><span class="g">${esc(p.gc)}</span>${esc(p.guerra)}</div><div class="m">${esc(metaP(p))||'&nbsp;'}</div></div>`; }
 function equipeAberta(e){
   const o=ordemEquipe(e), pf=proxFuncao(e), n=numEq(e), outras=S.equipes.filter(x=>x!==e&&(x.salva||membros(x.id).length));
   const opts=p=>{ const t=o.find(([,q])=>q===p)[0];
     if(movendo===p.id) return `<div class="mopts"><span class="lbl">Mover ${esc(nomeP(p))} para:</span>${outras.map(x=>`<button data-movpara="${x.id}">${esc(rotulo(x))}</button>`).join('')||'<span class="muted">Nenhuma outra equipe montada.</span>'}<button data-movx="1">Cancelar</button></div>`;
-    return `<div class="mopts">${t!=='CMT'?'<button data-role="cmt">Comandante</button>':''}${t!=='MOT'&&temMot(e.tipo)?'<button data-role="mot">Motorista</button>':''}${t!=='PAT'?'<button data-role="pat">Patrulheiro</button>':''}<button data-role="mov">Mover para outra equipe</button><button class="out" data-role="out">Tirar da equipe</button></div>`; };
+    return `<div class="mopts">${t!=='CMT'&&temCmt(e.tipo)?'<button data-role="cmt">Comandante</button>':''}${t!=='MOT'&&temMot(e.tipo)?'<button data-role="mot">Motorista</button>':''}${t!=='PAT'?'<button data-role="pat">Patrulheiro</button>':''}<button data-role="mov">Mover para outra equipe</button><button class="out" data-role="out">Tirar da equipe</button></div>`; };
   const linhas=o.map(([t,p])=>`<div class="mrow r-${p.cls}${aberto===p.id?' open':''}" data-id="${esc(p.id)}"><span class="rl rl-${t}">${t}</span><span class="nm">${esc(nomeP(p))}<small>${esc(metaP(p))}</small></span></div>`+(aberto===p.id?opts(p):'')).join('');
   const idx=S.equipes.indexOf(e);
   return `<div class="team act${e.salva?' editing':''}" data-drop="${e.id}">
     <div class="th"><span class="ttl">EQUIPE ${n}${e.salva?'<small>editando</small>':''}</span>
-      <div class="seg">${TIPOS.map(t=>`<button data-tipo="${t}" class="${t===e.tipo?'on':''}">${t==='VIATURA'?'🚓 Viatura':'🚶 A pé'}</button>`).join('')}</div>
+      <div class="seg">${TIPOS.map(t=>`<button data-tipo="${t}" class="${t===e.tipo?'on':''}">${TIPOLBL[t]}</button>`).join('')}</div>
       ${e.salva&&idx>0?`<button class="mini" data-sobe="1" title="Subir">↑</button>`:''}${e.salva&&idx<S.equipes.length-1&&S.equipes[idx+1].salva?`<button class="mini" data-desce="1" title="Descer">↓</button>`:''}
-      <button class="del" data-del="${e.id}" title="Apagar equipe">🗑</button></div>
-    <div class="tf">${temVtr(e.tipo)?`<label class="vtrbox"><span>VTR</span><input data-f="vtr" value="${esc(e.vtr)}" placeholder="nº" autocomplete="off"></label>`:''}
-      <label class="locbox">📍<input data-f="setor" list="dlLoc" value="${esc(e.setor)}" placeholder="Local do policiamento" autocomplete="off"></label>
-      <label class="telbox">📞<input data-f="tel" type="tel" inputmode="tel" value="${esc(telEq(e))}" placeholder="Telefone do comandante (com DDD)" autocomplete="off"></label></div>
+      <button class="del" data-del="${e.id}" title="Apagar equipe">Excluir</button></div>
+    <div class="tf">${temVtr(e.tipo)?`<label class="vtrbox"><span>${e.tipo==='ÔNIBUS'?'ÔNIBUS':'VTR'}</span><input data-f="vtr" value="${esc(e.vtr)}" placeholder="${e.tipo==='ÔNIBUS'?'prefixo':'nº'}" autocomplete="off"></label>`:''}
+      <label class="locbox"><input data-f="setor" list="dlLoc" value="${esc(e.setor)}" placeholder="Local do policiamento" autocomplete="off"></label>
+      <label class="telbox"><input data-f="tel" type="tel" inputmode="tel" value="${esc(telEq(e))}" placeholder="${temCmt(e.tipo)?'Telefone do comandante (com DDD)':'Telefone de contato (com DDD)'}" autocomplete="off"></label></div>
     <div class="mlist">${linhas}
-      <div class="nexthint">Toque num nome da lista → entra como <b>${NOMEF[pf]}</b>${o.length===1?'<br><span style="color:var(--warn)">mínimo de 2 policiais por equipe</span>':''}</div></div>
+      <div class="nexthint">${e.tipo==='ÔNIBUS'?'Toque nos nomes (ou use <b>Vários</b>) → entram na lista do ônibus; motorista CAT D entra como <b>MOTORISTA</b>':`Toque num nome da lista → entra como <b>${NOMEF[pf]}</b>`}${o.length===1?'<br><span style="color:var(--warn)">mínimo de 2 policiais por equipe</span>':''}</div></div>
     <div id="tErr"></div>
-    <div class="tbtns">${e.salva?'<button class="btn save" data-salvar="1">✓ Salvar alterações</button>':'<button class="btn save" data-salvar="1">💾 Salvar equipe</button>'}</div>
+    <div class="tbtns">${e.salva?'<button class="btn save" data-salvar="1">✓ Salvar alterações</button>':'<button class="btn save" data-salvar="1">Salvar equipe</button>'}</div>
   </div>`;
 }
 function equipeFechada(e){
   const o=ordemEquipe(e), pend=!e.salva&&o.length;
-  const l1=[temVtr(e.tipo)?('VTR '+(e.vtr||'—')):'A PÉ', e.setor].filter(Boolean).join(' · ');
+  const l1=[e.tipo==='ÔNIBUS'?('🚌 ÔNIBUS '+(e.vtr||'')).trim():temVtr(e.tipo)?('VTR '+(e.vtr||'—')):'A PÉ', e.setor].filter(Boolean).join(' · ');
   const l2=o.length?o.map(([t,p])=>(p.gc?p.gc+' ':'')+p.guerra.split(' ')[0]).join(', '):'vazia — toque para montar';
   return `<div class="team col${o.length?'':' vazia'}${pend?' pend':''}" data-drop="${e.id}" data-abrir="${e.id}"><span class="num">${numEq(e)}</span>
     <div class="info"><div class="l1">${esc(l1)}${pend?'<span class="tagpend">NÃO SALVA</span>':''}</div><div class="l2">${esc(l2)}</div></div>
@@ -851,17 +1175,22 @@ function renderMontar(){
   const a=ativa(); S.ativa=a.id;
   const salvas=S.equipes.filter(e=>e.salva).length;
   const temVazia=S.equipes.some(e=>!e.salva&&!membros(e.id).length);
-  $('#teams').innerHTML=(salvas?`<div class="secttl">Equipes salvas: ${salvas} · toque para editar</div>`:'')+
+  $('#teams').innerHTML=`<div class="fqcard" data-fqm="1">${fqCardHTML()}</div>`+(salvas?`<div class="secttl">Equipes salvas: ${salvas} · toque para editar</div>`:'')+
     S.equipes.map(e=>e===a?equipeAberta(e):equipeFechada(e)).join('')+(temVazia?'':`<button class="newteam" id="bNew">＋ Nova equipe</button>`);
-  const livres=S.pol.filter(p=>!p.eq&&!A(p)), alt=S.pol.filter(A).length;
+  const livres=S.pol.filter(p=>!p.eq&&!A(p)&&!p.fisc), alt=S.pol.filter(A).length;
   const catd=livres.filter(p=>p.mot), resto=livres.filter(p=>!p.mot);
   const faltosos=S.pol.filter(p=>p.st==='F');
   $('#pool').classList.toggle('mfalta',modoFalta); $('#bFaltas').classList.toggle('on',modoFalta);
-  $('#bFaltas').textContent=modoFalta?'✓ Concluir':'🚫 Marcar falta';
+  $('#pool').classList.toggle('msel',selVarios); $('#bSel').classList.toggle('on',selVarios); $('#bSel').textContent=selVarios?'Sair da seleção':'Vários'; $('#bSel').classList.toggle('hide',modoFalta);
+  [...sel].forEach(id=>{ if(!livres.some(p=>p.id===id)) sel.delete(id); });
+  $('#selBar').innerHTML=selVarios&&!modoFalta?`<div class="selbar"><button data-sa="todos">Todos (${livres.length})</button><button data-sa="nenhum">Limpar</button><button class="ok" data-sa="ok"${sel.size?'':' disabled'}>Colocar ${sel.size} na EQUIPE ${numEq(a)}</button></div>`:'';
+  $('#bFaltas').textContent=modoFalta?'Concluir':'Marcar falta';
   $('#poolTitle').textContent = modoFalta ? `Marcar falta${faltosos.length?' · '+faltosos.length+' falta(s)':''}`
     : livres.length ? `Falta distribuir: ${livres.length}`+(alt?` · ${alt} alteração(ões)`:'') : 'Todos distribuídos ✓';
+  if(selVarios&&!modoFalta){ $('#poolTitle').textContent=`Selecionados: ${sel.size} de ${livres.length}`; }
   $('#poolSub').innerHTML = modoFalta ? 'Toque em quem <b style="color:#b42318">FALTOU</b>. Tocou errado? Toque de novo para desfazer.'
-    : livres.length ? `Toque no nome para pôr na <b>EQUIPE ${numEq(a)}</b>` : 'Toque em <b>🏠 Início</b> para Fiscalizar ou gerar o Relatório.';
+    : selVarios ? `Toque nos nomes para marcar e coloque todos de uma vez na <b>EQUIPE ${numEq(a)}</b>.`
+    : livres.length ? `Toque no nome para pôr na <b>EQUIPE ${numEq(a)}</b>` : 'Toque em <b>Início</b> para Fiscalizar ou gerar o Relatório.';
   if(modoFalta){ $('#poolBody').innerHTML=(livres.length?`<div class="grp-t">Escalados</div><div class="chips">${livres.map(chipHTML).join('')}</div>`:'<div class="muted" style="padding:8px">Ninguém sobrando na lista.</div>')+
       (faltosos.length?`<div class="grp-t" style="color:#b42318">Faltaram (${faltosos.length}) — toque para desfazer</div><div class="chips">${faltosos.map(p=>chipHTML(p).replace('class="blk ','class="blk falt ')).join('')}</div>`:'')+
       '<div class="muted" style="padding:6px 2px">Quem já está numa equipe: marque a falta em <b>Efetivo</b> ou, durante o serviço, em <b>Fiscalizar → Registrar alteração</b>.</div>';
@@ -884,8 +1213,9 @@ function verAtiva(foco){ const t=document.querySelector('.team.act'); if(t){ t.s
 function abrir(eid,foco){ S.ativa=eid; aberto=null; movendo=null; salvar(); renderMontar(); verAtiva(foco); }
 function mover(id,dest){
   const p=P(id); if(!p) return; const orig=p.eq;
+  if(p.fisc&&dest!=='pool'){ toast(nomeP(p)+' está na equipe de fiscalização'); renderMontar(); return; }
   if(dest==='pool'){ p.eq=null; p.fn=null; }
-  else { const e=S.equipes.find(x=>x.id===dest); if(!e||(p.eq===e.id)) return; colocar(p,e,proxFuncao(e)); }
+  else { const e=S.equipes.find(x=>x.id===dest); if(!e||(p.eq===e.id)) return; colocar(p,e,proxFuncao(e,p)); }
   if(orig&&orig!==p.eq) normalizar(orig);
   aberto=null; movendo=null; salvar(); renderMontar();
 }
@@ -904,10 +1234,11 @@ function salvarEquipe(){
 }
 $('#teams').addEventListener('click',e=>{
   const t=e.target;
+  if(t.closest('[data-fqm]')){ irFiscEq('montar'); return; }
   const ab=t.closest('[data-abrir]'); if(ab){ abrir(ab.dataset.abrir); return; }
   const tp=t.closest('[data-tipo]'); if(tp){ const eq=ativa(); eq.tipo=tp.dataset.tipo; normalizar(eq.id); salvar(); renderMontar(); return; }
   const mp=t.closest('[data-movpara]'); if(mp){ const p=P(movendo), dest=S.equipes.find(x=>x.id===mp.dataset.movpara); const orig=p.eq;
-    colocar(p,dest,proxFuncao(dest)); normalizar(orig); aberto=null; movendo=null; salvar(); renderMontar(); toast(`${nomeP(p)} → Equipe ${numEq(dest)}`); return; }
+    colocar(p,dest,proxFuncao(dest,p)); normalizar(orig); aberto=null; movendo=null; salvar(); renderMontar(); toast(`${nomeP(p)} → Equipe ${numEq(dest)}`); return; }
   if(t.closest('[data-movx]')){ movendo=null; renderMontar(); return; }
   const rl=t.closest('[data-role]'); if(rl){ funcao(aberto,rl.dataset.role); return; }
   if(t.closest('[data-salvar]')){ salvarEquipe(); return; }
@@ -924,36 +1255,34 @@ $('#teams').addEventListener('input',e=>{ const f=e.target.dataset.f; if(f==='te
 $('#teams').addEventListener('change',e=>{ if(e.target.dataset.f==='setor'){ lembrarLocal(e.target.value); $('#dlLoc').innerHTML=locais.map(l=>`<option value="${esc(l)}">`).join(''); } });
 $('#teams').addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.dataset.f){ e.target.blur(); } });
 
-// toque = colocar na equipe aberta; arrastar também funciona (tablet/computador)
+// só toque: tocar coloca na equipe aberta (sem arrastar — rolar a lista nunca move ninguém)
 let drag=null;
 document.addEventListener('pointerdown',e=>{
   const b=e.target.closest('#montar .blk, #montar .mrow'); if(!b||e.button>0) return;
-  drag={id:b.dataset.id,el:b,x:e.clientX,y:e.clientY,on:false,ghost:null,over:null};
-  try{b.setPointerCapture(e.pointerId);}catch(_){}
+  drag={id:b.dataset.id,el:b,x:e.clientX,y:e.clientY};
 });
 document.addEventListener('pointermove',e=>{
-  if(!drag) return;
-  if(!drag.on){ if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<10) return;
-    drag.on=true; const g=drag.el.cloneNode(true); g.classList.add('ghost'); g.style.width=Math.min(drag.el.offsetWidth,260)+'px';
-    document.body.appendChild(g); drag.ghost=g; drag.el.classList.add('dragging'); }
-  drag.ghost.style.left=e.clientX+'px'; drag.ghost.style.top=e.clientY+'px';
-  const alvo=document.elementFromPoint(e.clientX,e.clientY); const z=alvo&&alvo.closest('[data-drop]');
-  if(drag.over&&drag.over!==z) drag.over.classList.remove('drop-on'); if(z) z.classList.add('drop-on'); drag.over=z;
-  for(const sc of [$('#teams'),$('#poolBody')]){ const r=sc.getBoundingClientRect();
-    if(e.clientX>=r.left&&e.clientX<=r.right){ if(e.clientY<r.top+50&&e.clientY>r.top-30) sc.scrollTop-=14; else if(e.clientY>r.bottom-50&&e.clientY<r.bottom+30) sc.scrollTop+=14; } }
+  if(drag&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>=10) drag=null; // dedo andou = rolagem, não toque
 });
 function alternarFalta(id){ const p=P(id); if(!p) return;
   if(p.st==='F'){ p.st='P'; delete p.faltaServ; toast(nomeP(p)+' voltou para a lista'); }
-  else { p.st='F'; if(p.eq){ const o=p.eq; p.eq=null; p.fn=null; normalizar(o); } toast('🚫 '+nomeP(p)+' – falta'); }
+  else { p.st='F'; if(p.eq){ const o=p.eq; p.eq=null; p.fn=null; normalizar(o); } toast(nomeP(p)+' – falta'); }
   salvar(); renderMontar(); }
-$('#bFaltas').onclick=()=>{ modoFalta=!modoFalta; aberto=null; movendo=null; renderMontar(); };
+$('#bFaltas').onclick=()=>{ modoFalta=!modoFalta; if(modoFalta){ selVarios=false; sel.clear(); } aberto=null; movendo=null; renderMontar(); };
+$('#bSel').onclick=()=>{ selVarios=!selVarios; sel.clear(); aberto=null; movendo=null; renderMontar(); };
+function colocarVarios(){ const e=ativa(), lista=S.pol.filter(p=>sel.has(p.id)&&!p.eq&&!A(p)&&!p.fisc); if(!lista.length) return;
+  lista.forEach(p=>colocar(p,e,proxFuncao(e,p))); normalizar(e.id); sel.clear(); selVarios=false; salvar(); renderMontar(); verAtiva();
+  toast(`✓ ${lista.length} policiais na Equipe ${numEq(e)}`); }
+$('#selBar').addEventListener('click',ev=>{ const b=ev.target.closest('[data-sa]'); if(!b) return; const k=b.dataset.sa;
+  if(k==='todos'){ S.pol.filter(p=>!p.eq&&!A(p)&&!p.fisc).forEach(p=>sel.add(p.id)); renderMontar(); }
+  else if(k==='nenhum'){ sel.clear(); renderMontar(); }
+  else if(k==='ok') colocarVarios(); });
 function fimDrag(cancel){
   if(!drag) return; const d=drag; drag=null;
-  if(d.on){ d.ghost.remove(); d.el.classList.remove('dragging'); if(d.over) d.over.classList.remove('drop-on');
-    if(!cancel&&d.over&&!modoFalta) mover(d.id,d.over.dataset.drop); else renderMontar(); return; }
   if(cancel) return;
   if(d.el.classList.contains('mrow')){ aberto = aberto===d.id?null:d.id; movendo=null; renderMontar(); return; }
   if(modoFalta){ alternarFalta(d.id); return; }
+  if(selVarios){ sel.has(d.id)?sel.delete(d.id):sel.add(d.id); renderMontar(); return; }
   mover(d.id,S.ativa); verAtiva();
 }
 document.addEventListener('pointerup',()=>fimDrag(false));
@@ -967,12 +1296,12 @@ function cardFiscal(e){
   const nomes=o.map(([t,p])=>(p.gc?p.gc+' ':'')+p.guerra).join(', ');
   const hist=(e.hist||[]).map((x,k)=>`<div class="hi"><span>${esc(linhasHist({hist:[x]})[0])}</span><button data-rmh="${k}" title="Apagar registro">✕</button></div>`).join('');
   return `<div class="fteam" data-eq="${e.id}">
-    <div class="fh"><b>${esc(rotulo(e))}${e.tipo!=='VIATURA'?' · A PÉ':''}</b><span class="cnt">${o.length} PM</span></div>
-    <div class="pt">📍 ${esc(atual||'Local não informado')}${r.length?`<small>Remanejada ${r.length}x · início: ${esc(pontoIni(e)||'—')}</small>`:''}</div>
+    <div class="fh"><b>${esc(rotulo(e))}${e.tipo==='A PÉ'?' · A PÉ':''}</b><span class="cnt">${o.length} PM</span></div>
+    <div class="pt">${esc(atual||'Local não informado')}${r.length?`<small>Remanejada ${r.length}x · início: ${esc(pontoIni(e)||'—')}</small>`:''}</div>
     <div class="nomes">${esc(nomes)}</div>
-    ${(()=>{ const c=cmtEq(e), t=telEq(e); return `<div class="ftel"><span class="nm">CMT: ${c?esc(nomeP(c)):'—'}${t?' · '+esc(fmtTel(t)):''}</span>${t?botoesTel(t):'<input data-ftel="1" type="tel" inputmode="tel" placeholder="📞 Telefone do comandante (com DDD)">'}</div>`; })()}
+    ${(()=>{ const c=cmtEq(e), t=telEq(e); return `<div class="ftel"><span class="nm">${temCmt(e.tipo)?'CMT: '+(c?esc(nomeP(c)):'—'):'Contato'}${t?' · '+esc(fmtTel(t)):''}</span>${t?botoesTel(t):`<input data-ftel="1" type="tel" inputmode="tel" placeholder="📞 Telefone ${temCmt(e.tipo)?'do comandante':'de contato'} (com DDD)">`}</div>`; })()}
     <div class="st ${f.length?'sim':'nao'}">${f.length?`✓ Fiscalizada ${f.length}x · última às ${hFmt(f[f.length-1].h)}`:'Ainda não fiscalizada'}</div>
-    <div class="acts"><button class="btn save" data-fisc="1">✓ Fiscalizada</button><button class="btn lt" data-rem="1">🔁 Remanejar</button></div>
+    <div class="acts"><button class="btn save" data-fisc="1">✓ Fiscalizada</button><button class="btn lt" data-rem="1">Remanejar</button></div>
     ${hist?`<div class="hist">${hist}</div>`:''}
   </div>`; }
 function renderFiscal(){
@@ -987,7 +1316,7 @@ $('#bFisc').onclick=irFiscal;
 let acao=null;
 function abrirAcao(tipo,e){
   acao={tipo,eid:e.id}; const rem=tipo==='rem';
-  $('#aTit').textContent=(rem?'🔁 Remanejar ':'✓ Fiscalizar ')+rotulo(e);
+  $('#aTit').textContent=(rem?'Remanejar ':'Fiscalizar ')+rotulo(e);
   $('#aSub').textContent=rem?('Ponto atual: '+(limpaLoc(e.setor)||'não informado')):('Local: '+(limpaLoc(e.setor)||'não informado'));
   $('#aPontoC').classList.toggle('hide',!rem); $('#aPonto').value='';
   $('#aHora').value=agoraHM();
@@ -1068,8 +1397,8 @@ function numeros(){
   const cont=k=>S.pol.filter(p=>p.st===k).length;
   const eqs=S.equipes.filter(e=>membros(e.id).length);
   return {escal:escal.length, pres:escal.filter(p=>!A(p)).length, ext:ext.length, F:cont('F'), LM:cont('LM'), ERR:cont('ERR'), OUT:cont('OUT'),
-    alt:S.pol.filter(p=>A(p)&&!p.faltaServ).length+(S.alts||[]).length, eqs, vtr:eqs.filter(e=>e.tipo==='VIATURA').length, pe:eqs.filter(e=>e.tipo!=='VIATURA').length,
-    emp:S.pol.filter(p=>p.eq&&!A(p)).length, sem:S.pol.filter(p=>!p.eq&&!A(p))};
+    alt:S.pol.filter(p=>A(p)&&!p.faltaServ).length+(S.alts||[]).length, eqs, vtr:eqs.filter(e=>e.tipo==='VIATURA').length, pe:eqs.filter(e=>e.tipo==='A PÉ').length, oni:eqs.filter(e=>e.tipo==='ÔNIBUS').length,
+    emp:S.pol.filter(p=>(p.eq||p.fisc)&&!A(p)).length, sem:S.pol.filter(p=>!p.eq&&!A(p)&&!p.fisc), fisc:S.pol.filter(p=>p.fisc&&!A(p)).length};
 }
 function linhaAlt(p){ return `${nomeP(p)}${p.mat&&!/^X\d/.test(p.mat)?' (Mat. '+p.mat+')':''} – ${ST[p.st]}${p.obs?': '+p.obs:''}`; }
 const alteracoes=()=>S.pol.filter(p=>(A(p)||p.obs)&&!p.faltaServ); // falta lançada no serviço aparece em ALTERAÇÕES DO SERVIÇO
@@ -1080,19 +1409,20 @@ function textoRel(){
   if(i.local) L.push('📍 *Operação:* '+i.local);
   L.push('📅 '+(i.data||'')+(i.periodo?'  ⏰ '+i.periodo:''));
   if(i.missao) L.push('🎯 *Missão:* '+i.missao.trim());
-  if(i.resp) L.push('👮 *Responsável/Fiscal:* '+i.resp+(i.respMat?' – Mat. '+i.respMat:''));
+  if(i.resp) L.push('*Responsável/Fiscal:* '+i.resp+(i.respMat?' – Mat. '+i.respMat:''));
+  if(FQ.mem.length){ L.push(''); L.push('*EQUIPE DE FISCALIZAÇÃO*'+(FQ.vtr?' – VTR '+FQ.vtr:'')); fqOrd().forEach(m=>L.push(`▪ ${FQTAG[m.fn]}: ${nomeFQ(m)}${m.mat?' – '+m.mat:''}`)); }
   L.push(''); L.push('*RESUMO DO EFETIVO*');
   L.push(`Escalados: ${n.escal} · Presentes: ${n.pres}`);
   const aus=[['F','Faltas'],['LM','Licença médica'],['ERR','Erro na escala'],['OUT','Outros']].filter(([k])=>n[k]).map(([k,t])=>`${t}: ${n[k]}`);
   if(aus.length) L.push(aus.join(' · '));
   if(n.ext) L.push(`Incluídos fora da escala: ${n.ext}`);
-  L.push(`Equipes: ${n.eqs.length} (${n.vtr} VTR · ${n.pe} a pé) · Empregados: ${n.emp}`);
+  L.push(`Equipes: ${n.eqs.length} (${n.vtr} VTR · ${n.pe} a pé${n.oni?' · '+n.oni+' ônibus':''}) · Empregados: ${n.emp}`);
   { const fz=n.eqs.filter(e=>fiscsEq(e).length).length, rm=n.eqs.reduce((s,e)=>s+remsEq(e).length,0);
     L.push(`Fiscalizadas: ${fz} de ${n.eqs.length} equipes`+(rm?` · Remanejamentos: ${rm}`:'')); }
   if(n.sem.length) L.push(`Sem equipe: ${n.sem.length}`);
   L.push(''); L.push('*EQUIPES*');
   n.eqs.forEach(e=>{ const o=ordemEquipe(e);
-    L.push(''); L.push(`*${rotulo(e)}*${e.tipo!=='VIATURA'?' · A PÉ':''}`); L.push(linhaPonto(e)); linhasHist(e).forEach(t=>L.push(t));
+    L.push(''); L.push(`*${rotulo(e)}*${e.tipo==='A PÉ'?' · A PÉ':''}`); L.push(linhaPonto(e)); linhasHist(e).forEach(t=>L.push(t));
     o.forEach(([t,p])=>L.push(`▪ ${t}: ${nomeP(p)}${metaP(p)?' – '+metaP(p):''}${extraP(p)?' – '+extraP(p):''}`)); });
   if(n.sem.length){ L.push(''); L.push('*SEM EQUIPE:* '+n.sem.map(nomeP).join(', ')); }
   const al=alteracoes(); if(al.length){ L.push(''); L.push('*ALTERAÇÕES DO EFETIVO*'); al.forEach(p=>L.push('▪ '+linhaAlt(p))); }
@@ -1123,7 +1453,8 @@ function imagemRel(){
   const alt=e=>hHead+locL(e).length*25+8+ordemEquipe(e).length*lh+14;
   // equipes em linhas de 2 (assim o PDF pode virar a folha entre uma linha e outra, sem cortar equipe)
   let yl=0; const pos=[]; for(let k=0;k<n.eqs.length;k+=2){ const par=n.eqs.slice(k,k+2); par.forEach((e,c)=>pos.push({e,c,y:yl})); yl+=Math.max(...par.map(alt))+gap; }
-  const topoEq=hCab+hRes+20, hEq=yl;
+  const fq=fqOrd(), hFq=fq.length?62+fq.length*lh+16:0;
+  const topoEq=hCab+hRes+20+(hFq?hFq+gap:0), hEq=yl;
   // rodapé: sem equipe, alterações, observações
   const blocos=[];
   if(n.sem.length) blocos.push(['SEM EQUIPE',quebra(n.sem.map(nomeP).join(', '),W-pad*2,F2),'#b54708']);
@@ -1145,12 +1476,22 @@ function imagemRel(){
     x.fillStyle=t==='Alterações'&&v?'#b42318':'#14213d'; x.font='800 38px system-ui,sans-serif'; x.textAlign='center'; x.fillText(String(v),X+tw/2,Y+46);
     x.fillStyle='#667085'; x.font='600 16px system-ui,sans-serif'; x.fillText(t.toUpperCase(),X+tw/2,Y+72); x.textAlign='left'; });
   const cor={of:'#7a1f2b',sgt:'#8a5a00',cb:'#1e6b3a',sd:'#1d4f91'};
+  if(hFq){ const X=pad, Y=hCab+hRes+12, w=W-pad*2;
+    x.fillStyle='#fff'; rr(X,Y,w,hFq,16); x.fill(); x.strokeStyle='#e5c76b'; x.lineWidth=2; x.stroke();
+    x.fillStyle='#7a5200'; rr(X,Y,w,52,16); x.fill(); x.fillRect(X,Y+30,w,22);
+    x.fillStyle='#fff'; x.font='800 23px system-ui,sans-serif'; x.fillText('EQUIPE DE FISCALIZAÇÃO',X+16,Y+34);
+    x.font='700 18px system-ui,sans-serif'; x.textAlign='right'; x.fillText([FQ.vtr?'VTR '+FQ.vtr:'',FQ.tel?fmtTel(FQ.tel):''].filter(Boolean).join('  ·  '),X+w-16,Y+33); x.textAlign='left';
+    fq.forEach((m,k)=>{ const yy=Y+52+20+k*lh+10;
+      x.fillStyle=cor[m.cls]||cor.sd; x.fillRect(X+16,yy-20,6,44);
+      x.fillStyle=m.fn==='of'?'#7a1f2b':m.fn==='mot'?'#0e7090':'#98a2b3'; rr(X+30,yy-19,52,24,6); x.fill(); x.fillStyle='#fff'; x.font='800 14px system-ui,sans-serif'; x.textAlign='center'; x.fillText(FQTAG[m.fn],X+56,yy-2); x.textAlign='left';
+      x.fillStyle='#1b2333'; x.font='700 20px system-ui,sans-serif'; x.fillText(fit(nomeFQ(m),w-120),X+92,yy);
+      x.fillStyle='#667085'; x.font='500 15px system-ui,sans-serif'; x.fillText(fit([m.lotacao,m.mat].filter(Boolean).join(' · '),w-120),X+92,yy+21); }); }
   pos.forEach(({e,c,y})=>{
     const X=pad+c*(cw+gap), Y=topoEq+y, m=ordemEquipe(e), h=alt(e);
     x.fillStyle='#fff'; rr(X,Y,cw,h,16); x.fill(); x.strokeStyle='#d7dce6'; x.lineWidth=2; x.stroke();
     x.fillStyle='#1f3160'; rr(X,Y,cw,52,16); x.fill(); x.fillRect(X,Y+30,cw,22);
     x.fillStyle='#fff'; x.font='800 23px system-ui,sans-serif'; x.fillText(fit(rotulo(e),cw*0.7),X+16,Y+34);
-    x.font='700 16px system-ui,sans-serif'; x.fillStyle='#c9d4ee'; x.textAlign='right'; x.fillText(e.tipo==='VIATURA'?'':'A PÉ',X+cw-14,Y+33); x.textAlign='left';
+    x.font='700 16px system-ui,sans-serif'; x.fillStyle='#c9d4ee'; x.textAlign='right'; x.fillText(e.tipo==='A PÉ'?'A PÉ':e.tipo==='ÔNIBUS'?(e.vtr?'':'ÔNIBUS'):'',X+cw-14,Y+33); x.textAlign='left';
     const ll=locL(e), dy=ll.length*25+8; ll.forEach(([t,f,c],k)=>{ x.font=f; x.fillStyle=t.includes('não informado')?'#98a2b3':c; x.fillText(t,X+16,Y+78+k*25); });
     m.forEach(([tag,p],k)=>{ const yy=Y+hHead+dy+k*lh+16;
       x.fillStyle=cor[p.cls]; x.fillRect(X+16,yy-20,6,44);
@@ -1198,7 +1539,7 @@ function pdfDoCanvas(cv){
   add(`trailer\n<< /Size ${n} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
   return new Blob(partes,{type:'application/pdf'});
 }
-const nomePdf=()=>'relatorio-'+((S.info.data||'servico').replace(/\s*\(.*\)/,'').trim().replace(/[^\wÀ-ú]+/g,'-').replace(/^-|-$/g,''))+'.pdf';
+const nomePdf=()=>'relatorio-'+[(S.info.data||'servico').replace(/\s*\(.*\)/,''), (S.info.local||S.info.escala||'').slice(0,30)].filter(Boolean).join(' ').trim().replace(/[^\wÀ-ú]+/g,'-').replace(/^-|-$/g,'')+'.pdf';
 function pegarPdf(){ if(!relPdf) relPdf=pdfDoCanvas(relCanvas||imagemRel()); return relPdf; }
 function baixarPdf(){
   const url=URL.createObjectURL(pegarPdf()), a=document.createElement('a'); a.href=url; a.download=nomePdf(); a.target='_blank'; a.rel='noopener';
@@ -1226,6 +1567,9 @@ $('#bPdfShare').onclick=async()=>{
 $('#bPdfDown').onclick=()=>{ try{ baixarPdf(); }catch(e){ $('#relMsg').textContent='Não foi possível gerar o PDF: '+(e.message||e); } };
 
 /* ================== CONFIRMAÇÃO ================== */
+$('#bHome').innerHTML=ICO.inicio+'Início'; $('#bEsc').innerHTML=ICO.escalas+'Escalas';
+$$('[data-ico]').forEach(el=>el.innerHTML=ICO[el.dataset.ico]||'');
+renderEscalas(); $('#ttl').textContent=titulo();
 function confirmar(t,ok){ $('#cfTxt').textContent=t; $('#mConfirm').classList.remove('hide');
   $('#cfYes').onclick=()=>{$('#mConfirm').classList.add('hide');ok();}; $('#cfNo').onclick=()=>$('#mConfirm').classList.add('hide'); }
 </script>
