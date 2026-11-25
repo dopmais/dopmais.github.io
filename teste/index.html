@@ -352,6 +352,23 @@ h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy
 .msg,.toast{border-radius:3px}
 .tg,.fbtn,.selbar button,.segf button{border-radius:3px}
 .assin{color:#98a2b3}
+.autobox{background:#fff;border:1px solid var(--line);border-left:4px solid #a8873a;border-radius:4px;padding:10px 12px;margin:4px 0 10px}
+.autobox .at{font-weight:800;color:#0f2747;font-size:14px;text-transform:uppercase;letter-spacing:.03em}
+.autobox .as{font-size:12.5px;color:var(--mute);margin-top:2px}
+.autobox .aops{display:flex;gap:8px;margin-top:8px}
+.autobox .aops button{flex:1;border:1px solid #0f2747;background:#fff;color:#0f2747;border-radius:3px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:1px}
+.autobox .aops button b{font-size:14px}.autobox .aops button small{font-size:11.5px;color:var(--mute)}
+.autobox .btn{margin-top:8px;width:100%}
+/* fiscalizar / efetivo / dados do serviço */
+.fteam{border-radius:4px;border-top:3px solid #0f2747}
+.fteam .fh .cnt{border-radius:3px;background:#eef2f7}
+.fteam .pt{color:#0f2747}
+.tbt{border-radius:3px;padding:8px 14px}
+.tbt.lig{background:#0f2747}.tbt.wa{background:#1f6f43}
+.ftel input,.prow input.obs,.ic,select,textarea,input{border-radius:3px}
+.prow{padding:11px 2px}
+.ic{color:#0f2747;font-weight:700}
+.fteam .st.nao{color:#9a3412}
 </style>
 </head>
 <body>
@@ -474,7 +491,7 @@ h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy
 <!-- 3. EFETIVO / ALTERAÇÕES -->
 <section class="screen stack hide" id="conferir">
   <button class="btn big" id="bMontar">Ir para a distribuição →</button>
-  <div class="msg warn hide" id="bannerFoto"><b>Escala lida por foto.</b> Confira graduação, nome, matrícula e lotação de cada um (✎ abre a correção). Inclua quem não foi lido e remova linhas erradas.</div>
+  <div class="msg warn hide" id="bannerFoto"><b>Escala lida por foto.</b> Confira graduação, nome, matrícula e lotação de cada um ("Corrigir" abre a correção). Inclua quem não foi lido e remova linhas erradas.</div>
   <div class="card">
     <div style="margin-bottom:4px" id="confCount"></div>
     <div class="muted">Todos começam como <b>Presente</b>. Marque falta, licença médica, erro na escala ou outro, com observação.</div>
@@ -494,7 +511,7 @@ h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy
 <section class="hide" id="montar">
   <div id="teams"></div>
   <aside id="pool">
-    <div class="poolhead"><div class="phrow"><div style="flex:1;min-width:0"><div class="t" id="poolTitle"></div><div class="sub" id="poolSub"></div></div><button class="fbtn selb" id="bSel">Vários</button><button class="fbtn" id="bFaltas">🚫 Marcar falta</button></div><div id="selBar"></div></div>
+    <div class="poolhead"><div class="phrow"><div style="flex:1;min-width:0"><div class="t" id="poolTitle"></div><div class="sub" id="poolSub"></div></div><button class="fbtn selb" id="bSel">Vários</button><button class="fbtn" id="bFaltas">Marcar falta</button></div><div id="selBar"></div></div>
     <div id="poolBody" data-drop="pool"></div>
   </aside>
 </section>
@@ -825,9 +842,9 @@ const fiscsEq=e=>(e.hist||[]).filter(x=>x.tipo==='fisc');
 const pontoIni=e=>{ const r=remsEq(e); return limpaLoc(r.length?r[0].de:e.setor); };
 function linhasHist(e){ // texto do histórico, na ordem em que aconteceu
   return (e.hist||[]).map(x=>x.tipo==='rem'
-    ? `🔁 ${hFmt(x.h)} Remanejada → ${limpaLoc(x.para)||'?'}${(x.motivo||'').trim()?' – Motivo: '+x.motivo.trim():''}`
-    : `✓ ${hFmt(x.h)} Fiscalizada${(x.obs||'').trim()?' – '+x.obs.trim():''}`); }
-function linhaPonto(e){ const ini=pontoIni(e); if(!ini) return '📍 Local não informado'; return '📍 '+ini+(remsEq(e).length?' (ponto inicial)':''); }
+    ? `${hFmt(x.h)} Remanejada → ${limpaLoc(x.para)||'?'}${(x.motivo||'').trim()?' – Motivo: '+x.motivo.trim():''}`
+    : `${hFmt(x.h)} Fiscalizada${(x.obs||'').trim()?' – '+x.obs.trim():''}`); }
+function linhaPonto(e){ const ini=pontoIni(e); if(!ini) return 'Local não informado'; return 'Local: '+ini+(remsEq(e).length?' (ponto inicial)':''); }
 // telefone do comandante da equipe (fica só no aparelho; lembrado pela matrícula do CMT)
 const soDig=t=>(t||'').replace(/\D/g,'');
 const telsMem=()=>LS.get('dp_tels')||{};
@@ -850,6 +867,47 @@ function colocar(p,e,fn){
   const orig=p.eq, origFn=p.fn;
   if(fn!=='pat'){ const o=ocup(e.id,fn); if(o&&o!==p) o.fn=(orig===e.id&&origFn)?origFn:'pat'; }
   p.eq=e.id; p.fn=fn; }
+/* ===== MONTAGEM AUTOMÁTICA =====
+   Antiguidade: posto/graduação e, no mesmo posto, a ordem da escala (que já vem do mais antigo ao mais moderno).
+   A lista é cortada em faixas do tamanho do nº de VTRs: a 1ª faixa são os comandantes (o mais antigo na VTR 1);
+   cada faixa seguinte é distribuída no sentido contrário da anterior (serpentina), então cada VTR recebe um de cada faixa
+   e nenhuma fica só de graduados ou só de soldados. Quem sobra da divisão entra a mais nas VTRs de comandante mais moderno.
+   Motorista: o mais moderno da equipe (qualquer policial dirige viatura; CAT D só importa no ônibus). */
+const ANTIG=[['CEL',1],['TC',2],['MAJ',3],['CAP',4],['1º TEN',5],['2º TEN',6],['TEN',6],['ASP',7],['SUBTEN',8],['ST',8],['1º SGT',9],['2º SGT',10],['3º SGT',11],['SGT',11],['CB',12],['SD',13]];
+function nivelAntig(p){ const g=(p.gc||p.grad||'').toUpperCase().replace(/[°O](?=\s*(SGT|TEN))/g,'º').replace(/(\d)\s*º?\s*(SGT|TEN)/,'$1º $2');
+  for(const [k,n] of ANTIG){ if(new RegExp('(^|\\s)'+k.replace('º','º?')+'(\\s|$)').test(g)) return n; } return 14; }
+const antiguidade=(a,b)=>nivelAntig(a)-nivelAntig(b)||((a.extra?1e6:0)+(a.ordem||0))-((b.extra?1e6:0)+(b.ordem||0));
+function nVtrs(n,k){ if(n<k) return 0; let T=Math.floor(n/k); if(n-T*k>T) T=Math.ceil(n/k); return T; } // sobra de no máx. 1 por VTR; se passar disso, mais VTRs com um a menos
+function planoAuto(livres,k){ const L=[...livres].sort(antiguidade), T=nVtrs(L.length,k); if(T<1) return null;
+  const eq=Array.from({length:T},()=>[]);
+  for(let c=0;c*T<L.length;c++){ const faixa=L.slice(c*T,(c+1)*T);
+    faixa.forEach((p,j)=>eq[faixa.length<T?T-1-j:(c%2===0?j:T-1-j)].push(p)); } // faixa incompleta: VTRs de comandante mais moderno
+  return eq; }
+function tamanhos(eq){ const t=[...new Set(eq.map(m=>m.length))].sort((a,b)=>b-a); return t.join(' e '); }
+let desfazerAuto=null;
+function montarAuto(k){
+  const livres=S.pol.filter(p=>!p.eq&&!A(p)&&!p.fisc); const plano=planoAuto(livres,k);
+  if(!plano){ toast('Policiais insuficientes para equipes de '+k); return; }
+  desfazerAuto={esc:S.id, pol:S.pol.map(p=>[p.id,p.eq,p.fn]), equipes:JSON.parse(JSON.stringify(S.equipes)), seq:S.seq, ativa:S.ativa};
+  S.equipes=S.equipes.filter(e=>e.salva||membros(e.id).length); // tira equipes vazias
+  let primeira=null;
+  plano.forEach(m=>{ const e=novaEquipe(); if(!primeira) primeira=e;
+    m.forEach((p,i)=>{ p.eq=e.id; p.fn=i===0?'cmt':(i===m.length-1&&m.length>1?'mot':'pat'); }); });
+  S.ativa=primeira.id; aberto=null; movendo=null; salvar(); renderMontar();
+  const temGrad=livres.some(p=>nivelAntig(p)<13), semGrad=temGrad?plano.filter(m=>nivelAntig(m[0])>=13).length:0; // escala só de SD: o SD mais antigo comanda, sem aviso
+  toast(plano.length+(plano.length>1?' equipes montadas':' equipe montada')+(semGrad?` · ${semGrad} com SD no comando`:'. Confira e salve.'));
+}
+function desfazerMontagem(){ const d=desfazerAuto; if(!d||d.esc!==S.id) return;
+  const m=new Map(d.pol.map(x=>[x[0],x])); S.pol.forEach(p=>{ const x=m.get(p.id); if(x){ p.eq=x[1]; p.fn=x[2]; } });
+  S.equipes=d.equipes; S.seq=d.seq; S.ativa=d.ativa; desfazerAuto=null; salvar(); renderMontar(); toast('Montagem automática desfeita'); }
+function autoHTML(livres){
+  if(desfazerAuto&&desfazerAuto.esc!==S.id) desfazerAuto=null;
+  if(desfazerAuto) return `<div class="autobox"><b>Equipes montadas automaticamente.</b> Confira, ajuste com o toque e salve cada uma.<button class="btn lt" id="bAutoX">Desfazer montagem</button></div>`;
+  if(livres.length<2) return '';
+  const ops=[2,3,4].map(k=>{ const pl=planoAuto(livres,k); if(!pl) return '';
+    const tm=tamanhos(pl); return `<button data-auto="${k}"><b>${k} por VTR</b><small>${pl.length} VTR${pl.length>1?'s':''}${tm!==String(k)?' de '+tm:''}</small></button>`; }).join('');
+  const L=[...livres].sort(antiguidade), grad=L.filter(p=>nivelAntig(p)<13).length;
+  return `<div class="autobox"><div class="at">Montar equipes automaticamente</div><div class="as">Comandante sempre o mais antigo; os demais divididos por antiguidade para equilibrar as VTRs. Motorista: o mais moderno. Depois é só conferir.</div><div class="aops">${ops}</div>${grad&&grad<(planoAuto(livres,2)||[]).length?`<div class="as" style="color:#9a3412;margin-top:6px">Há ${grad} graduado(s) livres: se houver mais VTRs que isso, algumas terão SD no comando.</div>`:''}</div>`; }
 function proxFuncao(e,p){ // na ordem do papel: comandante, motorista, patrulheiros
   if(e.tipo==='ÔNIBUS') return (p&&p.mot&&!ocup(e.id,'mot'))?'mot':'pat'; // ônibus: motorista CAT D + lista
   if(!ocup(e.id,'cmt')) return 'cmt';
@@ -1048,7 +1106,7 @@ function fqPreencherOficial(){ // o oficial fiscal começa com o responsável j�
   FQ.mem.unshift({fn:'of',gc:'',guerra:r.toUpperCase(),mat:(LS.get('dp_respMat')||'').trim(),lotacao:'',cls:classe(r),src:null}); salvarFQ(); sincRespTodas(); }
 function fqCardHTML(){ const o=fqOrd();
   const l2=o.length?o.map(m=>FQTAG[m.fn]+' '+nomeFQ(m)).join(' · '):'Toque para incluir o oficial fiscal, motorista, patrulheiro e VTR';
-  return `<span class="ico">${ICO.escudo}</span><div class="info"><div class="l1">Equipe de fiscalização do turno${FQ.vtr?' · VTR '+esc(FQ.vtr):''}</div><div class="l2">${esc(l2)}</div></div><span class="ed" style="font-weight:800;color:#7a5200">${o.length?'✎':'＋'}</span>`; }
+  return `<span class="ico">${ICO.escudo}</span><div class="info"><div class="l1">Equipe de fiscalização do turno${FQ.vtr?' · VTR '+esc(FQ.vtr):''}</div><div class="l2">${esc(l2)}</div></div><span class="ed" style="font-weight:800;font-size:11px;letter-spacing:.06em;color:#6b5420;border:1px solid #d9c9a0;border-radius:3px;padding:4px 7px">${o.length?'EDITAR':'INCLUIR'}</span>`; }
 let fqVolta='importar', fqFn='mot';
 function irFiscEq(volta){ fqVolta=volta||tela; fqPreencherOficial(); renderFiscEq(); mostrar('fisceq'); window.scrollTo(0,0); }
 function livresTurno(){ const out=[]; ESC.forEach(sc=>sc.pol.forEach(p=>{ if(!ausS(p)&&!p.fisc) out.push({sc,p}); }));
@@ -1110,7 +1168,7 @@ function rowConf(p,ed){
   return `<div class="prow${A(p)?' aus':''}" data-id="${esc(p.id)}">
     <div class="pl1">${linhaTopo(p)}</div>
     <div class="pl2"><select class="stsel st-${p.st}" data-f="st">${Object.entries(ST).map(([k,v])=>`<option value="${k}"${k===p.st?' selected':''}>${v}</option>`).join('')}</select>
-      <button class="tg ${p.mot?'on':''}" data-f="mot">CAT D</button>${showObs?'':'<button class="tg" data-f="obsbtn">＋ Observação</button>'}<button class="ic" data-f="edit" title="Corrigir dados">✎ Corrigir</button></div>
+      <button class="tg ${p.mot?'on':''}" data-f="mot">CAT D</button>${showObs?'':'<button class="tg" data-f="obsbtn">＋ Observação</button>'}<button class="ic" data-f="edit" title="Corrigir dados">Corrigir</button></div>
     ${showObs?`<input class="obs" data-f="obs" value="${esc(p.obs)}" placeholder="Observação (ex.: atestado até 25/11)">`:''}
     ${showEd?`<div class="pedit"><label>Grad.<input data-f="gc" value="${esc(p.gc)}"></label><label>Nome no bloco<input data-f="guerra" value="${esc(p.guerra)}"></label>
       <label>Matrícula<input data-f="mat" value="${esc(p.mat)}" inputmode="numeric"></label><label>Lotação (UPM)<input data-f="lotacao" value="${esc(p.lotacao)}"></label>
@@ -1175,7 +1233,7 @@ function equipeFechada(e){
   const l2=o.length?o.map(([t,p])=>(p.gc?p.gc+' ':'')+p.guerra.split(' ')[0]).join(', '):'vazia — toque para montar';
   return `<div class="team col${o.length?'':' vazia'}${pend?' pend':''}" data-drop="${e.id}" data-abrir="${e.id}"><span class="num">${numEq(e)}</span>
     <div class="info"><div class="l1">${esc(l1)}${pend?'<span class="tagpend">NÃO SALVA</span>':''}</div><div class="l2">${esc(l2)}</div></div>
-    ${o.length?`<span class="cnt"${o.length<2?' style="background:#fff4e5;color:#b54708"':''}>${o.length} PM</span>`:''}${o.length?'<span class="ed">✎</span>':''}</div>`;
+    ${o.length?`<span class="cnt"${o.length<2?' style="background:#fff4e5;color:#b54708"':''}>${o.length} PM</span>`:''}${o.length?'<span class="ed" style="font-size:11px;font-weight:800;letter-spacing:.05em">EDITAR</span>':''}</div>`;
 }
 function renderMontar(){
   const a=ativa(); S.ativa=a.id;
@@ -1201,7 +1259,7 @@ function renderMontar(){
       (faltosos.length?`<div class="grp-t" style="color:#b42318">Faltaram (${faltosos.length}) — toque para desfazer</div><div class="chips">${faltosos.map(p=>chipHTML(p).replace('class="blk ','class="blk falt ')).join('')}</div>`:'')+
       '<div class="muted" style="padding:6px 2px">Quem já está numa equipe: marque a falta em <b>Efetivo</b> ou, durante o serviço, em <b>Fiscalizar → Registrar alteração</b>.</div>';
     $('#dlLoc').innerHTML=locais.map(l=>`<option value="${esc(l)}">`).join(''); return; }
-  $('#poolBody').innerHTML = (catd.length?`<div class="grp-t">Motorista CAT D — ônibus, se necessário</div><div class="chips">${catd.map(chipHTML).join('')}</div>`:'')+
+  $('#poolBody').innerHTML = (selVarios?'':autoHTML(livres))+(catd.length?`<div class="grp-t">Motorista CAT D — ônibus, se necessário</div><div class="chips">${catd.map(chipHTML).join('')}</div>`:'')+
     (resto.length?`<div class="grp-t">Escalados</div><div class="chips">${resto.map(chipHTML).join('')}</div>`:'')+
     (!livres.length?'<div class="done">✓ Todo o efetivo foi distribuído</div>':'')+
     `<button class="addpm" id="bAddPm">＋ Incluir policial que não está na escala (ex.: o oficial)</button>
@@ -1211,6 +1269,8 @@ function renderMontar(){
   $('#dlLoc').innerHTML=locais.map(l=>`<option value="${esc(l)}">`).join('');
 }
 $('#poolBody').addEventListener('click',e=>{
+  const ab=e.target.closest('[data-auto]'); if(ab){ const k=+ab.dataset.auto; confirmar(`Montar as equipes automaticamente, ${k} policiais por VTR? Quem já está em equipe não muda.`,()=>montarAuto(k)); return; }
+  if(e.target.closest('#bAutoX')){ desfazerMontagem(); return; }
   if(e.target.closest('#bAddPm')){ $('#pmForm').classList.remove('hide'); $('#bAddPm').classList.add('hide'); $('#pmG').focus(); }
   if(e.target.closest('#pmX')) renderMontar();
   if(e.target.closest('#pmOk')){ if(incluir($('#pmG').value,$('#pmN').value,$('#pmM').value,$('#pmL').value,true)) renderMontar(); else $('#pmN').focus(); }
@@ -1220,6 +1280,7 @@ function abrir(eid,foco){ S.ativa=eid; aberto=null; movendo=null; salvar(); rend
 function mover(id,dest){
   const p=P(id); if(!p) return; const orig=p.eq;
   if(p.fisc&&dest!=='pool'){ toast(nomeP(p)+' está na equipe de fiscalização'); renderMontar(); return; }
+  desfazerAuto=null;
   if(dest==='pool'){ p.eq=null; p.fn=null; }
   else { const e=S.equipes.find(x=>x.id===dest); if(!e||(p.eq===e.id)) return; colocar(p,e,proxFuncao(e,p)); }
   if(orig&&orig!==p.eq) normalizar(orig);
@@ -1412,7 +1473,7 @@ function textoRel(){
   const i=S.info, n=numeros(), L=[];
   L.push('*RELATÓRIO DO SERVIÇO – DISTRIBUIÇÃO DO POLICIAMENTO*');
   if(i.escala) L.push('📋 *Escala:* '+i.escala);
-  if(i.local) L.push('📍 *Operação:* '+i.local);
+  if(i.local) L.push("*Operação:* "+i.local);
   L.push('📅 '+(i.data||'')+(i.periodo?'  ⏰ '+i.periodo:''));
   if(i.missao) L.push('🎯 *Missão:* '+i.missao.trim());
   if(i.resp) L.push('*Responsável/Fiscal:* '+i.resp+(i.respMat?' – Mat. '+i.respMat:''));
@@ -1442,7 +1503,7 @@ function imagemRel(){
   const quebra=(t,w,font)=>{ ctx.font=font; const out=[]; for(const par of String(t).split('\n')){ const ws=par.split(' '); let c='';
     for(const p of ws){ const nn=c?c+' '+p:p; if(ctx.measureText(nn).width>w&&c){out.push(c);c=p;} else c=nn; } out.push(c); } return out; };
   const fit=(t,w)=>{ if(ctx.measureText(t).width<=w) return t; while(t.length>1&&ctx.measureText(t+'…').width>w) t=t.slice(0,-1); return t+'…'; };
-  const rr=(X,Y,w,h,r)=>{ctx.beginPath();ctx.moveTo(X+r,Y);ctx.arcTo(X+w,Y,X+w,Y+h,r);ctx.arcTo(X+w,Y+h,X,Y+h,r);ctx.arcTo(X,Y+h,X,Y,r);ctx.arcTo(X,Y,X+w,Y,r);ctx.closePath();};
+  const rr=(X,Y,w,h,r)=>{r=Math.min(r,4);ctx.beginPath();ctx.moveTo(X+r,Y);ctx.arcTo(X+w,Y,X+w,Y+h,r);ctx.arcTo(X+w,Y+h,X,Y+h,r);ctx.arcTo(X,Y+h,X,Y,r);ctx.arcTo(X,Y,X+w,Y,r);ctx.closePath();};
   const F1='500 23px system-ui,sans-serif', F2='600 19px system-ui,sans-serif';
   // cabeçalho
   const cab=[]; if(i.escala) cab.push(['Escala: '+i.escala,F1]); if(i.local) cab.push(['Operação: '+i.local,F1]);
@@ -1455,7 +1516,7 @@ function imagemRel(){
   const hRes=110;
   // equipes em 2 colunas
   const FL='700 18px system-ui,sans-serif', FH='500 16px system-ui,sans-serif';
-  const locL=e=>[...quebra(linhaPonto(e),cw-32,FL).map(t=>[t,FL,'#1f3160']), ...linhasHist(e).flatMap(t=>quebra(t,cw-32,FH).map(u=>[u,FH,t.startsWith('🔁')?'#b54708':'#027a48']))];
+  const locL=e=>[...quebra(linhaPonto(e),cw-32,FL).map(t=>[t,FL,'#1f3160']), ...linhasHist(e).flatMap(t=>quebra(t,cw-32,FH).map(u=>[u,FH,/Remanejada/.test(t)?'#b54708':'#027a48']))];
   const alt=e=>hHead+locL(e).length*25+8+ordemEquipe(e).length*lh+14;
   // equipes em linhas de 2 (assim o PDF pode virar a folha entre uma linha e outra, sem cortar equipe)
   let yl=0; const pos=[]; for(let k=0;k<n.eqs.length;k+=2){ const par=n.eqs.slice(k,k+2); par.forEach((e,c)=>pos.push({e,c,y:yl})); yl+=Math.max(...par.map(alt))+gap; }
@@ -1470,21 +1531,21 @@ function imagemRel(){
   const hBl=blocos.reduce((s,[,l])=>s+44+l.length*28+10,0);
   const H=topoEq+hEq+hBl+70; cv.height=H;
   const x=ctx;
-  x.fillStyle='#eef1f6'; x.fillRect(0,0,W,H);
-  x.fillStyle='#14213d'; x.fillRect(0,0,W,hCab);
+  x.fillStyle='#f4f6f9'; x.fillRect(0,0,W,H);
+  x.fillStyle='#0f2747'; x.fillRect(0,0,W,hCab); x.fillStyle='#a8873a'; x.fillRect(0,hCab-6,W,6);
   x.fillStyle='#fff'; x.font='800 36px system-ui,sans-serif'; x.fillText('RELATÓRIO DO SERVIÇO',pad,56);
   let y=96; cab.forEach(([t,f],k)=>{ x.font=f; x.globalAlpha=.92; x.fillText(fit(t,W-pad*2),pad,y); y+=34;
     if(k===cab.length-(i.resp?2:1)&&misL.length){ misL.forEach(m=>{ x.fillText(m,pad,y); y+=34; }); } });
   x.globalAlpha=1;
   // tiles
   const tw=(W-pad*2-12*(tiles.length-1))/tiles.length;
-  tiles.forEach(([t,v],k)=>{ const X=pad+k*(tw+12), Y=hCab+18; x.fillStyle='#fff'; rr(X,Y,tw,hRes-24,14); x.fill();
+  tiles.forEach(([t,v],k)=>{ const X=pad+k*(tw+12), Y=hCab+18; x.fillStyle='#fff'; rr(X,Y,tw,hRes-24,4); x.fill(); x.strokeStyle='#d7dce6'; x.lineWidth=2; x.stroke(); x.fillStyle='#0f2747'; x.fillRect(X,Y,tw,4);
     x.fillStyle=t==='Alterações'&&v?'#b42318':'#14213d'; x.font='800 38px system-ui,sans-serif'; x.textAlign='center'; x.fillText(String(v),X+tw/2,Y+46);
     x.fillStyle='#667085'; x.font='600 16px system-ui,sans-serif'; x.fillText(t.toUpperCase(),X+tw/2,Y+72); x.textAlign='left'; });
   const cor={of:'#7a1f2b',sgt:'#8a5a00',cb:'#1e6b3a',sd:'#1d4f91'};
   if(hFq){ const X=pad, Y=hCab+hRes+12, w=W-pad*2;
-    x.fillStyle='#fff'; rr(X,Y,w,hFq,16); x.fill(); x.strokeStyle='#e5c76b'; x.lineWidth=2; x.stroke();
-    x.fillStyle='#7a5200'; rr(X,Y,w,52,16); x.fill(); x.fillRect(X,Y+30,w,22);
+    x.fillStyle='#fff'; rr(X,Y,w,hFq,16); x.fill(); x.strokeStyle='#a8873a'; x.lineWidth=2; x.stroke();
+    x.fillStyle='#6b5420'; rr(X,Y,w,52,16); x.fill(); x.fillRect(X,Y+30,w,22);
     x.fillStyle='#fff'; x.font='800 23px system-ui,sans-serif'; x.fillText('EQUIPE DE FISCALIZAÇÃO',X+16,Y+34);
     x.font='700 18px system-ui,sans-serif'; x.textAlign='right'; x.fillText([FQ.vtr?'VTR '+FQ.vtr:'',FQ.tel?fmtTel(FQ.tel):''].filter(Boolean).join('  ·  '),X+w-16,Y+33); x.textAlign='left';
     fq.forEach((m,k)=>{ const yy=Y+52+20+k*lh+10;
@@ -1495,7 +1556,7 @@ function imagemRel(){
   pos.forEach(({e,c,y})=>{
     const X=pad+c*(cw+gap), Y=topoEq+y, m=ordemEquipe(e), h=alt(e);
     x.fillStyle='#fff'; rr(X,Y,cw,h,16); x.fill(); x.strokeStyle='#d7dce6'; x.lineWidth=2; x.stroke();
-    x.fillStyle='#1f3160'; rr(X,Y,cw,52,16); x.fill(); x.fillRect(X,Y+30,cw,22);
+    x.fillStyle='#0f2747'; rr(X,Y,cw,52,16); x.fill(); x.fillRect(X,Y+30,cw,22);
     x.fillStyle='#fff'; x.font='800 23px system-ui,sans-serif'; x.fillText(fit(rotulo(e),cw*0.7),X+16,Y+34);
     x.font='700 16px system-ui,sans-serif'; x.fillStyle='#c9d4ee'; x.textAlign='right'; x.fillText(e.tipo==='A PÉ'?'A PÉ':e.tipo==='ÔNIBUS'?(e.vtr?'':'ÔNIBUS'):'',X+cw-14,Y+33); x.textAlign='left';
     const ll=locL(e), dy=ll.length*25+8; ll.forEach(([t,f,c],k)=>{ x.font=f; x.fillStyle=t.includes('não informado')?'#98a2b3':c; x.fillText(t,X+16,Y+78+k*25); });
