@@ -710,6 +710,10 @@ const novoIdEsc=()=>'s'+Date.now().toString(36)+Math.random().toString(36).slice
 /* equipe de fiscalização do turno (vale para todas as escalas) */
 let FQ=LS.get('dp_fisc')||{vtr:'',tel:'',mem:[]}; if(!Array.isArray(FQ.mem)) FQ.mem=[];
 function salvarFQ(){ LS.set('dp_fisc',FQ); }
+/* o oficial da equipe de fiscalização é o responsável/fiscal das escalas do turno (quando a escala ainda não tem um) */
+function sincResp(sc){ const o=FQ.mem.find(m=>m.fn==='of'); if(!o||!sc||(sc.info.resp||'').trim()) return false;
+  sc.info.resp=((o.gc?o.gc+' ':'')+o.guerra).trim(); if(o.mat) sc.info.respMat=o.mat; return true; }
+function sincRespTodas(){ let mud=false; ESC.forEach(sc=>{ if(sincResp(sc)) mud=true; }); if(mud) LS.set('dp_escalas',ESC); }
 let S=null, cad=LS.get('dp_cad')||{}, locais=LS.get('dp_locais')||[], aberto=null, movendo=null;
 const editando=new Set(), obsAbertas=new Set();
 const ST={P:'Presente',F:'Falta',LM:'Licença médica',ERR:'Erro na escala',OUT:'Outro'};
@@ -781,7 +785,7 @@ function carregar(res,origem,nomeArq){
   S={v:2, id:novoIdEsc(), criado:Date.now(), origem, conferido:origem!=='foto', iniciado:false,
      info:{escala:nomeArq||'', data:res.info.data||'', periodo:res.info.periodo||'', local:res.info.local||'', missao:'', resp:LS.get('dp_resp')||'', respMat:LS.get('dp_respMat')||'', obs:''},
      pol, equipes:[], alts:[], seq:0};
-  S.ativa=novaEquipe().id; aberto=null; editando.clear(); obsAbertas.clear(); salvar();
+  S.ativa=novaEquipe().id; aberto=null; editando.clear(); obsAbertas.clear(); sincResp(S); salvar();
   const n=S.pol.length, nome=S.info.local||S.info.escala||'Escala'; S=null; irEscalas();
   return {n,nome};
 }
@@ -878,7 +882,7 @@ function renderEscalas(){
   $('#bTurno').classList.toggle('hide',!ESC.length);
   $('#cFiscT').innerHTML=fqCardHTML(); }
 function irEscalas(){ modoFalta=false; renderEscalas(); mostrar('importar'); window.scrollTo(0,0); }
-function abrirEscala(id){ const s=ESC.find(x=>x.id===id); if(!s) return; S=s; migrar(); salvar(); aberto=null; movendo=null; editando.clear(); obsAbertas.clear(); modoFalta=false; msgImp('');
+function abrirEscala(id){ const s=ESC.find(x=>x.id===id); if(!s) return; S=s; migrar(); sincResp(S); salvar(); aberto=null; movendo=null; editando.clear(); obsAbertas.clear(); modoFalta=false; msgImp('');
   S.iniciado?irInicio():irServico(); }
 $('#escLista').addEventListener('click',ev=>{ const d=ev.target.closest('[data-escdel]'); if(d){ excluirEscala(d.dataset.escdel); return; }
   const c=ev.target.closest('[data-esc]'); if(c) abrirEscala(c.dataset.esc); });
@@ -942,7 +946,7 @@ const fqOrd=()=>['of','mot','pat'].flatMap(f=>FQ.mem.filter(m=>m.fn===f));
 const nomeFQ=m=>((m.gc?m.gc+' ':'')+m.guerra).trim();
 function fqPreencherOficial(){ // o oficial fiscal começa com o responsável já informado
   if(FQ.mem.some(m=>m.fn==='of')) return; const r=(LS.get('dp_resp')||'').trim(); if(!r) return;
-  FQ.mem.unshift({fn:'of',gc:'',guerra:r.toUpperCase(),mat:(LS.get('dp_respMat')||'').trim(),lotacao:'',cls:classe(r),src:null}); salvarFQ(); }
+  FQ.mem.unshift({fn:'of',gc:'',guerra:r.toUpperCase(),mat:(LS.get('dp_respMat')||'').trim(),lotacao:'',cls:classe(r),src:null}); salvarFQ(); sincRespTodas(); }
 function fqCardHTML(){ const o=fqOrd();
   const l2=o.length?o.map(m=>FQTAG[m.fn]+' '+nomeFQ(m)).join(' · '):'Toque para incluir o oficial fiscal, motorista, patrulheiro e VTR';
   return `<span style="font-size:24px">👮</span><div class="info"><div class="l1">Equipe de fiscalização do turno${FQ.vtr?' · VTR '+esc(FQ.vtr):''}</div><div class="l2">${esc(l2)}</div></div><span class="ed" style="font-weight:800;color:#7a5200">${o.length?'✎':'＋'}</span>`; }
@@ -969,7 +973,9 @@ function fqIncluir(){
   else { const g=$('#fqG').value.trim().toUpperCase(), n=$('#fqN').value.trim().toUpperCase().replace(/\s+/g,' '), m=$('#fqM').value.trim();
     if(!n){ $('#fqErr').innerHTML='<div class="msg err">Escolha um policial da escala ou digite o nome.</div>'; return; }
     FQ.mem.push({fn,gc:g,guerra:n,mat:m,lotacao:'',cls:classe(g||n),src:null}); ['#fqG','#fqN','#fqM'].forEach(x=>$(x).value=''); }
-  salvarFQ(); if(fn==='mot') fqFn='pat'; renderFiscEq(); toast('✓ Incluído na equipe de fiscalização'); }
+  salvarFQ();
+  if(fn==='of'){ const o=FQ.mem.find(m=>m.fn==='of'); LS.set('dp_resp',((o.gc?o.gc+' ':'')+o.guerra).trim()); if(o.mat) LS.set('dp_respMat',o.mat); sincRespTodas(); }
+  if(fn==='mot') fqFn='pat'; renderFiscEq(); toast('✓ Incluído na equipe de fiscalização'); }
 function fqTirar(k){ const m=FQ.mem[k]; if(!m) return;
   if(m.src){ const sc=ESC.find(x=>x.id===m.src.e), p=sc&&sc.pol.find(x=>x.id===m.src.p); if(p){ p.fisc=false; LS.set('dp_escalas',ESC); } }
   FQ.mem.splice(k,1); salvarFQ(); renderFiscEq(); }
@@ -980,7 +986,7 @@ $('#fqOk').onclick=fqIncluir;
 $('#fqLista').addEventListener('click',e=>{ const b=e.target.closest('[data-fqrm]'); if(!b) return; const m=FQ.mem[+b.dataset.fqrm]; confirmar(`Tirar ${nomeFQ(m)} da equipe de fiscalização?`,()=>fqTirar(+b.dataset.fqrm)); });
 $('#fqVtr').addEventListener('input',e=>{ FQ.vtr=e.target.value.toUpperCase(); salvarFQ(); });
 $('#fqTel').addEventListener('input',e=>{ FQ.tel=e.target.value; salvarFQ(); });
-$('#fqPronto').onclick=()=>{ const v=fqVolta; if(v==='montar'&&S) irMontar(); else if(v==='inicio'&&S) irInicio(); else irEscalas(); };
+$('#fqPronto').onclick=()=>{ sincRespTodas(); if(S) sincResp(S); const v=fqVolta; if(v==='montar'&&S) irMontar(); else if(v==='inicio'&&S) irInicio(); else irEscalas(); };
 $('#cFiscT').addEventListener('click',()=>irFiscEq('importar'));
 
 /* ================== DADOS DO SERVIÇO ================== */
