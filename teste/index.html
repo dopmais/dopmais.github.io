@@ -359,6 +359,9 @@ h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy
 .autobox .aops button{flex:1;border:1px solid #0f2747;background:#fff;color:#0f2747;border-radius:3px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:1px}
 .autobox .aops button b{font-size:14px}.autobox .aops button small{font-size:11.5px;color:var(--mute)}
 .autobox .btn{margin-top:8px;width:100%}
+.autobox .avtr{display:flex;align-items:center;gap:8px;margin-top:8px;font-weight:800;font-size:13px;color:#0f2747;text-transform:uppercase;letter-spacing:.03em}
+.autobox .avtr input{width:80px;border:1.5px solid #0f2747;border-radius:3px;padding:7px 8px;font-size:16px;font-weight:800;text-align:center}
+.autobox .aops{flex-direction:column}.autobox .aops button{flex-direction:row;justify-content:space-between;padding:9px 12px;text-align:left}
 .mopts.troca button{display:block;width:100%;text-align:left}
 .mopts.troca button small{display:inline-block;min-width:74px;font-size:11px;font-weight:800;color:var(--mute)}
 /* fiscalizar / efetivo / dados do serviço */
@@ -871,45 +874,64 @@ function colocar(p,e,fn){
   p.eq=e.id; p.fn=fn; }
 /* ===== MONTAGEM AUTOMÁTICA =====
    Antiguidade: posto/graduação e, no mesmo posto, a ordem da escala (que já vem do mais antigo ao mais moderno).
-   A lista é cortada em faixas do tamanho do nº de VTRs: a 1ª faixa são os comandantes (o mais antigo na VTR 1);
-   cada faixa seguinte é distribuída no sentido contrário da anterior (serpentina), então cada VTR recebe um de cada faixa
-   e nenhuma fica só de graduados ou só de soldados. Quem sobra da divisão entra a mais nas VTRs de comandante mais moderno.
+   O fiscal informa quantas viaturas há e quantos por VTR. Os tamanhos saem de tamanhosAuto (sobra 1 → entra numa equipe
+   com menos de 4; sobra 2+ → forma outra equipe; sem viatura sobrando → equipes A PÉ). Depois, serpentina por antiguidade:
+   1ª volta = comandantes (o mais antigo na equipe 1), cada volta seguinte no sentido contrário, pulando equipe já cheia.
    Motorista: o mais moderno da equipe (qualquer policial dirige viatura; CAT D só importa no ônibus). */
 const ANTIG=[['CEL',1],['TC',2],['MAJ',3],['CAP',4],['1º TEN',5],['2º TEN',6],['TEN',6],['ASP',7],['SUBTEN',8],['ST',8],['1º SGT',9],['2º SGT',10],['3º SGT',11],['SGT',11],['CB',12],['SD',13]];
 function nivelAntig(p){ const g=(p.gc||p.grad||'').toUpperCase().replace(/[°O](?=\s*(SGT|TEN))/g,'º').replace(/(\d)\s*º?\s*(SGT|TEN)/,'$1º $2');
   for(const [k,n] of ANTIG){ if(new RegExp('(^|\\s)'+k.replace('º','º?')+'(\\s|$)').test(g)) return n; } return 14; }
 const antiguidade=(a,b)=>nivelAntig(a)-nivelAntig(b)||((a.extra?1e6:0)+(a.ordem||0))-((b.extra?1e6:0)+(b.ordem||0));
-function nVtrs(n,k){ if(n<k) return 0; let T=Math.floor(n/k); if(n-T*k>T) T=Math.ceil(n/k); return T; } // sobra de no máx. 1 por VTR; se passar disso, mais VTRs com um a menos
-function planoAuto(livres,k){ const L=[...livres].sort(antiguidade), T=nVtrs(L.length,k); if(T<1) return null;
-  const eq=Array.from({length:T},()=>[]);
-  for(let c=0;c*T<L.length;c++){ const faixa=L.slice(c*T,(c+1)*T);
-    faixa.forEach((p,j)=>eq[faixa.length<T?T-1-j:(c%2===0?j:T-1-j)].push(p)); } // faixa incompleta: VTRs de comandante mais moderno
-  return eq; }
-function tamanhos(eq){ const t=[...new Set(eq.map(m=>m.length))].sort((a,b)=>b-a); return t.join(' e '); }
+// Tamanhos das equipes. V = nº de viaturas disponíveis (informado pelo fiscal), k = policiais por VTR.
+// Regras: sobra 1 → entra numa equipe com menos de 4; sobra 2 ou mais (menor que k) → forma uma equipe com eles.
+// Se as viaturas acabarem, o restante forma equipes A PÉ com a mesma regra.
+function tamanhosAuto(N,k,V){ if(N<2||!V) return null;
+  const Tf=Math.min(V,Math.floor(N/k)); let R=N-Tf*k; const sz=Array(Tf).fill(k), pe=[];
+  const somaUm=lista=>{ let t=-1; for(let i=lista.length-1;i>=0;i--) if(lista[i]<4){ t=i; break; } if(t<0) t=lista.length-1; lista[t]++; };
+  if(Tf===0){ sz.push(N); return {sz,pe}; }                  // menos policiais que uma equipe cheia: uma equipe só
+  if(R===0) return {sz,pe};
+  if(Tf<V){ if(R===1) somaUm(sz); else sz.push(R); return {sz,pe}; }   // ainda há VTR: sobra 1 entra, sobra ≥2 vira equipe
+  // viaturas acabaram: o restante vai A PÉ
+  if(R===1){ somaUm(sz); return {sz,pe}; }
+  const m=Math.floor(R/k), r2=R-m*k; for(let i=0;i<m;i++) pe.push(k);
+  if(r2===1){ if(pe.length) somaUm(pe); else somaUm(sz); } else if(r2>=2) pe.push(r2);
+  return {sz,pe}; }
+function planoAuto(livres,k,V){ const L=[...livres].sort(antiguidade), t=tamanhosAuto(L.length,k,V); if(!t) return null;
+  const cap=[...t.sz,...t.pe], T=cap.length, eq=Array.from({length:T},()=>[]); let idx=0;
+  for(let c=0; idx<L.length && c<50; c++){ const ord=[...Array(T).keys()]; if(c%2) ord.reverse(); // serpentina
+    for(const q of ord){ if(idx<L.length&&eq[q].length<cap[q]) eq[q].push(L[idx++]); } }
+  return {eq, nVtr:t.sz.length}; }
+function descPlano(pl){ const v=pl.eq.slice(0,pl.nVtr).map(m=>m.length), a=pl.eq.slice(pl.nVtr).map(m=>m.length);
+  const f=x=>{ const c={}; x.forEach(n=>c[n]=(c[n]||0)+1); return Object.keys(c).sort((a,b)=>b-a).map(n=>c[n]+' de '+n).join(' e '); };
+  return `VTRs: ${f(v)}`+(a.length?` · a pé: ${f(a)}`:''); }
 let desfazerAuto=null;
 function montarAuto(k){
-  const livres=S.pol.filter(p=>!p.eq&&!A(p)&&!p.fisc); const plano=planoAuto(livres,k);
-  if(!plano){ toast('Policiais insuficientes para equipes de '+k); return; }
+  const livres=S.pol.filter(p=>!p.eq&&!A(p)&&!p.fisc), V=+S.autoV||0; const pl=planoAuto(livres,k,V);
+  if(!pl){ toast(V?'Policiais insuficientes':'Informe quantas viaturas há'); return; } const plano=pl.eq;
   desfazerAuto={esc:S.id, pol:S.pol.map(p=>[p.id,p.eq,p.fn]), equipes:JSON.parse(JSON.stringify(S.equipes)), seq:S.seq, ativa:S.ativa};
   S.equipes=S.equipes.filter(e=>e.salva||membros(e.id).length); // tira equipes vazias
   let primeira=null;
-  plano.forEach(m=>{ const e=novaEquipe(); if(!primeira) primeira=e;
-    m.forEach((p,i)=>{ p.eq=e.id; p.fn=i===0?'cmt':(i===m.length-1&&m.length>1?'mot':'pat'); }); });
+  plano.forEach((m,q)=>{ const e=novaEquipe(); if(q>=pl.nVtr) e.tipo='A PÉ'; if(!primeira) primeira=e;
+    m.forEach((p,i)=>{ p.eq=e.id; p.fn=i===0?'cmt':(i===m.length-1&&m.length>1&&temMot(e.tipo)?'mot':'pat'); }); });
   S.ativa=primeira.id; aberto=null; movendo=null; salvar(); renderMontar();
   const temGrad=livres.some(p=>nivelAntig(p)<13), semGrad=temGrad?plano.filter(m=>nivelAntig(m[0])>=13).length:0; // escala só de SD: o SD mais antigo comanda, sem aviso
-  toast(plano.length+(plano.length>1?' equipes montadas':' equipe montada')+(semGrad?` · ${semGrad} com SD no comando`:'. Confira e salve.'));
+  toast(plano.length+(plano.length>1?' equipes montadas':' equipe montada')+(pl.eq.length>pl.nVtr?` (${pl.eq.length-pl.nVtr} a pé)`:'')+(semGrad?` · ${semGrad} com SD no comando`:'. Confira e salve.'));
 }
 function desfazerMontagem(){ const d=desfazerAuto; if(!d||d.esc!==S.id) return;
   const m=new Map(d.pol.map(x=>[x[0],x])); S.pol.forEach(p=>{ const x=m.get(p.id); if(x){ p.eq=x[1]; p.fn=x[2]; } });
   S.equipes=d.equipes; S.seq=d.seq; S.ativa=d.ativa; desfazerAuto=null; salvar(); renderMontar(); toast('Montagem automática desfeita'); }
+function autoOps(livres){ const V=+S.autoV||0;
+  if(!V) return '<div class="as" style="margin-top:6px">Informe primeiro quantas viaturas há.</div>';
+  return [2,3,4].map(k=>{ const pl=planoAuto(livres,k,V); if(!pl) return '';
+    return `<button data-auto="${k}"><b>${k} por VTR</b><small>${descPlano(pl)}</small></button>`; }).join(''); }
 function autoHTML(livres){
   if(desfazerAuto&&desfazerAuto.esc!==S.id) desfazerAuto=null;
   if(desfazerAuto) return `<div class="autobox"><b>Equipes montadas automaticamente.</b> Confira, ajuste com o toque e salve cada uma.<button class="btn lt" id="bAutoX">Desfazer montagem</button></div>`;
   if(livres.length<2) return '';
-  const ops=[2,3,4].map(k=>{ const pl=planoAuto(livres,k); if(!pl) return '';
-    const tm=tamanhos(pl); return `<button data-auto="${k}"><b>${k} por VTR</b><small>${pl.length} VTR${pl.length>1?'s':''}${tm!==String(k)?' de '+tm:''}</small></button>`; }).join('');
-  const L=[...livres].sort(antiguidade), grad=L.filter(p=>nivelAntig(p)<13).length;
-  return `<div class="autobox"><div class="at">Montar equipes automaticamente</div><div class="as">Comandante sempre o mais antigo; os demais divididos por antiguidade para equilibrar as VTRs. Motorista: o mais moderno. Depois é só conferir.</div><div class="aops">${ops}</div>${grad&&grad<(planoAuto(livres,2)||[]).length?`<div class="as" style="color:#9a3412;margin-top:6px">Há ${grad} graduado(s) livres: se houver mais VTRs que isso, algumas terão SD no comando.</div>`:''}</div>`; }
+  const grad=livres.filter(p=>nivelAntig(p)<13).length;
+  return `<div class="autobox"><div class="at">Montar equipes automaticamente</div><div class="as">Comandante sempre o mais antigo; os demais divididos por antiguidade para equilibrar as equipes. Motorista: o mais moderno. Sobrou 1: entra numa equipe com menos de 4. Sobraram 2 ou mais: formam outra equipe.</div>
+    <label class="avtr">Viaturas disponíveis <input id="autoV" type="number" inputmode="numeric" min="1" max="99" value="${S.autoV||''}" placeholder="nº"></label>
+    <div class="aops" id="autoOps">${autoOps(livres)}</div>${grad&&S.autoV&&grad<Math.min(+S.autoV,Math.floor(livres.length/2))?`<div class="as" style="color:#9a3412;margin-top:6px">Há ${grad} graduado(s) livres: se houver mais equipes que isso, algumas terão SD no comando.</div>`:''}</div>`; }
 function proxFuncao(e,p){ // na ordem do papel: comandante, motorista, patrulheiros
   if(e.tipo==='ÔNIBUS') return (p&&p.mot&&!ocup(e.id,'mot'))?'mot':'pat'; // ônibus: motorista CAT D + lista
   if(!ocup(e.id,'cmt')) return 'cmt';
@@ -1272,8 +1294,10 @@ function renderMontar(){
     <div class="assin">Ten. Antoniel - SO</div>`;
   $('#dlLoc').innerHTML=locais.map(l=>`<option value="${esc(l)}">`).join('');
 }
+$('#poolBody').addEventListener('input',e=>{ if(e.target.id==='autoV'){ const v=parseInt(e.target.value,10); S.autoV=v>0?v:''; salvar();
+  $('#autoOps').innerHTML=autoOps(S.pol.filter(p=>!p.eq&&!A(p)&&!p.fisc)); } });
 $('#poolBody').addEventListener('click',e=>{
-  const ab=e.target.closest('[data-auto]'); if(ab){ const k=+ab.dataset.auto; confirmar(`Montar as equipes automaticamente, ${k} policiais por VTR? Quem já está em equipe não muda.`,()=>montarAuto(k)); return; }
+  const ab=e.target.closest('[data-auto]'); if(ab){ const k=+ab.dataset.auto, pl=planoAuto(S.pol.filter(p=>!p.eq&&!A(p)&&!p.fisc),k,+S.autoV); if(!pl) return; confirmar(`Montar ${pl.eq.length} equipe(s) — ${descPlano(pl)}? Quem já está em equipe não muda.`,()=>montarAuto(k)); return; }
   if(e.target.closest('#bAutoX')){ desfazerMontagem(); return; }
   if(e.target.closest('#bAddPm')){ $('#pmForm').classList.remove('hide'); $('#bAddPm').classList.add('hide'); $('#pmG').focus(); }
   if(e.target.closest('#pmX')) renderMontar();
