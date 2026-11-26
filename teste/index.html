@@ -941,6 +941,7 @@ function autoHTML(livres){ // só uma linha fina no topo da lista, para não esc
   if(desfazerAuto&&desfazerAuto.esc!==S.id) desfazerAuto=null;
   if(desfazerAuto) return `<div class="autolink ok"><span>Equipes montadas automaticamente</span><button id="bAutoX">Desfazer</button></div>`;
   if(livres.length<2) return '';
+  if(S.pol.some(p=>p.eq)) return ''; // só no começo: depois que alguém foi distribuído, o botão some e a tela fica limpa
   return `<button class="autolink" id="bAutoAbrir">${ICO.equipes}<span>Montar equipes automaticamente</span></button>`; }
 function proxFuncao(e,p){ // na ordem do papel: comandante, motorista, patrulheiros
   if(e.tipo==='ÔNIBUS') return (p&&p.mot&&!ocup(e.id,'mot'))?'mot':'pat'; // ônibus: motorista CAT D + lista
