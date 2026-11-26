@@ -352,10 +352,9 @@ h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy
 .msg,.toast{border-radius:3px}
 .tg,.fbtn,.selbar button,.segf button{border-radius:3px}
 .assin{color:#98a2b3}
-.autolink{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#0f2747;border:0;border-radius:3px;padding:9px 12px;margin:2px 0 10px;font-size:13.5px;font-weight:700;color:#fff;letter-spacing:.01em;box-shadow:0 1px 2px rgba(15,39,71,.25)}
-.autolink svg{width:18px;height:18px;flex:0 0 auto}
-.autolink.ok{background:#eef6f1;color:#1f6f43;border:1px solid #b7dcc5;justify-content:space-between;box-shadow:none}
-.autolink.ok button{border:1px solid #1f6f43;background:#fff;color:#1f6f43;border-radius:3px;padding:4px 12px;font-weight:800;font-size:12.5px}
+.phbtns{display:flex;gap:6px;margin-top:7px}.phbtns .fbtn{flex:1;padding:7px 6px;border-radius:3px}
+.fbtn.autob{border-color:#0f2747;color:#0f2747}
+.fbtn.autob.on{background:#eef6f1;color:#1f6f43;border-color:#1f6f43}
 #mAuto .avtr{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;color:#0f2747;text-transform:uppercase;letter-spacing:.03em}
 #mAuto .avtr input{width:80px;border:1.5px solid #0f2747;border-radius:3px;padding:7px 8px;font-size:16px;font-weight:800;text-align:center}
 #mAuto .aops{display:flex;flex-direction:column;gap:8px}
@@ -515,7 +514,7 @@ h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy
 <section class="hide" id="montar">
   <div id="teams"></div>
   <aside id="pool">
-    <div class="poolhead"><div class="phrow"><div style="flex:1;min-width:0"><div class="t" id="poolTitle"></div><div class="sub" id="poolSub"></div></div><button class="fbtn selb" id="bSel">Vários</button><button class="fbtn" id="bFaltas">Marcar falta</button></div><div id="selBar"></div></div>
+    <div class="poolhead"><div class="t" id="poolTitle"></div><div class="sub" id="poolSub"></div><div class="phbtns"><button class="fbtn autob" id="bAuto">Automático</button><button class="fbtn selb" id="bSel">Vários</button><button class="fbtn" id="bFaltas">Marcar falta</button></div><div id="selBar"></div></div>
     <div id="poolBody" data-drop="pool"></div>
   </aside>
 </section>
@@ -942,12 +941,11 @@ function abrirAuto(){ const n=S.equipes.filter(e=>membros(e.id).length).length;
   $('#autoVlbl').textContent=n?'Viaturas ainda livres':'Viaturas disponíveis';
   $('#autoJa').innerHTML=n?`<b>${n} equipe${n>1?'s':''} já montada${n>1?'s':''}</b> não ${n>1?'mudam':'muda'}. Vão ser distribuídos só os ${livresAuto().length} que faltam. Informe quantas viaturas ainda estão livres.`:'';
   $('#autoV').value=S.autoV||''; autoAtualiza(); $('#mAuto').classList.remove('hide'); }
-function autoHTML(livres){ // só uma linha fina no topo da lista, para não esconder os policiais
+function autoBtn(livres){ // botão no cabeçalho (fora da lista, para não ser tocado sem querer)
   if(desfazerAuto&&desfazerAuto.esc!==S.id) desfazerAuto=null;
-  if(desfazerAuto) return `<div class="autolink ok"><span>Equipes montadas automaticamente</span><button id="bAutoX">Desfazer</button></div>`;
-  if(livres.length<2) return '';
-  const ja=S.pol.some(p=>p.eq); // já há equipe montada à mão: a automática distribui só quem falta
-  return `<button class="autolink" id="bAutoAbrir">${ICO.equipes}<span>${ja?'Montar automaticamente quem falta':'Montar equipes automaticamente'}</span></button>`; }
+  const b=$('#bAuto'); if(!b) return;
+  if(desfazerAuto){ b.textContent='Desfazer auto'; b.classList.add('on'); b.classList.toggle('hide',modoFalta||selVarios); return; }
+  b.textContent='Automático'; b.classList.remove('on'); b.classList.toggle('hide',modoFalta||selVarios||livres.length<2); }
 function proxFuncao(e,p){ // na ordem do papel: comandante, motorista, patrulheiros
   if(e.tipo==='ÔNIBUS') return (p&&p.mot&&!ocup(e.id,'mot'))?'mot':'pat'; // ônibus: motorista CAT D + lista
   if(!ocup(e.id,'cmt')) return 'cmt';
@@ -1301,7 +1299,8 @@ function renderMontar(){
       (faltosos.length?`<div class="grp-t" style="color:#b42318">Faltaram (${faltosos.length}) — toque para desfazer</div><div class="chips">${faltosos.map(p=>chipHTML(p).replace('class="blk ','class="blk falt ')).join('')}</div>`:'')+
       '<div class="muted" style="padding:6px 2px">Quem já está numa equipe: marque a falta em <b>Efetivo</b> ou, durante o serviço, em <b>Fiscalizar → Registrar alteração</b>.</div>';
     $('#dlLoc').innerHTML=locais.map(l=>`<option value="${esc(l)}">`).join(''); return; }
-  $('#poolBody').innerHTML = (selVarios?'':autoHTML(livres))+(catd.length?`<div class="grp-t">Motorista CAT D — ônibus, se necessário</div><div class="chips">${catd.map(chipHTML).join('')}</div>`:'')+
+  autoBtn(livres);
+  $('#poolBody').innerHTML = (catd.length?`<div class="grp-t">Motorista CAT D — ônibus, se necessário</div><div class="chips">${catd.map(chipHTML).join('')}</div>`:'')+
     (resto.length?`<div class="grp-t">Escalados</div><div class="chips">${resto.map(chipHTML).join('')}</div>`:'')+
     (!livres.length?'<div class="done">✓ Todo o efetivo foi distribuído</div>':'')+
     `<button class="addpm" id="bAddPm">＋ Incluir policial que não está na escala (ex.: o oficial)</button>
@@ -1316,9 +1315,7 @@ $('#mAuto').addEventListener('click',e=>{ if(e.target.id==='mAuto') $('#mAuto').
   const ab=e.target.closest('[data-auto]'); if(!ab) return; const k=+ab.dataset.auto, pl=planoAuto(livresAuto(),k,+S.autoV); if(!pl) return;
   $('#mAuto').classList.add('hide'); confirmar(`Montar ${pl.eq.length} equipe(s) — ${descPlano(pl)}? Quem já está em equipe não muda.`,()=>montarAuto(k)); });
 $('#poolBody').addEventListener('click',e=>{
-  if(e.target.closest('#bAutoAbrir')){ abrirAuto(); return; }
-  if(e.target.closest('#bAutoX')){ desfazerMontagem(); return; }
-  if(e.target.closest('#bAddPm')){ $('#pmForm').classList.remove('hide'); $('#bAddPm').classList.add('hide'); $('#pmG').focus(); }
+    if(e.target.closest('#bAddPm')){ $('#pmForm').classList.remove('hide'); $('#bAddPm').classList.add('hide'); $('#pmG').focus(); }
   if(e.target.closest('#pmX')) renderMontar();
   if(e.target.closest('#pmOk')){ if(incluir($('#pmG').value,$('#pmN').value,$('#pmM').value,$('#pmL').value,true)) renderMontar(); else $('#pmN').focus(); }
 });
@@ -1389,6 +1386,7 @@ function alternarFalta(id){ const p=P(id); if(!p) return;
   else { p.st='F'; if(p.eq){ const o=p.eq; p.eq=null; p.fn=null; normalizar(o); } toast(nomeP(p)+' – falta'); }
   salvar(); renderMontar(); }
 $('#bFaltas').onclick=()=>{ modoFalta=!modoFalta; if(modoFalta){ selVarios=false; sel.clear(); } aberto=null; movendo=null; renderMontar(); };
+$('#bAuto').onclick=()=>{ if(desfazerAuto) desfazerMontagem(); else abrirAuto(); };
 $('#bSel').onclick=()=>{ selVarios=!selVarios; sel.clear(); aberto=null; movendo=null; renderMontar(); };
 function colocarVarios(){ const e=ativa(), lista=S.pol.filter(p=>sel.has(p.id)&&!p.eq&&!A(p)&&!p.fisc); if(!lista.length) return;
   lista.forEach(p=>colocar(p,e,proxFuncao(e,p))); normalizar(e.id); sel.clear(); selVarios=false; salvar(); renderMontar(); verAtiva();
