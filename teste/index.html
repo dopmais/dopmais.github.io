@@ -352,10 +352,10 @@ h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy
 .msg,.toast{border-radius:3px}
 .tg,.fbtn,.selbar button,.segf button{border-radius:3px}
 .assin{color:#98a2b3}
-.autolink{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;background:#fff;border:1px solid var(--line);border-left:3px solid #a8873a;border-radius:3px;padding:7px 10px;margin:2px 0 8px;font-size:13px;font-weight:800;color:#0f2747;text-transform:uppercase;letter-spacing:.03em}
-.autolink b{font-size:18px;line-height:1}
-.autolink.ok{border-left-color:#1f6f43;color:#1f6f43}
-.autolink.ok button{border:1px solid #0f2747;background:#fff;color:#0f2747;border-radius:3px;padding:4px 10px;font-weight:800;font-size:12px;text-transform:uppercase}
+.autolink{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#0f2747;border:0;border-radius:3px;padding:9px 12px;margin:2px 0 10px;font-size:13.5px;font-weight:700;color:#fff;letter-spacing:.01em;box-shadow:0 1px 2px rgba(15,39,71,.25)}
+.autolink svg{width:18px;height:18px;flex:0 0 auto}
+.autolink.ok{background:#eef6f1;color:#1f6f43;border:1px solid #b7dcc5;justify-content:space-between;box-shadow:none}
+.autolink.ok button{border:1px solid #1f6f43;background:#fff;color:#1f6f43;border-radius:3px;padding:4px 12px;font-weight:800;font-size:12.5px}
 #mAuto .avtr{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;color:#0f2747;text-transform:uppercase;letter-spacing:.03em}
 #mAuto .avtr input{width:80px;border:1.5px solid #0f2747;border-radius:3px;padding:7px 8px;font-size:16px;font-weight:800;text-align:center}
 #mAuto .aops{display:flex;flex-direction:column;gap:8px}
@@ -941,7 +941,7 @@ function autoHTML(livres){ // só uma linha fina no topo da lista, para não esc
   if(desfazerAuto&&desfazerAuto.esc!==S.id) desfazerAuto=null;
   if(desfazerAuto) return `<div class="autolink ok"><span>Equipes montadas automaticamente</span><button id="bAutoX">Desfazer</button></div>`;
   if(livres.length<2) return '';
-  return `<button class="autolink" id="bAutoAbrir"><span>Montar equipes automaticamente</span><b>›</b></button>`; }
+  return `<button class="autolink" id="bAutoAbrir">${ICO.equipes}<span>Montar equipes automaticamente</span></button>`; }
 function proxFuncao(e,p){ // na ordem do papel: comandante, motorista, patrulheiros
   if(e.tipo==='ÔNIBUS') return (p&&p.mot&&!ocup(e.id,'mot'))?'mot':'pat'; // ônibus: motorista CAT D + lista
   if(!ocup(e.id,'cmt')) return 'cmt';
