@@ -352,6 +352,18 @@ h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy
 .msg,.toast{border-radius:3px}
 .tg,.fbtn,.selbar button,.segf button{border-radius:3px}
 .assin{color:#98a2b3}
+.autobox{background:#fff;border:1px solid var(--line);border-left:4px solid #a8873a;border-radius:4px;padding:10px 12px;margin:4px 0 10px}
+.autobox .at{font-weight:800;color:#0f2747;font-size:14px;text-transform:uppercase;letter-spacing:.03em}
+.autobox .as{font-size:12.5px;color:var(--mute);margin-top:2px}
+.autobox .aops{display:flex;gap:8px;margin-top:8px}
+.autobox .aops button{flex:1;border:1px solid #0f2747;background:#fff;color:#0f2747;border-radius:3px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:1px}
+.autobox .aops button b{font-size:14px}.autobox .aops button small{font-size:11.5px;color:var(--mute)}
+.autobox .btn{margin-top:8px;width:100%}
+.autobox .avtr{display:flex;align-items:center;gap:8px;margin-top:8px;font-weight:800;font-size:13px;color:#0f2747;text-transform:uppercase;letter-spacing:.03em}
+.autobox .avtr input{width:80px;border:1.5px solid #0f2747;border-radius:3px;padding:7px 8px;font-size:16px;font-weight:800;text-align:center}
+.autobox .aops{flex-direction:column}.autobox .aops button{flex-direction:row;justify-content:space-between;padding:9px 12px;text-align:left}
+.mopts.troca button{display:block;width:100%;text-align:left}
+.mopts.troca button small{display:inline-block;min-width:74px;font-size:11px;font-weight:800;color:var(--mute)}
 /* fiscalizar / efetivo / dados do serviço */
 .fteam{border-radius:4px;border-top:3px solid #0f2747}
 .fteam .fh .cnt{border-radius:3px;background:#eef2f7}
@@ -801,7 +813,7 @@ function vincularFQ(){ let mudE=false, mudF=false;
   if(mudE) LS.set('dp_escalas',ESC); if(mudF) salvarFQ(); return mudE; }
 setTimeout(()=>{ try{ vincularFQ(); }catch(_){} },0);
 function sincRespTodas(){ vincularFQ(); let mud=false; ESC.forEach(sc=>{ if(sincResp(sc)) mud=true; }); if(mud) LS.set('dp_escalas',ESC); }
-let S=null, cad=LS.get('dp_cad')||{}, locais=LS.get('dp_locais')||[], aberto=null, movendo=null;
+let S=null, cad=LS.get('dp_cad')||{}, locais=LS.get('dp_locais')||[], aberto=null, movendo=null, trocando=null;
 const editando=new Set(), obsAbertas=new Set();
 const ST={P:'Presente',F:'Falta',LM:'Licença médica',ERR:'Erro na escala',OUT:'Outro'};
 const A=p=>!!p.st&&p.st!=='P'; // ausente / alterado: não entra na distribuição
@@ -854,6 +866,66 @@ function colocar(p,e,fn){
   const orig=p.eq, origFn=p.fn;
   if(fn!=='pat'){ const o=ocup(e.id,fn); if(o&&o!==p) o.fn=(orig===e.id&&origFn)?origFn:'pat'; }
   p.eq=e.id; p.fn=fn; }
+/* ===== MONTAGEM AUTOMÁTICA =====
+   Antiguidade: posto/graduação e, no mesmo posto, a ordem da escala (que já vem do mais antigo ao mais moderno).
+   O fiscal informa quantas viaturas há e quantos por VTR. Os tamanhos saem de tamanhosAuto (sobra 1 → entra numa equipe
+   com menos de 4; sobra 2+ → forma outra equipe; sem viatura sobrando → equipes A PÉ). Depois, serpentina por antiguidade:
+   1ª volta = comandantes (o mais antigo na equipe 1), cada volta seguinte no sentido contrário, pulando equipe já cheia.
+   Motorista: o mais moderno da equipe (qualquer policial dirige viatura; CAT D só importa no ônibus). */
+const ANTIG=[['CEL',1],['TC',2],['MAJ',3],['CAP',4],['1º TEN',5],['2º TEN',6],['TEN',6],['ASP',7],['SUBTEN',8],['ST',8],['1º SGT',9],['2º SGT',10],['3º SGT',11],['SGT',11],['CB',12],['SD',13]];
+function nivelAntig(p){ const g=(p.gc||p.grad||'').toUpperCase().replace(/[°O](?=\s*(SGT|TEN))/g,'º').replace(/(\d)\s*º?\s*(SGT|TEN)/,'$1º $2');
+  for(const [k,n] of ANTIG){ if(new RegExp('(^|\\s)'+k.replace('º','º?')+'(\\s|$)').test(g)) return n; } return 14; }
+const antiguidade=(a,b)=>nivelAntig(a)-nivelAntig(b)||((a.extra?1e6:0)+(a.ordem||0))-((b.extra?1e6:0)+(b.ordem||0));
+// Tamanhos das equipes. V = nº de viaturas disponíveis (informado pelo fiscal), k = policiais por VTR.
+// Regras: sobra 1 → entra numa equipe com menos de 4; sobra 2 ou mais (menor que k) → forma uma equipe com eles.
+// Se as viaturas acabarem, o restante forma equipes A PÉ com a mesma regra.
+function tamanhosAuto(N,k,V){ if(N<2||!V) return null;
+  const Tf=Math.min(V,Math.floor(N/k)); let R=N-Tf*k; const sz=Array(Tf).fill(k), pe=[];
+  const somaUm=lista=>{ let t=-1; for(let i=lista.length-1;i>=0;i--) if(lista[i]<4){ t=i; break; } if(t<0) t=lista.length-1; lista[t]++; };
+  if(Tf===0){ sz.push(N); return {sz,pe}; }                  // menos policiais que uma equipe cheia: uma equipe só
+  if(R===0) return {sz,pe};
+  if(Tf<V){ if(R===1) somaUm(sz); else sz.push(R); return {sz,pe}; }   // ainda há VTR: sobra 1 entra, sobra ≥2 vira equipe
+  // viaturas acabaram: o restante vai A PÉ
+  if(R===1){ somaUm(sz); return {sz,pe}; }
+  const m=Math.floor(R/k), r2=R-m*k; for(let i=0;i<m;i++) pe.push(k);
+  if(r2===1){ if(pe.length) somaUm(pe); else somaUm(sz); } else if(r2>=2) pe.push(r2);
+  return {sz,pe}; }
+function planoAuto(livres,k,V){ const L=[...livres].sort(antiguidade), t=tamanhosAuto(L.length,k,V); if(!t) return null;
+  const cap=[...t.sz,...t.pe], T=cap.length, eq=Array.from({length:T},()=>[]); let idx=0;
+  for(let c=0; idx<L.length && c<50; c++){ const ord=[...Array(T).keys()]; if(c%2) ord.reverse(); // serpentina
+    for(const q of ord){ if(idx<L.length&&eq[q].length<cap[q]) eq[q].push(L[idx++]); } }
+  return {eq, nVtr:t.sz.length}; }
+function descPlano(pl){ const v=pl.eq.slice(0,pl.nVtr).map(m=>m.length), a=pl.eq.slice(pl.nVtr).map(m=>m.length);
+  const f=x=>{ const c={}; x.forEach(n=>c[n]=(c[n]||0)+1); return Object.keys(c).sort((a,b)=>b-a).map(n=>c[n]+' de '+n).join(' e '); };
+  return `VTRs: ${f(v)}`+(a.length?` · a pé: ${f(a)}`:''); }
+let desfazerAuto=null;
+function montarAuto(k){
+  const livres=S.pol.filter(p=>!p.eq&&!A(p)&&!p.fisc), V=+S.autoV||0; const pl=planoAuto(livres,k,V);
+  if(!pl){ toast(V?'Policiais insuficientes':'Informe quantas viaturas há'); return; } const plano=pl.eq;
+  desfazerAuto={esc:S.id, pol:S.pol.map(p=>[p.id,p.eq,p.fn]), equipes:JSON.parse(JSON.stringify(S.equipes)), seq:S.seq, ativa:S.ativa};
+  S.equipes=S.equipes.filter(e=>e.salva||membros(e.id).length); // tira equipes vazias
+  let primeira=null;
+  plano.forEach((m,q)=>{ const e=novaEquipe(); if(q>=pl.nVtr) e.tipo='A PÉ'; if(!primeira) primeira=e;
+    m.forEach((p,i)=>{ p.eq=e.id; p.fn=i===0?'cmt':(i===m.length-1&&m.length>1&&temMot(e.tipo)?'mot':'pat'); }); });
+  S.ativa=primeira.id; aberto=null; movendo=null; salvar(); renderMontar();
+  const temGrad=livres.some(p=>nivelAntig(p)<13), semGrad=temGrad?plano.filter(m=>nivelAntig(m[0])>=13).length:0; // escala só de SD: o SD mais antigo comanda, sem aviso
+  toast(plano.length+(plano.length>1?' equipes montadas':' equipe montada')+(pl.eq.length>pl.nVtr?` (${pl.eq.length-pl.nVtr} a pé)`:'')+(semGrad?` · ${semGrad} com SD no comando`:'. Confira e salve.'));
+}
+function desfazerMontagem(){ const d=desfazerAuto; if(!d||d.esc!==S.id) return;
+  const m=new Map(d.pol.map(x=>[x[0],x])); S.pol.forEach(p=>{ const x=m.get(p.id); if(x){ p.eq=x[1]; p.fn=x[2]; } });
+  S.equipes=d.equipes; S.seq=d.seq; S.ativa=d.ativa; desfazerAuto=null; salvar(); renderMontar(); toast('Montagem automática desfeita'); }
+function autoOps(livres){ const V=+S.autoV||0;
+  if(!V) return '<div class="as" style="margin-top:6px">Informe primeiro quantas viaturas há.</div>';
+  return [2,3,4].map(k=>{ const pl=planoAuto(livres,k,V); if(!pl) return '';
+    return `<button data-auto="${k}"><b>${k} por VTR</b><small>${descPlano(pl)}</small></button>`; }).join(''); }
+function autoHTML(livres){
+  if(desfazerAuto&&desfazerAuto.esc!==S.id) desfazerAuto=null;
+  if(desfazerAuto) return `<div class="autobox"><b>Equipes montadas automaticamente.</b> Confira, ajuste com o toque e salve cada uma.<button class="btn lt" id="bAutoX">Desfazer montagem</button></div>`;
+  if(livres.length<2) return '';
+  const grad=livres.filter(p=>nivelAntig(p)<13).length;
+  return `<div class="autobox"><div class="at">Montar equipes automaticamente</div><div class="as">Comandante sempre o mais antigo; os demais divididos por antiguidade para equilibrar as equipes. Motorista: o mais moderno. Sobrou 1: entra numa equipe com menos de 4. Sobraram 2 ou mais: formam outra equipe.</div>
+    <label class="avtr">Viaturas disponíveis <input id="autoV" type="number" inputmode="numeric" min="1" max="99" value="${S.autoV||''}" placeholder="nº"></label>
+    <div class="aops" id="autoOps">${autoOps(livres)}</div>${grad&&S.autoV&&grad<Math.min(+S.autoV,Math.floor(livres.length/2))?`<div class="as" style="color:#9a3412;margin-top:6px">Há ${grad} graduado(s) livres: se houver mais equipes que isso, algumas terão SD no comando.</div>`:''}</div>`; }
 function proxFuncao(e,p){ // na ordem do papel: comandante, motorista, patrulheiros
   if(e.tipo==='ÔNIBUS') return (p&&p.mot&&!ocup(e.id,'mot'))?'mot':'pat'; // ônibus: motorista CAT D + lista
   if(!ocup(e.id,'cmt')) return 'cmt';
@@ -1155,8 +1227,10 @@ function chipHTML(p){ return `<div class="blk r-${p.cls}${selVarios&&sel.has(p.i
 function equipeAberta(e){
   const o=ordemEquipe(e), pf=proxFuncao(e), n=numEq(e), outras=S.equipes.filter(x=>x!==e&&(x.salva||membros(x.id).length));
   const opts=p=>{ const t=o.find(([,q])=>q===p)[0];
+    if(trocando===p.id){ const cand=outras.flatMap(x=>ordemEquipe(x).map(([tg,q])=>({x,tg,q})));
+      return `<div class="mopts troca"><span class="lbl">Trocar ${esc(nomeP(p))} com:</span>${cand.map(({x,tg,q})=>`<button data-trocapor="${q.id}"><small>EQ ${numEq(x)} · ${tg}</small> ${esc(nomeP(q))}</button>`).join('')||'<span class="muted">Nenhuma outra equipe montada.</span>'}<button data-trocax="1">Cancelar</button></div>`; }
     if(movendo===p.id) return `<div class="mopts"><span class="lbl">Mover ${esc(nomeP(p))} para:</span>${outras.map(x=>`<button data-movpara="${x.id}">${esc(rotulo(x))}</button>`).join('')||'<span class="muted">Nenhuma outra equipe montada.</span>'}<button data-movx="1">Cancelar</button></div>`;
-    return `<div class="mopts">${t!=='CMT'&&temCmt(e.tipo)?'<button data-role="cmt">Comandante</button>':''}${t!=='MOT'&&temMot(e.tipo)?'<button data-role="mot">Motorista</button>':''}${t!=='PAT'?'<button data-role="pat">Patrulheiro</button>':''}<button data-role="mov">Mover para outra equipe</button><button class="out" data-role="out">Tirar da equipe</button></div>`; };
+    return `<div class="mopts">${t!=='CMT'&&temCmt(e.tipo)?'<button data-role="cmt">Comandante</button>':''}${t!=='MOT'&&temMot(e.tipo)?'<button data-role="mot">Motorista</button>':''}${t!=='PAT'?'<button data-role="pat">Patrulheiro</button>':''}<button data-role="troca">Trocar com policial de outra equipe</button><button data-role="mov">Mover para outra equipe</button><button class="out" data-role="out">Tirar da equipe</button></div>`; };
   const linhas=o.map(([t,p])=>`<div class="mrow r-${p.cls}${aberto===p.id?' open':''}" data-id="${esc(p.id)}"><span class="rl rl-${t}">${t}</span><span class="nm">${esc(nomeP(p))}<small>${esc(metaP(p))}</small></span></div>`+(aberto===p.id?opts(p):'')).join('');
   const idx=S.equipes.indexOf(e);
   return `<div class="team act${e.salva?' editing':''}" data-drop="${e.id}">
@@ -1175,7 +1249,7 @@ function equipeAberta(e){
 }
 function equipeFechada(e){
   const o=ordemEquipe(e), pend=!e.salva&&o.length;
-  const l1=[e.tipo==='ÔNIBUS'?('🚌 ÔNIBUS '+(e.vtr||'')).trim():temVtr(e.tipo)?('VTR '+(e.vtr||'—')):'A PÉ', e.setor].filter(Boolean).join(' · ');
+  const l1=[e.tipo==='ÔNIBUS'?('ÔNIBUS '+(e.vtr||'')).trim():temVtr(e.tipo)?('VTR '+(e.vtr||'—')):'A PÉ', e.setor].filter(Boolean).join(' · ');
   const l2=o.length?o.map(([t,p])=>(p.gc?p.gc+' ':'')+p.guerra.split(' ')[0]).join(', '):'vazia — toque para montar';
   return `<div class="team col${o.length?'':' vazia'}${pend?' pend':''}" data-drop="${e.id}" data-abrir="${e.id}"><span class="num">${numEq(e)}</span>
     <div class="info"><div class="l1">${esc(l1)}${pend?'<span class="tagpend">NÃO SALVA</span>':''}</div><div class="l2">${esc(l2)}</div></div>
@@ -1205,7 +1279,7 @@ function renderMontar(){
       (faltosos.length?`<div class="grp-t" style="color:#b42318">Faltaram (${faltosos.length}) — toque para desfazer</div><div class="chips">${faltosos.map(p=>chipHTML(p).replace('class="blk ','class="blk falt ')).join('')}</div>`:'')+
       '<div class="muted" style="padding:6px 2px">Quem já está numa equipe: marque a falta em <b>Efetivo</b> ou, durante o serviço, em <b>Fiscalizar → Registrar alteração</b>.</div>';
     $('#dlLoc').innerHTML=locais.map(l=>`<option value="${esc(l)}">`).join(''); return; }
-  $('#poolBody').innerHTML = (catd.length?`<div class="grp-t">Motorista CAT D — ônibus, se necessário</div><div class="chips">${catd.map(chipHTML).join('')}</div>`:'')+
+  $('#poolBody').innerHTML = (selVarios?'':autoHTML(livres))+(catd.length?`<div class="grp-t">Motorista CAT D — ônibus, se necessário</div><div class="chips">${catd.map(chipHTML).join('')}</div>`:'')+
     (resto.length?`<div class="grp-t">Escalados</div><div class="chips">${resto.map(chipHTML).join('')}</div>`:'')+
     (!livres.length?'<div class="done">✓ Todo o efetivo foi distribuído</div>':'')+
     `<button class="addpm" id="bAddPm">＋ Incluir policial que não está na escala (ex.: o oficial)</button>
@@ -1214,23 +1288,29 @@ function renderMontar(){
     <div class="assin">Ten. Antoniel - SO</div>`;
   $('#dlLoc').innerHTML=locais.map(l=>`<option value="${esc(l)}">`).join('');
 }
+$('#poolBody').addEventListener('input',e=>{ if(e.target.id==='autoV'){ const v=parseInt(e.target.value,10); S.autoV=v>0?v:''; salvar();
+  $('#autoOps').innerHTML=autoOps(S.pol.filter(p=>!p.eq&&!A(p)&&!p.fisc)); } });
 $('#poolBody').addEventListener('click',e=>{
+  const ab=e.target.closest('[data-auto]'); if(ab){ const k=+ab.dataset.auto, pl=planoAuto(S.pol.filter(p=>!p.eq&&!A(p)&&!p.fisc),k,+S.autoV); if(!pl) return; confirmar(`Montar ${pl.eq.length} equipe(s) — ${descPlano(pl)}? Quem já está em equipe não muda.`,()=>montarAuto(k)); return; }
+  if(e.target.closest('#bAutoX')){ desfazerMontagem(); return; }
   if(e.target.closest('#bAddPm')){ $('#pmForm').classList.remove('hide'); $('#bAddPm').classList.add('hide'); $('#pmG').focus(); }
   if(e.target.closest('#pmX')) renderMontar();
   if(e.target.closest('#pmOk')){ if(incluir($('#pmG').value,$('#pmN').value,$('#pmM').value,$('#pmL').value,true)) renderMontar(); else $('#pmN').focus(); }
 });
 function verAtiva(foco){ const t=document.querySelector('.team.act'); if(t){ t.scrollIntoView({block:'nearest',behavior:'smooth'}); if(foco){ const i=t.querySelector('input[data-f="vtr"]')||t.querySelector('input[data-f="setor"]'); if(i&&!i.value) setTimeout(()=>i.focus(),250); } } }
-function abrir(eid,foco){ S.ativa=eid; aberto=null; movendo=null; salvar(); renderMontar(); verAtiva(foco); }
+function abrir(eid,foco){ S.ativa=eid; aberto=null; movendo=null; trocando=null; salvar(); renderMontar(); verAtiva(foco); }
 function mover(id,dest){
   const p=P(id); if(!p) return; const orig=p.eq;
   if(p.fisc&&dest!=='pool'){ toast(nomeP(p)+' está na equipe de fiscalização'); renderMontar(); return; }
+  desfazerAuto=null;
   if(dest==='pool'){ p.eq=null; p.fn=null; }
   else { const e=S.equipes.find(x=>x.id===dest); if(!e||(p.eq===e.id)) return; colocar(p,e,proxFuncao(e,p)); }
   if(orig&&orig!==p.eq) normalizar(orig);
   aberto=null; movendo=null; salvar(); renderMontar();
 }
 function funcao(id,role){ const p=P(id); if(!p||!p.eq) return;
-  if(role==='mov'){ movendo=id; renderMontar(); return; }
+  if(role==='mov'){ movendo=id; trocando=null; renderMontar(); return; }
+  if(role==='troca'){ trocando=id; movendo=null; renderMontar(); return; }
   if(role==='out'){ const o=p.eq; p.eq=null; p.fn=null; normalizar(o); }
   else { const o=ocup(p.eq,role); if(o&&o!==p) o.fn=p.fn; p.fn=role; }
   aberto=null; salvar(); renderMontar(); }
@@ -1250,6 +1330,11 @@ $('#teams').addEventListener('click',e=>{
   const mp=t.closest('[data-movpara]'); if(mp){ const p=P(movendo), dest=S.equipes.find(x=>x.id===mp.dataset.movpara); const orig=p.eq;
     colocar(p,dest,proxFuncao(dest,p)); normalizar(orig); aberto=null; movendo=null; salvar(); renderMontar(); toast(`${nomeP(p)} → Equipe ${numEq(dest)}`); return; }
   if(t.closest('[data-movx]')){ movendo=null; renderMontar(); return; }
+  if(t.closest('[data-trocax]')){ trocando=null; renderMontar(); return; }
+  const tq=t.closest('[data-trocapor]'); if(tq){ const a=P(trocando), b=P(tq.dataset.trocapor); if(a&&b){ // troca de lugar e de função
+      [a.eq,b.eq]=[b.eq,a.eq]; [a.fn,b.fn]=[b.fn,a.fn]; desfazerAuto=null;
+      toast(`Trocados: ${nomeP(a)} e ${nomeP(b)}`); }
+    aberto=null; trocando=null; salvar(); renderMontar(); return; }
   const rl=t.closest('[data-role]'); if(rl){ funcao(aberto,rl.dataset.role); return; }
   if(t.closest('[data-salvar]')){ salvarEquipe(); return; }
   if(t.closest('[data-sobe]')||t.closest('[data-desce]')){ const eq=ativa(), i=S.equipes.indexOf(eq), j=t.closest('[data-sobe]')?i-1:i+1;
@@ -1290,7 +1375,7 @@ $('#selBar').addEventListener('click',ev=>{ const b=ev.target.closest('[data-sa]
 function fimDrag(cancel){
   if(!drag) return; const d=drag; drag=null;
   if(cancel) return;
-  if(d.el.classList.contains('mrow')){ aberto = aberto===d.id?null:d.id; movendo=null; renderMontar(); return; }
+  if(d.el.classList.contains('mrow')){ aberto = aberto===d.id?null:d.id; movendo=null; trocando=null; renderMontar(); return; }
   if(modoFalta){ alternarFalta(d.id); return; }
   if(selVarios){ sel.has(d.id)?sel.delete(d.id):sel.add(d.id); renderMontar(); return; }
   mover(d.id,S.ativa); verAtiva();
