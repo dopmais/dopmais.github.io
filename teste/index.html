@@ -362,6 +362,7 @@ h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy
 #mAuto .aops button{border:1px solid #0f2747;background:#fff;color:#0f2747;border-radius:3px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left}
 #mAuto .aops button b{font-size:15px}#mAuto .aops button small{font-size:12px;color:var(--mute)}
 #mAuto .box{border-radius:4px}
+#autoJa:empty{display:none}
 /* fiscalizar / efetivo / dados do serviço */
 .fteam{border-radius:4px;border-top:3px solid #0f2747}
 .fteam .fh .cnt{border-radius:3px;background:#eef2f7}
@@ -597,7 +598,8 @@ h2{font-size:12.5px;text-transform:uppercase;letter-spacing:1px;color:var(--navy
   <div class="box stack" style="max-width:460px;margin-top:8vh">
     <h2 style="margin:0">Montar equipes automaticamente</h2>
     <div class="as muted" style="font-size:13px">Comandante: o mais antigo. Motorista: o mais moderno. Os demais divididos por antiguidade para equilibrar. Sobrou 1: entra numa equipe com menos de 4. Sobraram 2 ou mais: formam outra equipe. Sem viatura: a pé.</div>
-    <label class="avtr">Viaturas disponíveis <input id="autoV" type="number" inputmode="numeric" min="1" max="99" placeholder="nº"></label>
+    <div id="autoJa" class="msg" style="font-size:13px;background:#eef2f7;border-radius:3px;padding:8px 10px"></div>
+    <label class="avtr"><span id="autoVlbl">Viaturas disponíveis</span> <input id="autoV" type="number" inputmode="numeric" min="1" max="99" placeholder="nº"></label>
     <div class="aops" id="autoOps"></div>
     <div id="autoAviso"></div>
     <div class="row" style="justify-content:flex-end"><button class="btn lt" id="autoFechar" style="flex:0 0 auto">Fechar</button></div>
@@ -936,13 +938,16 @@ function autoOps(livres){ const V=+S.autoV||0;
 function autoAtualiza(){ const L=livresAuto(), grad=L.filter(p=>nivelAntig(p)<13).length;
   $('#autoOps').innerHTML=autoOps(L);
   $('#autoAviso').innerHTML=grad&&S.autoV&&grad<Math.min(+S.autoV,Math.floor(L.length/2))?`<div class="msg" style="color:#9a3412;font-size:13px">Há ${grad} graduado(s) livres: se houver mais equipes que isso, algumas terão SD no comando.</div>`:''; }
-function abrirAuto(){ $('#autoV').value=S.autoV||''; autoAtualiza(); $('#mAuto').classList.remove('hide'); }
+function abrirAuto(){ const n=S.equipes.filter(e=>membros(e.id).length).length;
+  $('#autoVlbl').textContent=n?'Viaturas ainda livres':'Viaturas disponíveis';
+  $('#autoJa').innerHTML=n?`<b>${n} equipe${n>1?'s':''} já montada${n>1?'s':''}</b> não ${n>1?'mudam':'muda'}. Vão ser distribuídos só os ${livresAuto().length} que faltam. Informe quantas viaturas ainda estão livres.`:'';
+  $('#autoV').value=S.autoV||''; autoAtualiza(); $('#mAuto').classList.remove('hide'); }
 function autoHTML(livres){ // só uma linha fina no topo da lista, para não esconder os policiais
   if(desfazerAuto&&desfazerAuto.esc!==S.id) desfazerAuto=null;
   if(desfazerAuto) return `<div class="autolink ok"><span>Equipes montadas automaticamente</span><button id="bAutoX">Desfazer</button></div>`;
   if(livres.length<2) return '';
-  if(S.pol.some(p=>p.eq)) return ''; // só no começo: depois que alguém foi distribuído, o botão some e a tela fica limpa
-  return `<button class="autolink" id="bAutoAbrir">${ICO.equipes}<span>Montar equipes automaticamente</span></button>`; }
+  const ja=S.pol.some(p=>p.eq); // já há equipe montada à mão: a automática distribui só quem falta
+  return `<button class="autolink" id="bAutoAbrir">${ICO.equipes}<span>${ja?'Montar automaticamente quem falta':'Montar equipes automaticamente'}</span></button>`; }
 function proxFuncao(e,p){ // na ordem do papel: comandante, motorista, patrulheiros
   if(e.tipo==='ÔNIBUS') return (p&&p.mot&&!ocup(e.id,'mot'))?'mot':'pat'; // ônibus: motorista CAT D + lista
   if(!ocup(e.id,'cmt')) return 'cmt';
